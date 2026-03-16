@@ -70,6 +70,45 @@ Here's your complete roadmap with projects added:
 | **Personal Finance Advisor** — Upload bank statements, AI analyzes spending | Document processing, tool calling |
 
 ---
+Here are the best YouTube search keywords to learn all these topics:
+
+**Start Here (Foundations)**
+- "embeddings explained"
+- "vector embeddings tutorial"
+- "what are vector databases"
+- "RAG tutorial for beginners"
+- "retrieval augmented generation explained"
+
+**API & Implementation**
+- "OpenAI embeddings API tutorial"
+- "Pinecone vector database tutorial"
+- "Supabase pgvector tutorial"
+- "LangChain.js tutorial"
+- "LlamaIndex typescript tutorial"
+- "function calling LLM tutorial"
+
+**Advanced Topics**
+- "hybrid search vector keyword"
+- "advanced RAG techniques"
+- "RAG chunking strategies"
+- "re-ranking RAG pipeline"
+- "multi-query retrieval LangChain"
+- "self-querying retriever tutorial"
+- "structured outputs Zod OpenAI"
+- "Neo4j knowledge graph AI"
+- "AI guardrails input output validation"
+
+**Best YouTube Channels to Follow**
+- **Fireship** — quick concept videos
+- **Traversy Media** — practical implementations
+- **AI Jason** — RAG & LLM app building
+- **Sam Witteveen** — LangChain deep dives
+- **Leon van Zyl** — LangChain.js specifically
+- **Pixegami** — RAG pipeline projects
+- **NetworkChuck** — beginner friendly AI
+
+**Pro Tip:** Search *"build RAG app from scratch 2024"* or *"full RAG pipeline tutorial"* to get end-to-end project videos that cover multiple topics at once.
+
 
 ## 🟠 Phase 3 — Bots
 *Goal: Deploy AI bots on real platforms*
