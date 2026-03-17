@@ -70,45 +70,226 @@ Here's your complete roadmap with projects added:
 | **Personal Finance Advisor** — Upload bank statements, AI analyzes spending | Document processing, tool calling |
 
 ---
-Here are the best YouTube search keywords to learn all these topics:
 
-**Start Here (Foundations)**
-- "embeddings explained"
-- "vector embeddings tutorial"
-- "what are vector databases"
-- "RAG tutorial for beginners"
-- "retrieval augmented generation explained"
 
-**API & Implementation**
-- "OpenAI embeddings API tutorial"
-- "Pinecone vector database tutorial"
-- "Supabase pgvector tutorial"
-- "LangChain.js tutorial"
-- "LlamaIndex typescript tutorial"
-- "function calling LLM tutorial"
+Here’s a **chronological learning path** for Phase 2: Core AI Patterns, designed to take you from fundamentals to advanced implementations. Each step builds on the previous one, with integrated projects to solidify your understanding.
 
-**Advanced Topics**
-- "hybrid search vector keyword"
-- "advanced RAG techniques"
-- "RAG chunking strategies"
-- "re-ranking RAG pipeline"
-- "multi-query retrieval LangChain"
-- "self-querying retriever tutorial"
-- "structured outputs Zod OpenAI"
-- "Neo4j knowledge graph AI"
-- "AI guardrails input output validation"
+---
 
-**Best YouTube Channels to Follow**
-- **Fireship** — quick concept videos
-- **Traversy Media** — practical implementations
-- **AI Jason** — RAG & LLM app building
-- **Sam Witteveen** — LangChain deep dives
-- **Leon van Zyl** — LangChain.js specifically
-- **Pixegami** — RAG pipeline projects
-- **NetworkChuck** — beginner friendly AI
+## 1. Embeddings: Text → Vectors  
+**What you’ll learn:**  
+- Why embeddings are the foundation of modern AI apps.  
+- How text is converted into numerical vectors (dense representations).  
+- Key concepts: cosine similarity, vector space, dimensionality.
 
-**Pro Tip:** Search *"build RAG app from scratch 2024"* or *"full RAG pipeline tutorial"* to get end-to-end project videos that cover multiple topics at once.
+**Resources:**  
+- YouTube: *“embeddings explained”*, *“vector embeddings tutorial”*  
+- Read: OpenAI’s embedding documentation.
 
+---
+
+## 2. Generating Embeddings via API  
+**What you’ll learn:**  
+- Using OpenAI’s embedding API (or alternatives like Cohere, Hugging Face).  
+- Best practices for embedding text: chunking, batch processing, rate limits.  
+- Hands‑on: Write a script to embed a list of sentences.
+
+**Resources:**  
+- YouTube: *“OpenAI embeddings API tutorial”*  
+- API docs: OpenAI, Cohere.
+
+---
+
+## 3. Vector Databases: Why & How  
+**What you’ll learn:**  
+- What vector databases are and when to use them.  
+- Indexing and searching vectors efficiently (ANN algorithms).  
+- Overview of Pinecone, Supabase pgvector, Weaviate, Qdrant.
+
+**Resources:**  
+- YouTube: *“what are vector databases”*  
+- Tutorials: *“Pinecone vector database tutorial”*, *“Supabase pgvector tutorial”*
+
+---
+
+## 4. Storing and Querying Vectors  
+**What you’ll learn:**  
+- Setting up a vector database (Pinecone or pgvector).  
+- Inserting embedded data and performing similarity searches.  
+- Filtering metadata and understanding query results.
+
+**Resources:**  
+- Follow official quickstarts for Pinecone / Supabase.  
+- YouTube: *“store and query vectors in Pinecone”*
+
+---
+
+## 5. RAG Basics — Build Your First Pipeline  
+**What you’ll learn:**  
+- The Retrieval-Augmented Generation (RAG) pattern:  
+  Upload a document → chunk → embed → store → retrieve relevant chunks → feed to LLM.  
+- Hands‑on: Build a simple script that answers questions based on a PDF.
+
+**Resources:**  
+- YouTube: *“RAG tutorial for beginners”*, *“retrieval augmented generation explained”*  
+- Code walkthroughs: *“build RAG app from scratch 2024”*
+
+---
+
+## 6. LangChain.js / LlamaIndex.ts Basics  
+**What you’ll learn:**  
+- Using frameworks to orchestrate RAG pipelines.  
+- Chains, retrievers, document loaders, and output parsers.  
+- Building a reusable Q&A system with LangChain.js.
+
+**Resources:**  
+- YouTube: *“LangChain.js tutorial”*, *“LlamaIndex typescript tutorial”*  
+- Official docs and examples.
+
+---
+
+## 7. Tool Calling / Function Calling Fundamentals  
+**What you’ll learn:**  
+- How to let an LLM call external tools/functions.  
+- Defining schemas and handling the function call cycle.  
+- Use cases: calculators, APIs, database lookups.
+
+**Resources:**  
+- YouTube: *“function calling LLM tutorial”*  
+- OpenAI function calling guide.
+
+---
+
+## 🚀 **Project 1: PDF Q&A Bot**  
+**Integrates:** Steps 1–7  
+**What you build:** Upload any PDF and ask questions about its content.  
+**Concepts applied:** Embeddings, vector DB, RAG, LangChain.js.
+
+---
+
+## 8. Advanced RAG — Chunking Strategies & Re‑ranking  
+**What you’ll learn:**  
+- Why chunk size and overlap matter.  
+- Different chunking methods (recursive, semantic, by tokens).  
+- Re‑ranking retrieved results to improve relevance.
+
+**Resources:**  
+- YouTube: *“advanced RAG techniques”*, *“RAG chunking strategies”*, *“re-ranking RAG pipeline”*
+
+---
+
+## 9. Hybrid Search (Vector + Keyword)  
+**What you’ll learn:**  
+- Combining dense vector search with BM25/full‑text search.  
+- Implementing hybrid search in Pinecone (with sparse vectors) or pgvector.  
+- Benefits for out‑of‑domain queries and exact matches.
+
+**Resources:**  
+- YouTube: *“hybrid search vector keyword”*  
+- Pinecone/sparse‑dense tutorials.
+
+---
+
+## 10. Multi‑Query Retrieval & Self‑Querying Retrievers  
+**What you’ll learn:**  
+- Using LLMs to generate multiple queries for better coverage.  
+- Self‑querying retrievers that can filter on metadata automatically.  
+- When to apply these techniques.
+
+**Resources:**  
+- YouTube: *“multi-query retrieval LangChain”*, *“self-querying retriever tutorial”*
+
+---
+
+## 🚀 **Project 2: AI Knowledge Base**  
+**Integrates:** Steps 8–10  
+**What you build:** A chatbot that answers from company documents (HR policies, product docs).  
+**Concepts applied:** Advanced RAG, chunking, re‑ranking, hybrid search.
+
+---
+
+## 11. Guardrails & AI Safety  
+**What you’ll learn:**  
+- Validating inputs and outputs to prevent prompt injection, toxic content, etc.  
+- Tools like NeMo Guardrails, Guardrails AI, or simple validation functions.  
+- Implementing input/output moderation.
+
+**Resources:**  
+- YouTube: *“AI guardrails input output validation”*  
+- Articles on LLM safety best practices.
+
+---
+
+## 12. Structured Outputs with Zod Validation  
+**What you’ll learn:**  
+- Forcing LLMs to return structured data (JSON) using Zod schemas.  
+- Integrating Zod with LangChain/LlamaIndex for type‑safe parsing.  
+- Use cases: extracting entities, generating reports.
+
+**Resources:**  
+- YouTube: *“structured outputs Zod OpenAI”*  
+- LangChain docs on output parsers.
+
+---
+
+## 🚀 **Project 3: Legal Document Analyzer**  
+**Integrates:** Steps 11–12  
+**What you build:** Upload contracts, the AI extracts clauses, flags risks, and gives summaries with strict schema validation.  
+**Concepts applied:** Guardrails, structured outputs, Zod.
+
+---
+
+## 13. Knowledge Graphs with Neo4j + AI  
+**What you’ll learn:**  
+- How knowledge graphs represent relationships.  
+- Using Neo4j to store entities and connections extracted by an LLM.  
+- Querying the graph with natural language via LangChain.
+
+**Resources:**  
+- YouTube: *“Neo4j knowledge graph AI”*  
+- Neo4j + LangChain tutorials.
+
+---
+
+## 14. Advanced RAG with Knowledge Graphs  
+**What you’ll learn:**  
+- Enhancing RAG by retrieving from both vector stores and knowledge graphs.  
+- Graph‑augmented generation for better reasoning.  
+- Multi‑hop queries over connected data.
+
+**Resources:**  
+- YouTube: *“knowledge graphs for RAG”*  
+- LangChain’s GraphCypherQAChain.
+
+---
+
+## 🚀 **Project 4: AI Study Buddy**  
+**Integrates:** Steps 13–14 (plus earlier RAG)  
+**What you build:** Upload a textbook, get summaries, generate flashcards and quizzes based on the knowledge graph of concepts.  
+**Concepts applied:** Knowledge graphs, multi‑query retrieval, advanced RAG.
+
+---
+
+## 🚀 **Project 5: Personal Finance Advisor**  
+**Integrates:** Step 7 (tool calling) and all prior steps  
+**What you build:** Upload bank statements; the AI analyzes spending, suggests budgets, and can call a “calculator” tool for projections.  
+**Concepts applied:** Document processing, tool calling, RAG, structured outputs.
+
+---
+
+## 🚀 **Project 6: Semantic Search Engine**  
+**Integrates:** Steps 9 (hybrid search), 2, 3, 4  
+**What you build:** Search products or jobs by meaning, not just keywords.  
+**Concepts applied:** Embeddings, vector search, hybrid search.
+
+---
+
+### **Pro Tips for Learning**
+- **Watch end‑to‑end tutorials:** Search YouTube for *“full RAG pipeline tutorial”*, *“build RAG app from scratch 2024”* to see how topics connect.  
+- **Follow channels:** Fireship, Traversy Media, AI Jason, Sam Witteveen, Leon van Zyl, Pixegami, NetworkChuck.  
+- **Code along:** Don’t just watch – build each mini‑project yourself.
+
+This path ensures you master the core AI patterns in a logical, project‑driven way. Good luck!
 
 ## 🟠 Phase 3 — Bots
 *Goal: Deploy AI bots on real platforms*
