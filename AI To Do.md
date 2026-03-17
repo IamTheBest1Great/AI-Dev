@@ -501,3 +501,49 @@ If you only want to build the most impactful ones:
 ```
 
 This roadmap takes you from zero AI knowledge to building products that businesses will genuinely pay for.
+
+
+
+
+Path B: ML Engineer / Model Customizer
+Focus: Understand, train, fine‑tune, and deploy machine learning models yourself. You work closer to the metal.
+
+Core Skills:
+
+Neural network fundamentals (backpropagation, layers, activations)
+
+Transformer architecture (attention, multi-head, positional encoding)
+
+Tokenization (BPE, WordPiece) and context windows
+
+Fine‑tuning techniques (LoRA, QLoRA, full fine‑tune)
+
+Quantization (GGUF, GPTQ, AWQ) for efficient inference
+
+Model serving (vLLM, TGI, Ollama, Hugging Face)
+
+Running local models (Llama, Mistral, Phi) on your own infrastructure
+
+Evaluation and benchmarking (evals, promptfoo)
+
+ML pipelines (data prep, training, validation, deployment)
+
+Capabilities — What you can build:
+
+Custom fine‑tuned models for specific domains (legal, medical, customer support) that outperform generic APIs
+
+Self‑hosted AI services that run entirely on your infrastructure (privacy‑first, no API costs)
+
+Offline‑first applications (mobile apps with on‑device models)
+
+High‑performance, low‑latency inference for real‑time use cases
+
+Quantized models that run on consumer GPUs or even CPUs
+
+Multi‑model routers that send queries to the smallest capable model to save costs
+
+Embedding servers for private, in‑house vector generation
+
+Experiments with new architectures or research ideas
+
+Time to proficiency: Months to years. Requires stronger mathematical background and longer learning curve.
