@@ -559,7 +559,7 @@ flowchart LR
     QV1 --> R1[Retriever]
     QV2 --> R2[Retriever]
     QV3 --> R3[Retriever]
-    R1 --> F[Rank Fusion (RRF)]
+    R1 --> F["Rank Fusion (RRF)"]
     R2 --> F
     R3 --> F
     F --> Final[Top merged docs]
