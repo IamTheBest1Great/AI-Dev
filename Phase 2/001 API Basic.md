@@ -110,20 +110,23 @@ Streaming avoids the delay of waiting for the entire response before displaying 
 
 ```mermaid
 sequenceDiagram
-    participant Client (e.g., Browser)
-    participant Server (Your Backend)
-    participant LLM (e.g., OpenAI)
+    participant Client (Browser/App)
+    participant Backend (Your Server)
+    participant LLM API (OpenAI/Anthropic)
 
-    Client->>Server: New HTTP Request (stream: true)
-    Server->>LLM: API Call with stream=true
-    Note over LLM: Model starts generating the response
-    loop Throughout Generation
-        LLM-->>Server: Stream Data Chunk (SSE formatted)
-        Server-->>Client: Send chunk via WebSocket/SSE
-        Client->>Client: Append chunk to UI
+    Client->>Backend: HTTP Request (stream: true, Accept: text/event-stream)
+    Note over Backend: Opens connection & sets streaming headers
+    Backend->>LLM API: HTTP Request (stream: true)
+    Note over LLM API: Begins generating tokens
+
+    loop Each token/chunk generated
+        LLM API-->>Backend: HTTP Response chunk (SSE formatted data)
+        Backend-->>Client: Forward chunk as raw SSE data
+        Client->>Client: Parse SSE event, append token to UI
     end
-    LLM-->>Server: Stream End Message
-    Server-->>Client: End-of-Stream Signal
+
+    LLM API-->>Backend: [DONE] event (stream end)
+    Backend-->>Client: Close HTTP connection
 ```
 
 - **Server-Sent Events Architecture**: Streaming is implemented using Server-Sent Events (SSE) over HTTP. Your application sends a standard `POST` request to the API (e.g., `https://api.openai.com/v1/chat/completions`) but includes the `"stream": true` parameter.
