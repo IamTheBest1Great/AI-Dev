@@ -1,4 +1,186 @@
-This section provides a comprehensive breakdown of the fundamental concepts needed to effectively and reliably use AI APIs.
+# Table of Contents — AI API Fundamentals
+
+Based on the uploaded notes document. 
+
+---
+
+# 1.1 API Basics
+
+## 1.1.1 Provider Setup
+
+* OpenAI API Setup
+
+  * Create Account
+  * Generate API Key
+  * Secure API Key
+* Anthropic API Setup
+
+  * Create Account
+  * Generate API Key
+  * Environment Variables
+* Google Gemini API Setup
+
+  * Google AI Studio Access
+  * Create API Key
+  * Google Cloud Project Selection
+  * Environment Variables
+* LiteLLM for Unified Access
+
+  * Unified API Interface
+  * Configuration Setup
+  * Multi-Provider Switching
+
+---
+
+## 1.1.2 Rate Limits & Headers
+
+* Understanding Rate Limits
+* Reading HTTP Headers
+* Important Rate Limit Headers
+
+  * `x-ratelimit-limit-requests`
+  * `x-ratelimit-remaining-requests`
+  * `x-ratelimit-remaining-tokens`
+  * `retry-after`
+* Handling 429 Errors
+
+  * Header Inspection
+  * Exponential Backoff
+  * Jitter Strategy
+  * Retry Limits
+* Flowchart
+
+  * API Rate Limit Handling
+
+---
+
+## 1.1.3 Token Counting
+
+* What are Tokens?
+* Token Estimation
+* `tiktoken` Overview
+* Byte Pair Encoding (BPE)
+* `encoding_for_model()`
+* Counting Tokens in Text
+* Counting Tokens in Messages Array
+* Prompt Tokens vs Completion Tokens
+* Context Window Management
+* Token Budgeting
+* Safety Margin Planning
+
+---
+
+## 1.1.4 Cost Management
+
+* Per-Model Pricing Tables
+* Cost Calculation
+
+  * Cost per Million Tokens
+  * Cost per Thousand Tokens
+* API Usage Object
+* Cost Per Request
+* Cost Per Session Tracking
+* Session-Based Usage Monitoring
+* Backend Tracking Logic
+
+---
+
+## 1.1.5 Streaming Responses (SSE)
+
+* Introduction to Streaming
+* Server-Sent Events (SSE)
+* Streaming Architecture
+* Token-by-Token Delivery
+* Streaming HTTP Connections
+* `stream: true`
+* `text/event-stream`
+* Client-Side Streaming
+
+  * `fetch` API
+  * `ReadableStream`
+* Backend Proxy Streaming
+* Connection Keep-Alive
+* Abort Controller
+* Flowchart
+
+  * Streaming Token Delivery Sequence
+
+---
+
+## 1.1.6 System Prompts vs User Prompts
+
+* System Prompt Fundamentals
+
+  * Persistent Instructions
+  * Persona Definition
+  * Governance Rules
+  * Multi-Turn Consistency
+* User Prompt Fundamentals
+
+  * Dynamic User Input
+  * Task Instructions
+  * User Data Handling
+* Dynamic System Prompts
+* Prompt Context Injection
+* Prompt Caching
+
+  * Dedicated Prompt Cache
+  * Cost Optimization
+  * Persistent Persona Reuse
+
+---
+
+## 1.1.7 Conversation History Pattern
+
+* Messages Array Structure
+
+  * `system`
+  * `user`
+  * `assistant`
+* Conversation Storage
+* Sliding Window Technique
+* Token Threshold Management
+* Conversation Trimming
+* Summarization Strategy
+
+  * Context Compression
+  * Summary Injection
+  * Cheap Model Summarization
+* Safety Buffer Allocation
+* Context Window Protection
+* Long Conversation Handling
+
+---
+
+# Additional Concepts Included
+
+## API Security
+
+* Environment Variables
+* API Key Protection
+* Backend Key Management
+
+## Scalability & Reliability
+
+* Retry Mechanisms
+* Backoff Algorithms
+* Streaming Architecture
+* Connection Management
+
+## Cost Optimization
+
+* Prompt Caching
+* Token Budgeting
+* Session Tracking
+
+## Production Readiness
+
+* Conversation Persistence
+* Error Recovery
+* Token Safety Buffers
+* Real-Time Streaming UX
+
+
 
 ---
 
