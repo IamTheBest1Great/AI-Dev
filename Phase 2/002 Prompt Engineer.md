@@ -1,5 +1,281 @@
 # 📘 Prompt Engineering — Complete Guide
 
+
+# Table of Contents — Prompt Engineering Complete Guide
+
+Based on the uploaded notes document. 
+
+---
+
+# 1.2 Prompt Engineering
+
+## 1.2.1 Zero-Shot Prompting
+
+* Definition of Zero-Shot Prompting
+* Direct Instruction Format
+* Clear & Specific Instructions
+* When Zero-Shot Works
+
+  * Translation
+  * Summarization
+  * Extraction
+  * Simple Classification
+* Failure Scenarios
+
+  * Ambiguous Tasks
+  * Domain-Specific Reasoning
+  * Unusual Output Formats
+* Rule of Thumb for Example Usage
+
+---
+
+## 1.2.2 One-Shot Prompting
+
+* Definition of One-Shot Prompting
+* Single Example Inclusion
+* Input-Output Demonstration
+* Format Consistency
+* Example Structure Matching
+* Translation Prompt Examples
+
+---
+
+## 1.2.3 Few-Shot Prompting
+
+* Definition of Few-Shot Prompting
+* Multiple Example Strategy
+* Optimal Example Count (3–5)
+* Overfitting Risks
+* Example Selection Strategy
+
+  * Typical Inputs
+  * Edge Cases
+  * Ambiguous Cases
+  * Diversity
+* Format Standardization
+* Standardized Templates
+* Good vs Bad Example Formatting
+
+---
+
+## 1.2.4 Chain-of-Thought (CoT)
+
+* Definition of Chain-of-Thought
+* Step-by-Step Reasoning
+* Intermediate Reasoning Steps
+* Arithmetic Reasoning
+* Logical Deduction
+* Multi-Hop Reasoning
+* Self-Consistency CoT
+
+  * Multiple Reasoning Paths
+  * Majority Voting
+* Accuracy Improvements
+* When CoT Works Best
+* Token Cost Considerations
+* When CoT is Not Useful
+
+---
+
+## 1.2.5 Tree-of-Thought (ToT)
+
+* Definition of Tree-of-Thought
+* Multi-Branch Reasoning
+* Branch Generation
+* Branch Evaluation
+* Pruning Strategies
+* Decision Tree Exploration
+* Flowchart
+
+  * ToT Process
+* Step Generation Prompts
+* Evaluation Heuristics
+* Multi-Step Decision Making
+* Use Cases
+
+  * Planning
+  * Coding
+  * Complex Puzzles
+* Cost & Latency Tradeoffs
+
+---
+
+## 1.2.6 Role Prompting & Personas
+
+* Persona Definition
+* Expertise Specification
+* Communication Style Control
+* Domain-Specific Language
+* System Message Usage
+* Persistent Persona Behavior
+* Examples
+
+  * Software Architect
+  * Teacher Persona
+  * Legal Assistant
+
+---
+
+## 1.2.7 Negative Prompting
+
+* Definition of Negative Prompting
+* Explicit Exclusion Instructions
+* “DO NOT” Patterns
+* Hallucination Prevention
+* Safe Failure Responses
+* Positive + Negative Instruction Pairing
+
+---
+
+## 1.2.8 Delimiter Techniques
+
+* Purpose of Delimiters
+* XML Tag Structuring
+* Triple Backticks for Code
+* JSON Schema Specification
+* Instruction/Data Separation
+* Structured Extraction Prompts
+* Context Isolation
+
+---
+
+## 1.2.9 Prompt Injection Defense
+
+* Definition of Prompt Injection
+* Input Sanitization
+
+  * Keyword Removal
+  * Special Character Escaping
+* Delimiter Escaping
+* User Input Isolation
+* Role Separation
+
+  * System Message
+  * User Message
+* Output Validation Layer
+* Injection Detection
+* JavaScript Sanitization Example
+* Multi-Layer Defense Strategy
+
+---
+
+## 1.2.10 Prompt Compression
+
+* Purpose of Prompt Compression
+* Reducing Prompt Length
+* Removing Filler Words
+* Context Summarization
+* Multi-Turn Compression
+* LLMLingua
+
+  * Automatic Compression
+  * Microsoft Library
+  * Token Reduction
+* Python Example
+* JavaScript Compression Alternatives
+* Cost Optimization
+* Context Window Optimization
+
+---
+
+# Summary Table of Techniques
+
+## Included Techniques
+
+* Zero-Shot Prompting
+* One-Shot Prompting
+* Few-Shot Prompting
+* Chain-of-Thought
+* Tree-of-Thought
+* Role Prompting
+* Negative Prompting
+* Delimiters
+* Prompt Injection Defense
+* Prompt Compression
+
+## Comparison Parameters
+
+* Best Use Cases
+* Core Insight
+* Accuracy Impact
+* Cost Considerations
+* Complexity Tradeoffs
+
+---
+
+# Hands-On Exercises
+
+## Exercise 1
+
+* Zero-Shot Prompt Creation
+* Few-Shot Prompt Creation
+* CoT Prompt Creation
+* Output Comparison
+
+## Exercise 2
+
+* Legal Assistant Role Prompt
+* Negative Prompt Design
+* Legal Advice Restrictions
+
+## Exercise 3
+
+* Prompt Injection Attack Simulation
+* Defense Layer Implementation
+
+## Exercise 4
+
+* Long Prompt Compression
+* LLMLingua Usage
+* Compression Validation
+
+---
+
+# Next Steps / Advanced Applications
+
+## RAG Pipelines
+
+* Retrieval Instructions
+* Answer Formatting
+
+## Agent Tool Calling
+
+* Tool Selection Prompts
+* Agent Guidance
+
+## Structured Outputs
+
+* Few-Shot + JSON Schema
+* Structured Response Design
+
+---
+
+# Additional Concepts Included
+
+## AI Reasoning Techniques
+
+* Sequential Reasoning
+* Branching Reasoning
+* Self-Consistency
+
+## Prompt Security
+
+* Injection Defense
+* Sanitization
+* Validation Layers
+
+## Cost Optimization
+
+* Prompt Compression
+* Token Efficiency
+
+## Production AI Engineering
+
+* Reliable Prompt Design
+* Structured Prompting
+* Persona Persistence
+
+
 Prompt engineering is the practice of designing and refining the input (prompts) given to a language model to elicit the desired output. It is both an art and a science, and mastering it is essential for building reliable AI applications. This guide covers the most important techniques, from basic zero-shot to advanced defense mechanisms.
 
 ---
