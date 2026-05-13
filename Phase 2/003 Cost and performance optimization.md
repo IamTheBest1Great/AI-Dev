@@ -1,4 +1,452 @@
 # 📘 Cost & Performance Optimization — Complete Guide
+# Table of Contents — Cost & Performance Optimization
+
+Based on the uploaded notes document. 
+
+---
+
+# 1.3 Cost & Performance Optimization
+
+## 1.3.1 Prompt Caching
+
+### Introduction to Prompt Caching
+
+* Why Prompt Caching Matters
+* Large System Prompt Costs
+* Redundant Prefix Processing
+* Production AI Cost Problems
+
+### How Prompt Caching Works
+
+* KV Tensor Reuse
+* Transformer Attention Mechanism
+* Query, Key, Value (QKV)
+* KV Cache Storage
+* Prefill Computation Avoidance
+* Prefix Matching
+* Cache Reuse Logic
+
+### Benefits of Prompt Caching
+
+* Reduced TTFT (Time to First Token)
+* Input Token Cost Reduction
+* Automatic Cache Handling
+* Large Prompt Optimization
+
+---
+
+## Anthropic (Claude) Prompt Caching
+
+### Anthropic Cache Architecture
+
+* `cache_control` Markers
+* Explicit Cache Configuration
+* Cacheable Content Blocks
+
+### Anthropic Pricing
+
+* Standard Input Pricing
+* Cache Write Pricing
+* Cache Read Pricing
+* Relative Cost Multipliers
+
+### Cache TTL
+
+* Default 5-Minute TTL
+* TTL Refresh on Hit
+* Optional 1-Hour TTL
+
+### Anthropic Cache Lifecycle
+
+* Cache Write Flow
+* Cache Hit Flow
+* Cache Expiration
+* Cache Recreation
+* Flowchart
+
+  * Anthropic Cache Request Lifecycle
+
+### Anthropic Constraints
+
+* Minimum Prefix Size
+* Maximum Cache Markers
+* Exact Prefix Matching
+* System Array Requirement
+
+### Anthropic SDK Implementation
+
+* `cache_control`
+* Cacheable Tool Definitions
+* Session-Scoped RAG Chunks
+* Usage Metrics
+
+  * `cache_creation_input_tokens`
+  * `cache_read_input_tokens`
+
+---
+
+## OpenAI Prompt Caching
+
+### OpenAI Automatic Caching
+
+* No Configuration Required
+* Automatic Prefix Detection
+* 1024+ Token Requirement
+* 128-Token Increment Matching
+* In-Memory Caching
+* Extended Caching
+* 24-Hour TTL
+
+### OpenAI Cache Features
+
+* `prompt_cache_key`
+* Traffic Routing Optimization
+* Cacheable Assets
+
+  * Messages
+  * Images
+  * Audio
+  * Tool Definitions
+  * Structured Output Schemas
+
+### OpenAI SDK Implementation
+
+* Automatic Cache Handling
+* Streaming-Compatible Caching
+
+---
+
+## Cache Hit Measurement & Optimization
+
+### Cache Metrics
+
+* `cache_creation_input_tokens`
+* `cache_read_input_tokens`
+* `input_tokens`
+
+### Optimization Strategies
+
+* Stable Prefix Grouping
+* Prefix Reuse
+* `prompt_cache_key`
+* Prefix Identity Maintenance
+* TTL-Aware Design
+* Dynamic Content Placement
+
+### High Cache Hit Rate Rules
+
+* System Prompt Positioning
+* Few-Shot Example Placement
+* User Input at End
+* Whitespace Stability
+
+### Real-World Impact
+
+* RAG Customer Support Example
+* 78% Cost Reduction Case Study
+
+### Priority ROI Guide
+
+* High ROI Cache Targets
+* Medium ROI Cache Targets
+* Low / Anti-ROI Cache Targets
+
+---
+
+# 1.3.2 Model Tiering
+
+## Introduction to Model Tiering
+
+* Definition of Model Tiering
+* Cost vs Performance Tradeoffs
+* Enterprise AI Budget Challenges
+* Inference Cost Scaling
+
+---
+
+## Model Classification Tiers
+
+### 🟢 Cheap / Fast Tier
+
+* DeepSeek V3.2
+* GPT-4o-mini
+* Claude Haiku 4.5
+* Gemini 2.5 Flash
+* High Throughput Tasks
+* Long Context Handling
+
+### 🟡 Standard Tier
+
+* GPT-5.4
+* Claude Sonnet 4.5
+* Balanced Cost/Performance
+
+### 🔴 Complex Tier
+
+* Gemini 2.5 Pro
+* GPT-5
+* Long Document Reasoning
+* Maximum Capability Tasks
+
+### 🧠 Reasoning Tier
+
+* Claude Opus 4.6
+* OpenAI o1 Series
+* DeepSeek-R1
+* Deep Reasoning
+* Agent Workflows
+
+---
+
+## Model Pricing & Context Windows
+
+* Input Token Pricing
+* Output Token Pricing
+* Context Length Comparison
+* Output Cost Multipliers
+
+---
+
+## Query Routing Logic
+
+### Complexity-Based Routing
+
+* Simple Queries
+* Medium Queries
+* Complex Queries
+
+### Complexity Assessment
+
+* Heuristic Detection
+* Keyword-Based Classification
+* Query Length Analysis
+
+### Basic Router Implementation
+
+* `routeQuery()`
+* `assessComplexity()`
+
+---
+
+## Smart Model Tiering
+
+### Cheap Chunk + Premium Merge Pattern
+
+* Parallel Cheap Processing
+* Premium Model Aggregation
+* Chunk Summarization
+* Insight Merging
+
+### Tiered Processing Workflow
+
+* Parallelization
+* Cost Optimization
+* Quality Preservation
+
+### Real-World Cost Impact
+
+* Support Chatbot Example
+* Monthly Cost Comparisons
+
+---
+
+# 1.3.3 Streaming for Perceived Speed
+
+## Introduction to Streaming
+
+* Definition of Streaming
+* Autoregressive Token Generation
+* Sequential Token Emission
+* Real-Time Response Delivery
+
+---
+
+## Streaming Architecture
+
+### Server-Sent Events (SSE)
+
+* `stream: true`
+* SSE over HTTP
+* Persistent HTTP Connections
+
+### Streaming Flow
+
+* Client → Backend → LLM API
+* Token Streaming Loop
+* `[DONE]` Event
+* Flowchart
+
+  * Streaming Sequence Diagram
+
+---
+
+## Streaming Performance Metrics
+
+### TTFT (Time to First Token)
+
+* Initial Response Delay
+* User Perceived Wait Time
+
+### TPOT (Time Per Output Token)
+
+* Token Generation Speed
+* Streaming Smoothness
+
+### Perceived vs Actual Latency
+
+* Progress Bar Effect
+* Attention Engagement
+* User Experience Psychology
+
+---
+
+## Express.js Streaming Implementation
+
+### SSE Headers
+
+* `Content-Type`
+* `Cache-Control`
+* `Connection`
+
+### OpenAI Streaming API
+
+* `stream: true`
+* Async Iteration
+* Incremental Token Delivery
+
+### Response Handling
+
+* `delta.content`
+* Client Streaming Updates
+* Connection Closing
+
+---
+
+## Progressive Rendering Techniques
+
+* Typing Indicators
+* Incremental Markdown Rendering
+* Smooth Auto-Scrolling
+* AbortController Timeout Handling
+
+---
+
+## Connection Management
+
+### Client-Side Management
+
+* `fetch` API
+* `ReadableStream`
+* AbortController
+
+### Server-Side Management
+
+* SSE Timeouts
+* Hanging Connection Prevention
+
+### Backend Proxy Handling
+
+* Direct Response Piping
+* Buffer Prevention
+
+### Why SSE Instead of WebSocket
+
+* HTTP-Based Streaming
+* No Protocol Upgrade Needed
+
+---
+
+# Summary Table
+
+## Optimization Techniques
+
+* Prompt Caching
+* Model Tiering
+* Streaming
+
+## Comparison Metrics
+
+* Primary Benefit
+* Key Metrics
+* Implementation Complexity
+
+---
+
+# Hands-On Exercises
+
+## Exercise 1 — Prompt Caching
+
+* Claude Cache Control
+* Cache Hit Monitoring
+* Cost Reduction Calculation
+
+## Exercise 2 — Model Router
+
+* Keyword-Based Routing
+* Model Selection Logic
+* Cost vs Quality Evaluation
+
+## Exercise 3 — Streaming Benchmark
+
+* Streaming vs Non-Streaming
+* TTFT Measurement
+* TPOT Measurement
+* User Experience Comparison
+
+---
+
+# Next Steps / Advanced Optimization
+
+## Combined Optimization Strategies
+
+* Caching + Tiering
+* Complexity Router Caching
+
+## Semantic Caching
+
+* Redis-Based Query Cache
+* Cross-User Cache Reuse
+
+## Automatic Model Routing
+
+* Classifier LLM Routing
+* Query Complexity Prediction
+
+## Agent Cascades
+
+* Cheap Model First
+* Premium Escalation Logic
+* Confidence-Based Escalation
+
+---
+
+# Additional Concepts Included
+
+## AI Infrastructure Optimization
+
+* KV Cache Reuse
+* Transformer Optimization
+* Prefill Computation
+
+## Cost Engineering
+
+* Token Cost Reduction
+* Query Cost Routing
+* Inference Optimization
+
+## AI Scalability
+
+* High Throughput Systems
+* Session Optimization
+* Streaming UX
+
+## Production AI Architecture
+
+* SSE Streaming
+* Model Routers
+* Cache-Aware Design
+* Tiered AI Systems
+
 
 Building AI applications that don't drain your budget requires a strategic approach. This guide covers three essential optimization techniques: **prompt caching**, **model tiering**, and **streaming for perceived speed**.
 
