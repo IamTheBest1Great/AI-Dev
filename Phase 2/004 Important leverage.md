@@ -1,5 +1,527 @@
 # 📘 What Most Developers Miss — Production-Ready AI Practices
 
+# Table of Contents — Production-Ready AI Practices
+
+Based on the uploaded notes document. 
+
+---
+
+# 1.4 What Most Developers Miss — Production-Ready AI Practices
+
+---
+
+# 1.4.1 Dynamic System Prompts
+
+## Introduction to Dynamic Prompts
+
+* Problems with Static System Prompts
+* Runtime Adaptation
+* Production AI Prompt Requirements
+
+---
+
+## Injecting User Data at Runtime
+
+* Dynamic User Context Injection
+* Clean Prompt Templates
+* Runtime Personalization
+* User Metadata Injection
+
+  * Name
+  * Plan
+  * Locale
+  * Preferences
+
+### JavaScript Implementation
+
+* `buildSystemPrompt(user)`
+* Dynamic Template Construction
+
+---
+
+## Role-Based Prompt Variation
+
+### User Roles
+
+* End User
+* Admin
+* Support Agent
+* Anonymous Visitor
+
+### Prompt Behavior by Role
+
+* Friendly Responses
+* Technical Responses
+* Internal System Access
+* Restrictive Access Rules
+
+### Role Prompt Mapping
+
+* `rolePrompts`
+* Role-Based Instruction Composition
+* User Context Concatenation
+
+---
+
+## Tier-Based Constraints
+
+### Subscription Tiers
+
+* Free Tier
+* Pro Tier
+* Enterprise Tier
+
+### Capability Restrictions
+
+* File Upload Permissions
+* Response Length Limits
+* Context Limits
+* Model Access
+
+### Tier Constraint Enforcement
+
+* System Prompt Enforcement
+* Business Logic Layer
+* Defense Against Prompt Injection
+
+### `getTierConstraints(tier)`
+
+* Switch-Based Tier Logic
+* Capability Management
+
+---
+
+# 1.4.2 Output Validation Before Sending to User
+
+## Introduction to Output Validation
+
+* Risks of Raw LLM Outputs
+* Compliance Concerns
+* User Trust Protection
+
+---
+
+## Hallucination Detection
+
+### RAG Validation
+
+* Retrieved Context Verification
+* Unsupported Claim Detection
+* Context vs Answer Comparison
+
+### Detection Methods
+
+* Cheap Model Validation
+* Cross-Encoder Validation
+* Fact-Checking LLMs
+* Entailment Scoring
+
+### JavaScript Example
+
+* `detectHallucination()`
+
+---
+
+## Factual Consistency Checks
+
+* ROUGE
+* BLEU
+* LLM-Based Entailment
+* Named Entity Overlap (NER)
+* Summarization Validation
+* Extraction Validation
+
+---
+
+## PII Detection
+
+### Sensitive Data Protection
+
+* Email Detection
+* Phone Number Detection
+* SSN Detection
+
+### Redaction Strategies
+
+* Regex-Based Redaction
+* PII Libraries
+* Microsoft Presidio
+
+### JavaScript Example
+
+* `redactPII(text)`
+
+---
+
+## Toxicity Scoring
+
+### Content Moderation
+
+* Hate Speech Detection
+* Harassment Detection
+* Violence Detection
+
+### OpenAI Moderation API
+
+* Category Scores
+* Toxicity Thresholds
+
+### JavaScript Example
+
+* `isToxic(text)`
+
+---
+
+## Validation Pipeline
+
+### Ordered Validation Flow
+
+1. PII Redaction
+2. Toxicity Check
+3. Hallucination Detection
+4. Factual Consistency
+
+### Cost-Aware Validation
+
+* Cheap Checks First
+* Expensive Checks Last
+
+---
+
+# 1.4.3 Prompt Versioning from Day 1
+
+## Why Prompt Versioning Matters
+
+* Prompt Evolution
+* Rollback Capability
+* Regression Debugging
+* Auditability
+
+---
+
+## Prompt Storage Approaches
+
+### Hardcoded Prompts
+
+* Advantages
+* Limitations
+
+### Database Storage
+
+* Dynamic Updates
+* Version Management
+* A/B Testing Support
+
+### Config Files + Git
+
+* Git Versioning
+* Deployment Constraints
+
+### Recommended Strategy
+
+* DB + Cache
+* JSON + Git for Small Teams
+
+---
+
+## Semantic Versioning for Prompts
+
+### Versioning Scheme
+
+* MAJOR
+* MINOR
+* PATCH
+
+### Breaking Changes
+
+* Output Format Changes
+* Capability Removal
+
+### Backward-Compatible Changes
+
+* Improved Instructions
+* Additional Examples
+
+### Patch Fixes
+
+* Typos
+* Clarifications
+
+---
+
+## Prompt Database Schema
+
+* `prompt_id`
+* `version`
+* `system_prompt`
+* `user_prompt_template`
+* `created_at`
+* `is_active`
+
+---
+
+## Prompt Change History
+
+### Changelog Structure
+
+* Author
+* Date
+* Change Description
+* Performance Delta
+
+### Performance Tracking
+
+* Accuracy Changes
+* Cost Per Call Changes
+
+---
+
+# 1.4.4 A/B Testing Prompts
+
+## Why A/B Testing Matters
+
+* Prompt Wording Uncertainty
+* Controlled Experimentation
+
+---
+
+## Traffic Splitting
+
+### Deterministic Routing
+
+* User ID Hashing
+* Session Consistency
+
+### Variant Bucketing
+
+* Variant A
+* Variant B
+* Control Group
+
+### JavaScript Example
+
+* `getPromptVariant()`
+
+---
+
+## Statistical Significance
+
+### Sample Size Requirements
+
+* Accuracy Testing
+* Satisfaction Testing
+* Cost Testing
+
+### Statistical Methods
+
+* T-Test
+* Chi-Square Test
+
+### Confidence Levels
+
+* 95% Confidence
+
+---
+
+## Quality Score Comparison
+
+### Human Evaluation
+
+* Manual Ratings
+* 1–5 Scoring
+
+### LLM-as-a-Judge
+
+* GPT-5 Evaluation
+* Comparative Judging
+
+### Task-Specific Metrics
+
+* Exact Match
+* F1 Score
+* Entailment
+
+### Evaluation Prompt Design
+
+* Answer Comparison Prompt
+
+---
+
+# 1.4.5 Model Fallback Chains
+
+## Why Fallback Chains Matter
+
+* Model Failures
+* Rate Limits
+* Timeouts
+* Content Filters
+* API Reliability
+
+---
+
+## Primary → Secondary → Tertiary Chains
+
+### Fallback Model Hierarchy
+
+* GPT-5
+* Claude Sonnet 4.5
+* GPT-4o-mini
+* Rule-Based Responses
+
+### Quality vs Reliability Tradeoffs
+
+* Premium Models
+* Cheap Reliable Models
+
+---
+
+## Fallback Trigger Conditions
+
+### Trigger Types
+
+* Rate Limits (429)
+* Timeouts
+* Server Errors
+* Content Filtering
+* Malformed Outputs
+
+### Recovery Actions
+
+* Retry Logic
+* Provider Switching
+* Lower Temperature Retry
+* Blocking Unsafe Content
+
+---
+
+## Quality Threshold Validation
+
+### Response Quality Assessment
+
+* Quick LLM Scoring
+* Acceptance Thresholds
+
+### Fallback Acceptance Logic
+
+* Continue on Low Quality
+* Final Default Responses
+
+### JavaScript Example
+
+* `callWithFallback()`
+
+---
+
+## Fallback Optimization
+
+* Query Pattern Caching
+* Pre-Emptive Routing
+* Failure Pattern Detection
+
+---
+
+# Summary Table — What Most Developers Miss
+
+## Common Production Mistakes
+
+* Hardcoded Prompts
+* Raw Output Display
+* No Prompt History
+* No Prompt Testing
+* Single-Model Dependency
+
+## Production-Ready Practices
+
+* Dynamic Prompts
+* Validation Pipelines
+* Prompt Versioning
+* A/B Testing
+* Model Fallback Chains
+
+---
+
+# Hands-On Exercises
+
+## Exercise 1 — Dynamic Prompts
+
+* Plan-Based Prompt Changes
+* Free vs Paid User Responses
+
+## Exercise 2 — Output Validation
+
+* Email Redaction
+* Phone Number Redaction
+* Toxicity Moderation
+
+## Exercise 3 — Prompt Versioning
+
+* SQLite Prompt Storage
+* Active Prompt Retrieval
+
+## Exercise 4 — A/B Testing
+
+* Prompt Variants
+* Traffic Splitting
+* Synthetic Quality Scores
+* Statistical Significance
+
+## Exercise 5 — Fallback Chains
+
+* OpenAI Fallback
+* Anthropic Fallback
+* Local Default Responses
+* Retry Handling
+
+---
+
+# Next Steps / Advanced Production Practices
+
+## Observability
+
+* Prompt Telemetry
+* Fallback Monitoring
+* Usage Analytics
+
+## Automated Prompt Optimization
+
+* DSPy
+* Programmatic Prompt Tuning
+
+## Cost-Aware Routing
+
+* Real-Time Cost Optimization
+* Quality-Aware Routing
+* Spot Instance Model Selection
+
+---
+
+# Additional Concepts Included
+
+## Production AI Engineering
+
+* Runtime Prompting
+* Validation Layers
+* Model Reliability
+
+## AI Security
+
+* Prompt Injection Defense
+* PII Protection
+* Toxicity Filtering
+
+## AI Observability
+
+* Version Tracking
+* Performance Monitoring
+* Experiment Analytics
+
+## Scalable AI Architecture
+
+* Multi-Model Systems
+* Graceful Degradation
+* Dynamic Capability Management
+
+
 Beyond the basics of API calls, prompt engineering, and optimization, there are critical practices that separate experimental prototypes from production‑grade AI systems. This section covers five areas that many developers overlook until they cause real problems.
 
 ---
