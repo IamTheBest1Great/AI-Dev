@@ -289,7 +289,8 @@ Examples:
 * Search Tool
 * Database Tool
 * Email Tool
-![Uploading image.png…]()
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8c8438dd-a9ea-40c0-9f11-6cf6bb54e96a" />
+
 
 ---
 
@@ -307,6 +308,7 @@ Show:
 * Ambiguous descriptions
 * Wrong types
 * Poor validation
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/6e9d80c4-bbca-4978-9e1b-29aedd025994" />
 
 ---
 
@@ -335,6 +337,7 @@ Observe
  ↓
 Continue
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/383f078c-4043-461b-9a59-89020139dc90" />
 
 ---
 
@@ -361,6 +364,7 @@ Result
  ↓
 Next Decision
 ```
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c57b499b-cd8a-4c92-b58d-55827c8bde7c" />
 
 ---
 
@@ -381,6 +385,7 @@ Invalid date
 ```
 
 Show validation layer.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/591bcafd-2342-4613-9d84-3b92bc3b8fe3" />
 
 ---
 
@@ -407,6 +412,7 @@ Types:
 * Success
 * Partial Success
 * Failure
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f30f1c35-fefa-4902-8e2e-16c4cd333047" />
 
 ---
 
@@ -433,6 +439,7 @@ Tool Failure
  ↓
 Fallback
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/5477c4eb-33a2-43fa-bae1-859f29c7dc3b" />
 
 ---
 
@@ -455,6 +462,7 @@ Email
  ↓
 CRM
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/30ad50b5-fda8-45f6-bde0-ca1a44235ba3" />
 
 ---
 
@@ -473,6 +481,7 @@ Stocks  → Merge Results
       ↗
 News
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0b4bb577-e62b-415c-bb46-b1316b1e2d09" />
 
 ---
 
@@ -496,6 +505,7 @@ Principles:
 * Explicit
 * Reliable
 * Observable
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0aac3bf0-40be-4e65-94fd-f6b65185d537" />
 
 ---
 
@@ -514,6 +524,7 @@ Human Tool
 vs
 Agent Tool
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/89cad12e-263c-4dc8-b1b3-3aef003c70c2" />
 
 ---
 
@@ -531,6 +542,7 @@ Topics:
 * Defaults
 * Validation
 * Constraints
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/3e7d567b-ddbb-4c1c-bfc8-e5e9f6fbc9fa" />
 
 ---
 
@@ -559,6 +571,7 @@ Good:
  "messageId": "123"
 }
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/586f073a-3ccc-45d4-801a-760c7efcbdc3" />
 
 ---
 
@@ -583,6 +596,7 @@ Metrics
  ↓
 Tracing
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/a6abdd0b-38ff-435e-9f31-b3511b629644" />
 
 ---
 
@@ -600,6 +614,9 @@ Concepts:
 * Permissions
 * Allow Lists
 * Credential Vaults
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/284c376d-f055-4ac8-b515-52d80b6d51a6" />
+
 
 ---
 
@@ -624,6 +641,7 @@ Monitoring
  ↓
 Audit Logs
 ```
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/58654e95-3357-441b-9e8b-5cf19fdbaf64" />
 
 ---
 
