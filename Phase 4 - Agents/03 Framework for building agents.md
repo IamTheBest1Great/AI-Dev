@@ -1,276 +1,48 @@
-````md
-### Image 51
+# Module 3 — Frameworks for Building Agents
 
-# What Is LangChain?
+## Goal
 
-Image URL:
-https://github.com/user-attachments/assets/1db306a4-2efb-47bf-bffa-f688d3dfbf3b
+Learn the major frameworks used to build production AI agents and understand:
 
-**Purpose**
-
-High-level introduction.
-
-Topics:
-
-* Chains
-* Prompts
-* Tools
-* Agents
-* Memory
-
-```text
-User
- ↓
-Prompt
- ↓
-LLM
- ↓
-Tool
- ↓
-Answer
-````
+- When to use each framework
+- How they differ
+- Architectural patterns
+- Real-world production use cases
+- Strengths and limitations
 
 ---
 
-### Image 52
-
-# LangChain Core Components
-
-Image URL:
-[https://github.com/user-attachments/assets/f443c8da-9db0-4fb9-a170-32783fc53126](https://github.com/user-attachments/assets/f443c8da-9db0-4fb9-a170-32783fc53126)
-
-**Purpose**
-
-Understand the building blocks.
-
-Components:
-
-```text
-Models
-Prompts
-Tools
-Memory
-Agents
-Output Parsers
-Retrievers
-```
-
----
-
-### Image 53
-
-# LangChain Agent Architecture
-
-Image URL:
-[https://github.com/user-attachments/assets/55aed401-56ad-49ed-a600-dcc6f5c96877](https://github.com/user-attachments/assets/55aed401-56ad-49ed-a600-dcc6f5c96877)
-
-**Purpose**
-
-How LangChain agents operate.
-
-```text
-User
- ↓
-Agent
- ↓
-Reasoning
- ↓
-Tool Selection
- ↓
-Tool Execution
- ↓
-Final Answer
-```
-
----
-
-### Image 54
-
-# Chains vs Agents
-
-Image URL:
-[https://github.com/user-attachments/assets/bac55a2a-24a1-47b5-bebd-9083fa4a3082](https://github.com/user-attachments/assets/bac55a2a-24a1-47b5-bebd-9083fa4a3082)
-
-**Purpose**
-
-Most common beginner confusion.
-
-Compare:
-
-### Chain
-
-```text
-Fixed Flow
-A → B → C
-```
-
-### Agent
-
-```text
-Decide Next Step
-Dynamically
-```
-
----
-
-### Image 55
-
-# LangChain Tool Calling
-
-Image URL:
-[https://github.com/user-attachments/assets/df690600-c3c0-4311-95c4-bbf6fb53d21c](https://github.com/user-attachments/assets/df690600-c3c0-4311-95c4-bbf6fb53d21c)
-
-**Purpose**
-
-Show tool integration.
-
-Examples:
-
-* Search
-* Calculator
-* Database
-* APIs
-
-```text
-Agent
- ↓
-Tool Registry
- ↓
-Selected Tool
- ↓
-Result
-```
-
----
-
-### Image 56
-
-# LangChain Production Architecture
-
-Image URL:
-[https://github.com/user-attachments/assets/a66d8bd6-503e-4040-a6b8-04b0f8872e63](https://github.com/user-attachments/assets/a66d8bd6-503e-4040-a6b8-04b0f8872e63)
-
-**Purpose**
-
-End-to-end deployment.
-
-```text
-Frontend
- ↓
-LangChain
- ↓
-Tools
- ↓
-Databases
- ↓
-Monitoring
-```
-
----
-
-### Image 57
-
-# Why LangGraph Exists
-
-Image URL:
-[https://github.com/user-attachments/assets/8c05f4fb-19b0-4641-a21c-a49b634797cf](https://github.com/user-attachments/assets/8c05f4fb-19b0-4641-a21c-a49b634797cf)
-
-**Purpose**
-
-Show LangChain limitations.
-
-Problem:
-
-```text
-Agent
- ↓
-Tool
- ↓
-Answer
-```
-
-Need:
-
-```text
-State
-Branching
-Loops
-Recovery
-```
-
----
-
-### Image 58
-
-# What Is LangGraph?
-
-Image URL:
-[https://github.com/user-attachments/assets/0ccd2a8c-07dd-40fd-ba27-dcddbff0b6b2](https://github.com/user-attachments/assets/0ccd2a8c-07dd-40fd-ba27-dcddbff0b6b2)
-
-**Purpose**
-
-High-level introduction.
-
-```text
-Node
- ↓
-Edge
- ↓
-State
- ↓
-Workflow
-```
-
-Visualize graphs.
-
----
-
-### Image 59
-
-# LangGraph Core Architecture
-
-Image URL:
-[https://github.com/user-attachments/assets/28e6614d-1935-429b-867a-e9a58953c67e](https://github.com/user-attachments/assets/28e6614d-1935-429b-867a-e9a58953c67e)
-
-**Purpose**
-
-Understand graph structure.
-
-Components:
-
-```text
-Nodes
-Edges
-State
-Checkpoints
-```
-
----
-
-### Image 60
-
-# Stateful Agent Workflows
-
-Image URL:
-[https://github.com/user-attachments/assets/7930923b-ccbb-427c-b54f-78a475020d0e](https://github.com/user-attachments/assets/7930923b-ccbb-427c-b54f-78a475020d0e)
-
-**Purpose**
-
-Show state persistence.
-
-```text
-User
- ↓
-Planner
- ↓
-Executor
- ↓
-Reviewer
-```
-
-Shared State
-
-```
-
-Send **"61-70"** and I'll continue with the next section.
-```
+# URL Mapping
+
+51 = https://github.com/user-attachments/assets/1db306a4-2efb-47bf-bffa-f688d3dfbf3b
+52 = https://github.com/user-attachments/assets/f443c8da-9db0-4fb9-a170-32783fc53126
+53 = https://github.com/user-attachments/assets/55aed401-56ad-49ed-a600-dcc6f5c96877
+54 = https://github.com/user-attachments/assets/bac55a2a-24a1-47b5-bebd-9083fa4a3082
+55 = https://github.com/user-attachments/assets/df690600-c3c0-4311-95c4-bbf6fb53d21c
+56 = https://github.com/user-attachments/assets/a66d8bd6-503e-4040-a6b8-04b0f8872e63
+57 = https://github.com/user-attachments/assets/8c05f4fb-19b0-4641-a21c-a49b634797cf
+58 = https://github.com/user-attachments/assets/0ccd2a8c-07dd-40fd-ba27-dcddbff0b6b2
+59 = https://github.com/user-attachments/assets/28e6614d-1935-429b-867a-e9a58953c67e
+60 = https://github.com/user-attachments/assets/7930923b-ccbb-427c-b54f-78a475020d0e
+61 = https://github.com/user-attachments/assets/5f8b289d-3d93-4450-8e77-c96e5695f6a8
+62 = https://github.com/user-attachments/assets/2bedabd5-1e90-455c-8a70-ac5e84fd0f02
+63 = https://github.com/user-attachments/assets/73f57a83-a2f0-4f21-8c3e-b4b0583c2127
+64 = https://github.com/user-attachments/assets/0fbeacbe-774d-43bd-95f1-96b3b0dbe0d7
+65 = https://github.com/user-attachments/assets/f9994a03-4c85-4250-a44c-1224d95bbc60
+66 = https://github.com/user-attachments/assets/eaa00e6a-7411-4180-8a82-6775848b4556
+67 = https://github.com/user-attachments/assets/7821c4b9-fac3-415e-ba04-f42052ee4eef
+68 = https://github.com/user-attachments/assets/351a2feb-5177-474d-8577-be0946c697d8
+69 = https://github.com/user-attachments/assets/826f7bf5-6186-40f5-a356-af7c29aedbf9
+70 = https://github.com/user-attachments/assets/43255442-691c-4f84-93be-995240e57c2c
+71 = https://github.com/user-attachments/assets/5c347688-1819-4e34-8bd7-6bce25087b00
+72 = https://github.com/user-attachments/assets/7014ffac-9899-457d-bdcd-4c00cbca5467
+73 = https://github.com/user-attachments/assets/7747a798-55c9-4fcc-8197-62806801f7c8
+74 = https://github.com/user-attachments/assets/604bf600-b870-4fe3-9579-aa54bcd15e24
+75 = https://github.com/user-attachments/assets/746c89cf-99a1-49c4-82ae-68b34559e9dc
+76 = https://github.com/user-attachments/assets/8f450555-037a-4c44-803f-a089b6e9106e
+77 = https://github.com/user-attachments/assets/317e1cbe-eeb3-4cb0-8061-8e8f0c2225ec
+78 = https://github.com/user-attachments/assets/1941e2ad-36f6-46ab-a0bb-85db3e78917f
+79 = https://github.com/user-attachments/assets/ec9cf18a-9437-4f16-bc42-5f8d90d37a8b
+80 = https://github.com/user-attachments/assets/a3c80723-cd1d-4389-a1cf-b0a75a21b17e
+
+(Use these URLs under the corresponding Image 51–80 sections in the study guide.)
