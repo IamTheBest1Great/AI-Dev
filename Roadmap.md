@@ -185,18 +185,376 @@ Most pure ML engineers cannot do these, which gives you an edge:
 
 *Goal: Build AI systems that reason, take actions, use tools, remember information, interact with software, and complete real-world tasks autonomously.*
 
-**Module Breakdown & Core Skills:**
+# AI Agents & Automation — Comprehensive Study Guide
 
-1. **Agent Foundations:** Reactive vs proactive, ReAct pattern (Reason → Act → Observe loop).
-2. **Tool Use & Execution:** Tool schemas, lifecycle, tool categories (Retrieval, Action, Computation). *Note: Tool descriptions are prompts.*.
-3. **Agent Frameworks:** LangChain agents, LangGraph (stateful workflows, cycles, branching, checkpoints), OpenAI Assistants API (Threads, File Search), CrewAI.js (Roles, Goals, Delegation).
-4. **Planning Systems:** Task decomposition, Planner-Executor pattern, Plan-and-Execute agents, Reflexion (self-reflection loops).
-5. **Browser & Web Automation:** Puppeteer/Playwright, Browserbase (cloud sessions), Stagehand (AI-native browser control), Firecrawl/Jina Reader/Exa/Tavily for AI-optimized search.
-6. **Data Extraction Pipelines:** Scrape → Extract → Store pipelines, n8n workflow automation, self-healing pipelines, change detection algorithms.
-7. **MCP (Model Context Protocol):** Architecture (hosts, clients, servers, tools), building and publishing Node.js MCP servers to standardizing integrations.
-8. **Advanced Agent Systems:** Computer Use API (Anthropic), Coding agents (Cursor/Devin models), Parallel agents, Multi-agent systems (collaboration, debate).
-9. **Reliability & Production:** Circuit breakers (Max Steps, Max Cost), retries, observability (LangSmith/Langfuse logging), agent security (sandboxing, allowlists).
+> This merges your Phase 4 curriculum and your module tracker into one structure, fills the numbering gap you had (Module 2 was missing), and adds sections most agent curricula skip — evaluation, deployment, UX, and security/safety in more depth. New additions are marked **🆕**. Use the checkboxes to track progress.
 
+---
+
+## Module 1 — Agent Foundations
+
+### 1.1 Agents vs Chatbots
+- [ ] What "agency" means (autonomy, goal-directedness, environment interaction)
+- [ ] Action-taking vs response-only systems
+- [ ] 🆕 The agency spectrum: fixed workflow → conditional workflow → autonomous agent → multi-agent system
+- [ ] 🆕 When *not* to use an agent (simpler workflows often outperform agents on cost/reliability)
+
+### 1.2 Agent Anatomy
+- [ ] LLM as the reasoning core ("brain")
+- [ ] Orchestration/runtime layer
+- [ ] Tools as the agent's "hands"
+- [ ] Memory as persistent context
+- [ ] Environment / feedback loop
+
+### 1.3 Reasoning & Planning Patterns
+- [ ] ReAct (Reason → Act → Observe loop)
+- [ ] Thought-action-observation format
+- [ ] When to stop vs continue (stopping criteria, confidence thresholds)
+- [ ] Chain-of-Thought vs ReAct — when each is sufficient
+- [ ] 🆕 Reflexion (self-critique and retry loops)
+- [ ] 🆕 Tree of Thoughts / search-based reasoning (branching, backtracking)
+- [ ] 🆕 Plan-and-Execute (separate planner and executor roles)
+- [ ] 🆕 Least-to-most prompting / task decomposition before execution
+
+### 1.4 Agent Memory
+- [ ] In-context memory (conversation history)
+- [ ] External memory (database storage)
+- [ ] 🆕 Short-term/working memory vs long-term memory
+- [ ] 🆕 Episodic memory (events/experiences) vs semantic memory (facts/knowledge)
+- [ ] Mem0 and persistent cross-session memory
+- [ ] Knowledge graphs as memory structures
+- [ ] 🆕 Vector stores for semantic recall (embeddings, similarity search)
+- [ ] 🆕 Memory compression and summarization strategies (avoiding context bloat)
+- [ ] 🆕 Memory write/forget policies (what to persist, what to discard)
+
+### 1.5 Agent Failure Modes
+- [ ] Infinite loops
+- [ ] Hallucinated tool calls
+- [ ] Stuck states
+- [ ] Timeout handling
+- [ ] 🆕 Context window overflow / truncation errors
+- [ ] 🆕 Error compounding (one bad step poisoning later reasoning)
+- [ ] 🆕 Tool misuse (right tool, wrong parameters; wrong tool, plausible parameters)
+
+### 1.6 Human-in-the-Loop
+- [ ] Critical decision checkpoints
+- [ ] Approval workflows
+- [ ] Rejection handling
+- [ ] 🆕 Confidence-based escalation (agent decides when to ask for help)
+- [ ] 🆕 Asynchronous approvals (pause/resume across long-running tasks)
+
+---
+
+## Module 2 — Tool Use & Function Calling 🆕
+*(This was the conspicuous gap between your Module 1 and Module 3 — function calling deserves its own module since almost everything downstream depends on it.)*
+
+### 2.1 Function Calling Fundamentals
+- [ ] JSON schema design for tool parameters
+- [ ] Typed inputs/outputs and why strict typing reduces hallucinated calls
+- [ ] Single-call vs multi-call (parallel) tool invocation
+
+### 2.2 Tool Selection & Routing
+- [ ] How agents choose among many available tools
+- [ ] Tool namespacing and grouping at scale (10s–100s of tools)
+- [ ] Dynamic tool loading (only expose relevant tools per task)
+
+### 2.3 Structured Output & Validation
+- [ ] Schema validation libraries (Pydantic, Zod, instructor)
+- [ ] Repair strategies for malformed tool calls
+- [ ] Retry-with-feedback loops on validation failure
+
+### 2.4 Tool Descriptions as Prompts
+- [ ] Description quality's impact on tool selection accuracy
+- [ ] Example-driven descriptions (few-shot inside the schema)
+- [ ] Common anti-patterns (vague names, overlapping tools, missing constraints)
+
+---
+
+## Module 3 — Frameworks
+
+### 3.1 LangChain 🆕
+- [ ] Core abstractions (chains, runnables, agent executors)
+- [ ] When LangChain is the right layer vs raw API calls
+
+### 3.2 LangGraph
+- [ ] Stateful workflows
+- [ ] Conditional branching
+- [ ] Cycles and loops
+- [ ] Checkpoints and resumability
+- [ ] Human-in-the-loop nodes
+
+### 3.3 OpenAI Assistants/Agents API
+- [ ] Threads and messages
+- [ ] File search
+- [ ] Code interpreter
+- [ ] Function calling
+- [ ] 🆕 Note: OpenAI's agent-facing APIs have shifted rapidly (Assistants → Responses API → Agents SDK) — verify current docs before building
+
+### 3.4 CrewAI / CrewAI.js
+- [ ] Multi-agent with roles
+- [ ] Goal and delegation
+- [ ] Task dependencies
+- [ ] Agent communication
+
+### 3.5 AutoGen / AG2 🆕
+- [ ] Conversable agents
+- [ ] Group chat orchestration
+- [ ] Code execution agents
+
+### 3.6 LlamaIndex Agents 🆕
+- [ ] Data agents over indexed corpora
+- [ ] Query engines as tools
+
+### 3.7 Other Notable Frameworks 🆕
+- [ ] Semantic Kernel (Microsoft)
+- [ ] Vercel AI SDK agent primitives
+- [ ] Google Agent Development Kit (ADK)
+
+### 3.8 Framework Selection 🆕
+- [ ] Build-vs-buy: raw API + custom loop vs framework
+- [ ] Comparison criteria: control, debuggability, lock-in, community size
+
+---
+
+## Module 4 — Browser & Web Automation
+
+### 4.1 Puppeteer / Playwright
+- [ ] Headless browser control
+- [ ] Page scraping
+- [ ] Form automation
+- [ ] Session management
+
+### 4.2 Browserbase
+- [ ] Cloud-hosted browser sessions
+- [ ] Scaling browser automation
+
+### 4.3 Stagehand
+- [ ] AI-native browser control
+- [ ] Natural language actions
+- [ ] Data extraction
+
+### 4.4 browser-use 🆕
+- [ ] Open-source AI browser agent framework
+- [ ] Comparison with Stagehand
+
+### 4.5 Firecrawl / Jina Reader
+- [ ] Clean markdown extraction
+- [ ] Site crawling
+- [ ] Content filtering
+
+### 4.6 AI-Optimized Search
+- [ ] Tavily API
+- [ ] Exa API
+- [ ] 🆕 Perplexity API
+- [ ] Search result quality and ranking for agent consumption
+
+### 4.7 Anti-Bot & Ethics Considerations 🆕
+- [ ] CAPTCHAs and rate limiting
+- [ ] Proxy rotation (and when it crosses an ethical/legal line)
+- [ ] robots.txt and Terms of Service compliance
+
+---
+
+## Module 5 — Data Pipelines
+
+### 5.1 Web Scraping + AI Cleaning
+- [ ] HTML parsing
+- [ ] Messy data structuring
+- [ ] Validation pipelines
+
+### 5.2 n8n Workflow Automation
+- [ ] Visual workflow builder
+- [ ] Code nodes
+- [ ] Integration ecosystem
+
+### 5.3 Self-Healing Pipelines
+- [ ] Failure detection
+- [ ] Alternative strategy execution
+- [ ] Recovery logic
+
+### 5.4 Change Detection
+- [ ] Diff algorithms
+- [ ] Alert on meaningful changes
+- [ ] Noise filtering
+
+### 5.5 Orchestration at Scale 🆕
+- [ ] Airflow / Prefect / Dagster for scheduled pipelines
+- [ ] n8n/Zapier/Make vs code-first orchestration — tradeoffs
+- [ ] Queues and retries for long-running jobs
+
+### 5.6 Data Validation & Schema Enforcement 🆕
+- [ ] Contract-first pipeline design
+- [ ] Detecting silent schema drift from source sites/APIs
+
+---
+
+## Module 6 — Model Context Protocol (MCP)
+
+### 6.1 MCP Architecture
+- [ ] Hosts, clients, servers
+- [ ] Tools, resources, prompts
+
+### 6.2 Building MCP Servers
+- [ ] Node.js implementation
+- [ ] Tool schema definition
+- [ ] Error handling
+
+### 6.3 Publishing MCP Servers
+- [ ] npm publishing
+- [ ] Registry submission
+- [ ] Claude Desktop / client integration
+
+### 6.4 MCP vs Traditional APIs 🆕
+- [ ] How MCP differs from plain function calling/REST integration
+- [ ] When MCP is worth the overhead vs a direct API call
+
+### 6.5 Ecosystem Strategy
+- [ ] Early mover advantage and ecosystem formation timing
+- [ ] Visibility within the Claude ecosystem
+
+---
+
+## Module 7 — Multi-Agent Systems 🆕
+*(Expanded out of "advanced agents" because orchestration patterns deserve dedicated treatment.)*
+
+- [ ] Orchestration patterns: supervisor/orchestrator-worker, hierarchical, peer-to-peer/swarm, blackboard
+- [ ] Agent-to-agent communication protocols and message passing
+- [ ] Task decomposition and delegation strategies
+- [ ] Parallel agents / sub-agent spawning
+- [ ] Shared state and coordination problems (race conditions, conflicting actions, deadlock)
+- [ ] Cost/latency tradeoffs of multi-agent vs single-agent-with-tools
+
+---
+
+## Module 8 — Advanced Agent Capabilities
+
+### 8.1 Computer Use Agents
+- [ ] OS-level control (screen perception, mouse/keyboard actions)
+- [ ] Risks and sandboxing requirements specific to computer use
+
+### 8.2 Coding Agents
+- [ ] Autonomous coding agents (Claude Code, SWE-agent, Devin-style agents, IDE agent modes)
+- [ ] Repo-aware context management
+- [ ] Test-driven verification loops for code agents
+
+### 8.3 Voice & Real-Time Agents 🆕
+- [ ] Streaming speech-to-text / text-to-speech integration
+- [ ] Latency budgets for conversational real-time agents
+- [ ] Interruption handling (barge-in)
+
+### 8.4 Agentic RAG 🆕
+- [ ] Retrieval as a callable tool vs static context injection
+- [ ] Query planning and multi-hop retrieval
+- [ ] Re-ranking and source verification before synthesis
+
+### 8.5 Long-Horizon / Autonomous Agents 🆕
+- [ ] Continuous/background operation patterns
+- [ ] Scheduling and triggering (cron, event-driven)
+- [ ] State checkpointing across very long tasks
+
+---
+
+## Module 9 — Reliability & Security
+
+### 9.1 Circuit Breakers
+- [ ] Agent timeouts and circuit breakers
+- [ ] Max-step / max-cost caps
+
+### 9.2 Trace Logging & Observability
+- [ ] LangSmith / Langfuse integration
+- [ ] 🆕 Helicone, Arize Phoenix, and other tracing tools
+- [ ] Step-by-step debugging
+
+### 9.3 Agent Security
+- [ ] Sandboxed execution
+- [ ] URL allowlists
+- [ ] Action confirmation for high-risk operations
+- [ ] 🆕 Prompt injection via tool outputs (scraped pages, file content, API responses)
+- [ ] 🆕 Least-privilege tool design and permission scoping
+- [ ] 🆕 Secrets handling (never let agents see or echo raw credentials)
+
+### 9.4 Cost & Token Management 🆕
+- [ ] Token budget tracking per task/session
+- [ ] Model routing (cheap model for simple steps, strong model for hard reasoning)
+- [ ] Caching repeated tool calls / prompts
+
+---
+
+## Module 10 — Evaluation & Testing 🆕
+*(The biggest structural gap in most agent curricula — agents fail silently without this.)*
+
+- [ ] Agent evaluation frameworks (LLM-as-judge, rubric-based grading)
+- [ ] Public benchmark suites for calibration (SWE-bench, WebArena, AgentBench, GAIA, τ-bench)
+- [ ] Regression testing for agent behavior across prompt/tool changes
+- [ ] A/B testing prompts, tool sets, and model versions
+- [ ] Building simulated environments / sandboxes for repeatable testing
+- [ ] Defining success metrics beyond "did it run" (task success rate, step efficiency, cost per task)
+
+---
+
+## Module 11 — Deployment & Productionization 🆕
+
+- [ ] Sync vs async execution models; job queues for long-running agents
+- [ ] Durable execution and state persistence (e.g., Temporal-style workflows, DB-backed checkpoints)
+- [ ] Scaling considerations: concurrency limits, provider rate limits, multi-model routing
+- [ ] Versioning agents, prompts, and tool schemas
+- [ ] Rollout strategies: canary releases, feature flags for agent behavior changes
+
+---
+
+## Module 12 — Agent UX & Design Patterns 🆕
+
+- [ ] Streaming reasoning/output to users vs batching the final answer
+- [ ] Showing intermediate steps vs hiding agent "scratchpad" reasoning
+- [ ] Interruptibility and steerability mid-task
+- [ ] Designing for trust: transparency, confidence signals, citations
+- [ ] Error recovery UX: graceful degradation, clear handoff to a human
+
+---
+
+## Module 13 — Ethics, Safety & Responsible Agent Design 🆕
+
+- [ ] Levels of autonomy and matching scope to risk (read-only vs write-access tools)
+- [ ] Accountability and audit trails for agent actions
+- [ ] Bias and fairness considerations in agentic decision-making
+- [ ] Dual-use concerns and misuse potential of autonomous tool-using systems
+- [ ] Awareness of the evolving regulatory landscape around autonomous AI systems
+
+---
+
+## Module 14 — Capstone Projects
+
+**From your original plan:**
+1. AI Research Agent with citations and source checking
+2. Job Application Agent with form automation
+3. Competitor Monitor with change detection
+
+**Suggested additions 🆕:**
+4. Autonomous coding agent that opens a PR from a bug report (exercises Modules 2, 8, 10)
+5. Multi-agent research team (planner + researchers + writer + critic) (exercises Modules 1, 7)
+6. Personal assistant with persistent memory across sessions (exercises Module 1.4, MCP)
+7. Self-healing data pipeline with alerting (exercises Module 5)
+
+---
+
+## Appendix A — Glossary
+- **Agent**: A system that uses an LLM to decide actions, take them via tools, and observe results in a loop toward a goal.
+- **ReAct**: Reason-Act-Observe prompting pattern interleaving thought and tool use.
+- **Tool / Function call**: A structured, schema-defined action an LLM can invoke.
+- **Orchestrator**: The component (code or another agent) coordinating multiple agents or steps.
+- **Checkpoint**: A saved state allowing an agent workflow to pause and resume.
+- **Circuit breaker**: A safeguard that halts an agent after repeated failures or excessive cost/time.
+- **MCP**: Model Context Protocol — a standard for connecting LLM hosts to external tools/data via servers.
+
+## Appendix B — Suggested Sequencing
+1. Modules 1–2 (foundations + tool use) before anything else — everything depends on this.
+2. Module 3 (pick *one* framework deeply, not all) in parallel with Module 9.1–9.2 (timeouts, tracing) from day one.
+3. Modules 4–6 (browser, data, MCP) based on which capstone project you're building toward.
+4. Module 7–8 (multi-agent, advanced) only after a single agent is reliable solo.
+5. Modules 10–13 (evaluation, deployment, UX, ethics) woven in throughout, not bolted on at the end.
+
+## Appendix C — Staying Current
+Agent frameworks and APIs change quickly (e.g., OpenAI's Assistants API has been migrating). Before building against any specific framework or API mentioned here, check its current docs rather than relying on memory.
 **What Most Developers Miss:**
 
 * Agents need timeouts and circuit breakers; infinite loops are a common failure.
