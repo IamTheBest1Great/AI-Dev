@@ -13,67 +13,51 @@ Learn the major frameworks used to build production AI agents and understand:
 
 ## Table of Contents
 
-* [3.1 LangChain 🆕](#31-langchain-)
-* [Core abstractions (chains, runnables, agent executors)](#core-abstractions-chains-runnables-agent-executors)
-* [When LangChain is the right layer vs raw API calls](#when-langchain-is-the-right-layer-vs-raw-api-calls)
-* [📋 Interview Questions — 3.1](#-interview-questions--31)
-
-
-* [3.2 LangGraph](#32-langgraph)
-* [Stateful workflows](#stateful-workflows)
-* [Conditional branching](#conditional-branching)
-* [Cycles and loops](#cycles-and-loops)
-* [Checkpoints and resumability](#checkpoints-and-resumability)
-* [Human-in-the-loop nodes](#human-in-the-loop-nodes)
-* [📋 Interview Questions — 3.2](#-interview-questions--32)
-
-
-* [3.3 OpenAI Assistants/Agents API](#33-openai-assistantsagents-api)
-* [Threads and messages](#threads-and-messages)
-* [File search](#file-search)
-* [Code interpreter](#code-interpreter)
-* [Function calling](#function-calling)
-* [🆕 Note: OpenAI's agent-facing APIs have shifted rapidly — current status](#-note-openais-agent-facing-apis-have-shifted-rapidly--current-status)
-* [📋 Interview Questions — 3.3](#-interview-questions--33)
-
-
-* [3.4 CrewAI / CrewAI.js](#34-crewai--crewaijs)
-* [Multi-agent with roles](#multi-agent-with-roles)
-* [Goal and delegation](#goal-and-delegation)
-* [Task dependencies](#task-dependencies)
-* [Agent communication](#agent-communication)
-* [🆕 A note on "CrewAI.js"](#-a-note-on-crewaijs)
-* [📋 Interview Questions — 3.4](#-interview-questions--34)
-
-
-* [3.5 AutoGen / AG2 🆕](#35-autogen--ag2-)
-* [Conversable agents](#conversable-agents)
-* [Group chat orchestration](#group-chat-orchestration)
-* [Code execution agents](#code-execution-agents)
-* [🆕 Current status — important to know before recommending this stack](#-current-status--important-to-know-before-recommending-this-stack)
-* [📋 Interview Questions — 3.5](#-interview-questions--35)
-
-
-* [3.6 LlamaIndex Agents 🆕](#36-llamaindex-agents-)
-* [Data agents over indexed corpora](#data-agents-over-indexed-corpora)
-* [Query engines as tools](#query-engines-as-tools)
-* [📋 Interview Questions — 3.6](#-interview-questions--36)
-
-
-* [3.7 Other Notable Frameworks 🆕](#37-other-notable-frameworks-)
-* [Semantic Kernel (Microsoft)](#semantic-kernel-microsoft)
-* [Vercel AI SDK agent primitives](#vercel-ai-sdk-agent-primitives)
-* [Google Agent Development Kit (ADK)](#google-agent-development-kit-adk)
-* [📋 Interview Questions — 3.7](#-interview-questions--37)
-
-
-* [3.8 Production Realities & Framework Selection 🆕](#38-production-realities--framework-selection-)
-* [Tracing & Evaluation / Handling Hallucinations](#tracing--evaluation-the-x-ray-layer)
-* [Build-vs-buy: raw API + custom loop vs framework](#build-vs-buy-raw-api--custom-loop-vs-framework)
-* [Comparison criteria: control, debuggability, lock-in, community size](#comparison-criteria-control-debuggability-lock-in-community-size)
-* [📋 Interview Questions — 3.8](#-interview-questions--38)
-
-
+* [3.1 LangChain 🆕](https://www.google.com/search?q=%2331-langchain-)
+* [Core abstractions (chains, runnables, agent executors)](https://www.google.com/search?q=%23core-abstractions-chains-runnables-agent-executors)
+* [When LangChain is the right layer vs raw API calls](https://www.google.com/search?q=%23when-langchain-is-the-right-layer-vs-raw-api-calls)
+* [📋 Interview Questions — 3.1](https://www.google.com/search?q=%23-interview-questions--31)
+* [3.2 LangGraph](https://www.google.com/search?q=%2332-langgraph)
+* [Stateful workflows](https://www.google.com/search?q=%23stateful-workflows)
+* [Conditional branching](https://www.google.com/search?q=%23conditional-branching)
+* [Cycles and loops](https://www.google.com/search?q=%23cycles-and-loops)
+* [Checkpoints and resumability](https://www.google.com/search?q=%23checkpoints-and-resumability)
+* [Human-in-the-loop nodes](https://www.google.com/search?q=%23human-in-the-loop-nodes)
+* [📋 Interview Questions — 3.2](https://www.google.com/search?q=%23-interview-questions--32)
+* [3.3 OpenAI Assistants/Agents API](https://www.google.com/search?q=%2333-openai-assistantsagents-api)
+* [Threads and messages](https://www.google.com/search?q=%23threads-and-messages)
+* [File search](https://www.google.com/search?q=%23file-search)
+* [Code interpreter](https://www.google.com/search?q=%23code-interpreter)
+* [Function calling](https://www.google.com/search?q=%23function-calling)
+* [🆕 Note: OpenAI's agent-facing APIs have shifted rapidly — current status](https://www.google.com/search?q=%23-note-openais-agent-facing-apis-have-shifted-rapidly--current-status)
+* [📋 Interview Questions — 3.3](https://www.google.com/search?q=%23-interview-questions--33)
+* [3.4 CrewAI / CrewAI.js](https://www.google.com/search?q=%2334-crewai--crewaijs)
+* [Multi-agent with roles](https://www.google.com/search?q=%23multi-agent-with-roles)
+* [Goal and delegation](https://www.google.com/search?q=%23goal-and-delegation)
+* [Task dependencies](https://www.google.com/search?q=%23task-dependencies)
+* [Agent communication](https://www.google.com/search?q=%23agent-communication)
+* [🆕 A note on "CrewAI.js"](https://www.google.com/search?q=%23-a-note-on-crewaijs)
+* [📋 Interview Questions — 3.4](https://www.google.com/search?q=%23-interview-questions--34)
+* [3.5 AutoGen / AG2 🆕](https://www.google.com/search?q=%2335-autogen--ag2-)
+* [Conversable agents](https://www.google.com/search?q=%23conversable-agents)
+* [Group chat orchestration](https://www.google.com/search?q=%23group-chat-orchestration)
+* [Code execution agents](https://www.google.com/search?q=%23code-execution-agents)
+* [🆕 Current status — important to know before recommending this stack](https://www.google.com/search?q=%23-current-status--important-to-know-before-recommending-this-stack)
+* [📋 Interview Questions — 3.5](https://www.google.com/search?q=%23-interview-questions--35)
+* [3.6 LlamaIndex Agents 🆕](https://www.google.com/search?q=%2336-llamaindex-agents-)
+* [Data agents over indexed corpora](https://www.google.com/search?q=%23data-agents-over-indexed-corpora)
+* [Query engines as tools](https://www.google.com/search?q=%23query-engines-as-tools)
+* [📋 Interview Questions — 3.6](https://www.google.com/search?q=%23-interview-questions--36)
+* [3.7 Other Notable Frameworks 🆕](https://www.google.com/search?q=%2337-other-notable-frameworks-)
+* [Semantic Kernel (Microsoft)](https://www.google.com/search?q=%23semantic-kernel-microsoft)
+* [Vercel AI SDK agent primitives](https://www.google.com/search?q=%23vercel-ai-sdk-agent-primitives)
+* [Google Agent Development Kit (ADK)](https://www.google.com/search?q=%23google-agent-development-kit-adk)
+* [📋 Interview Questions — 3.7](https://www.google.com/search?q=%23-interview-questions--37)
+* [3.8 Production Realities & Framework Selection 🆕](https://www.google.com/search?q=%2338-production-realities--framework-selection-)
+* [Tracing & Evaluation / Handling Hallucinations](https://www.google.com/search?q=%23tracing--evaluation-the-x-ray-layer)
+* [Build-vs-buy: raw API + custom loop vs framework](https://www.google.com/search?q=%23build-vs-buy-raw-api--custom-loop-vs-framework)
+* [Comparison criteria: control, debuggability, lock-in, community size](https://www.google.com/search?q=%23comparison-criteria-control-debuggability-lock-in-community-size)
+* [📋 Interview Questions — 3.8](https://www.google.com/search?q=%23-interview-questions--38)
 
 > Frameworks in this space move fast — several of the frameworks below changed meaningfully between when most tutorials were written and today. Where it matters, these notes call out the *current* (mid-2026) state explicitly rather than the historically popular pattern, since interviewers increasingly probe for whether a candidate's knowledge is current.
 
@@ -81,41 +65,47 @@ Learn the major frameworks used to build production AI agents and understand:
 
 ## 3.1 LangChain 🆕
 
+### [Image 51 Placeholder]
+
 ### What Is LangChain?
 
 * **Visual Layout:** A linear flowchart: `User` $\rightarrow$ `Prompt` $\rightarrow$ `LLM` $\rightarrow$ `Tool` $\rightarrow$ `Answer`.
 * **Engineering Context:** Introduces LangChain as the entry-level orchestrator. The diagram details the standard single-turn text execution path. A user provides an input, which is packaged into a structured prompt format. The LLM processes this prompt, recognizes the need for an external capability, dispatches execution to a registered function (the tool), and compiles the tool output back into a human-readable final answer.
 
+### [Image 52 Placeholder]
 
 ### LangChain Core Components
 
 * **Visual Layout:** A stacked architectural grid showcasing seven fundamental modules: `Models`, `Prompts`, `Tools`, `Memory`, `Agents`, `Output Parsers`, and `Retrievers`.
 * **Engineering Context:** This serves as a vocabulary map. `Models` wrap LLMs; `Prompts` handle template creation; `Tools` expose Python functions; `Memory` injects historical messages; `Agents` leverage the LLM as a reasoning engine; `Output Parsers` transform unstructured string text into typed JSON; and `Retrievers` interface with vector stores for RAG.
 
+### [Image 53 Placeholder]
 
 ### LangChain Agent Architecture
 
 * **Visual Layout:** An execution cascade: `User Input` $\rightarrow$ `Agent Executor` $\rightarrow$ `LLM Reasoning Loop` $\rightarrow$ `Tool Selection` $\rightarrow$ `Tool Execution` $\rightarrow$ `Final Answer`.
 * **Engineering Context:** Clarifies how an agent controls execution. Unlike static software code, the `Agent` acts as a continuous loop. It parses the user request, asks the LLM what to do (*Reasoning*), receives an intermediate action (*Tool Selection*), runs that action (*Tool Execution*), inspects the result, and repeats until it has enough info to provide the *Final Answer*.
 
+### [Image 54 Placeholder]
 
 ### Chains vs. Agents
 
 * **Visual Layout:** Side-by-side comparison. Left (**Chain**): A rigid track (`Step A → Step B → Step C`). Right (**Agent**): A central `LLM Router` branching dynamically based on intent.
 * **Engineering Context:** Addresses the core architectural choice. A **Chain** is a fixed pipeline where the execution sequence is predetermined by code. An **Agent** delegates control of the sequence entirely to the model at runtime, allowing it to dynamically skip, re-order, or call tools multiple times.
 
+### [Image 55 Placeholder]
 
 ### LangChain Tool Calling
 
 * **Visual Layout:** A hub-and-spoke diagram connecting a central `Agent` to a `Tool Registry`, which branches to `Search (Web)`, `Calculator`, `Database`, and `APIs`.
 * **Engineering Context:** Shows how an LLM interacts with deterministic software. Tools are defined with semantic text descriptions and strict JSON schemas. The agent matches intent against the registry, formats payload parameters, invokes the module, and absorbs the text result back into working memory.
 
+### [Image 56 Placeholder]
 
 ### LangChain Production Architecture
 
 * **Visual Layout:** End-to-end full-stack layout: `Frontend UI` $\rightarrow$ `LangChain Runtime Core` $\rightarrow$ `Client-side Tools`, `Databases`, and `Monitoring` systems.
 * **Engineering Context:** Highlights real-world deployment. LangChain requires a stateless middleware layer to convert frontend user requests into prompt sequences, coordinate secure access keys, and send trace logs to evaluation systems to track latency and token costs.
-
 
 ### Core abstractions (chains, runnables, agent executors)
 
@@ -156,53 +146,61 @@ The current practitioner consensus (mid-2026) is **not** "LangChain vs LangGraph
 
 ## 3.2 LangGraph
 
+### [Image 57 Placeholder]
+
 ### Why LangGraph Exists
 
 * **Visual Layout:** Problem-solution split. Top: The standard LangChain linear failure trap. Bottom: Enterprise requirements: `State Persistence`, `Branching Paths`, `Cyclic Loops`, and `Error Recovery`.
 * **Engineering Context:** Basic agent loops are fragile—they struggle to recover from bad tool outputs or handle complex conditional branching. LangGraph transitions from autonomous "black box" agents to highly controlled, deterministic agent workflows.
 
+### [Image 58 Placeholder]
 
 ### What Is LangGraph?
 
 * **Visual Layout:** A directed graph schema: `Node` connected by an `Edge`, overlaid on a shared `State` ledger governing the `Workflow`.
 * **Engineering Context:** Defines the core mental model using graph theory. Workflows are modeled explicitly as Directed Acyclic Graphs (DAGs) or cyclic graphs. Every execution step is isolated into a node, and pathing is strictly governed by edges.
 
+### [Image 59 Placeholder]
 
 ### LangGraph Core Architecture
 
 * **Visual Layout:** A blueprint detailing the 4 pillars: `Nodes` (processing), `Edges` (routing), `State` (memory schema), and `Checkpoints` (time-travel storage).
 * **Engineering Context:** **Nodes** are isolated Python functions. **Edges** can be normal or conditional (LLM-driven). **State** is a memory database accessible by all nodes. **Checkpoints** save the exact state configuration after every node execution.
 
+### [Image 60 Placeholder]
 
 ### Stateful Agent Workflows
 
 * **Visual Layout:** A data-flow diagram tracking a user prompt as a `Planner`, `Executor`, and `Reviewer` read from and write back to a central `Shared State` cylinder sequentially.
 * **Engineering Context:** Demonstrates state persistence. Instead of passing bloated text string histories back and forth to an LLM, the graph maintains a structured data schema. Each specialized node performs its operation, mutates specific keys, and passes the updated state down the line.
 
+### [Image 61 Placeholder]
 
 ### Branching Workflows
 
 * **Visual Layout:** A structural fork. A `Conditional Decision Node` splits into `Path A (Payment Approved)` and `Path B (Payment Denied)`.
 * **Engineering Context:** Focuses on conditional routing. Engineers can build deterministic switch-case logic into an agent workflow based on standard code (API status) or LLM intent parsing.
 
+### [Image 62 Placeholder]
 
 ### Cycles & Agent Loops
 
 * **Visual Layout:** Circular node layout: `Reason` $\rightarrow$ `Tool` $\rightarrow$ `Observe` $\rightarrow$ looping back (`↺`) to `Reason`.
 * **Engineering Context:** Highlights LangGraph's primary capability: controlled cyclic behavior. Crucial for self-correction loops—e.g., writing code, sending it to a compiler, observing a stack trace, and looping back to rewrite until it passes.
 
+### [Image 63 Placeholder]
 
 ### Checkpoints & Recovery
 
 * **Visual Layout:** Timeline workflow with markers: `Step 1 (✓)` $\rightarrow$ `Step 2 (✓)` $\rightarrow$ `Step 3 (✗)`. A resume command points directly to the state snapshot of `Step 3`.
 * **Engineering Context:** Explains fault-tolerant design. Because LangGraph saves state snapshots at every edge transition, if a step fails due to a network timeout, the system simply reloads the state snapshot from memory and retries right where it broke.
 
+### [Image 64 Placeholder]
 
 ### Production LangGraph Architecture
 
 * **Visual Layout:** Enterprise deployment blueprint. A `Graph Runtime` connects persistently to an independent `State Store` (like PostgreSQL/Redis), mapped to distributed `Tools` and an observability stack.
 * **Engineering Context:** Illustrates infrastructure decoupling. By abstracting the state store into an external persistent layer, the agent architecture becomes fully stateless and resilient, capable of handling long-running, multi-day user sessions without data loss.
-
 
 ### Stateful workflows
 
@@ -244,53 +242,61 @@ LangGraph supports **interrupts** placed before or after specific nodes (e.g., a
 
 ## 3.3 OpenAI Assistants/Agents API
 
+### [Image 65 Placeholder]
+
 ### What Is the Assistants API?
 
 * **Visual Layout:** Cloud block diagram. A `User` triggers an `OpenAI Assistant Service` which handles built-in `Tools` internally to compute the `Answer`.
 * **Engineering Context:** Introduces Agent-as-a-Service. Instead of building code modules for tracking history or vector databases, developers utilize a hosted API endpoint where OpenAI acts as the computing backend, managing agent internals automatically.
 
+### [Image 66 Placeholder]
 
 ### Assistants API Architecture
 
 * **Visual Layout:** Structural hierarchy. A top-level `Assistant` links to child nodes: `Threads`, `Messages`, `Runs`, `Files`, and `Tools`.
 * **Engineering Context:** Outlines hosted data objects. An `Assistant` (model + system instructions) relies on `Threads` for sessions, `Messages` for text payloads, `Runs` to initiate LLM invocations, and hosted `Files` tied to internal tools.
 
+### [Image 67 Placeholder]
 
 ### Threads & Conversations
 
 * **Visual Layout:** Append-only tree diagram. A `Thread` container holds nested items: `Message 1`, `Message 2`, `Message 3`.
 * **Engineering Context:** Details hosted state tracking. A `Thread` is a persistent cloud storage resource. Developers append new messages to an existing Thread ID, and the API automatically optimizes the context window history behind the scenes.
 
+### [Image 68 Placeholder]
 
 ### Runs & Execution Lifecycle
 
 * **Visual Layout:** Lifecycle status flow: `Create Run` $\rightarrow$ `Queued` $\rightarrow$ `In Progress` $\rightarrow$ `Requires Action (Tool Calls)` $\rightarrow$ `Submitting Outputs` $\rightarrow$ `Completed`.
 * **Engineering Context:** Focuses on the asynchronous polling loop. When an assistant hits a custom tool step, it transitions to a `requires_action` state, passing a payload to the client. The client runs local code, uploads the result, and the Assistant resumes.
 
+### [Image 69 Placeholder]
 
 ### File Search Architecture
 
 * **Visual Layout:** Automated hosted RAG pipeline: `Raw Files` $\rightarrow$ `Auto-Chunking & Embeddings` $\rightarrow$ `Semantic Search` $\rightarrow$ `LLM Answer`.
 * **Engineering Context:** Illustrates built-in vector search. Developers don't need separate vector DBs (like Pinecone). By passing documents to the File Search tool, chunking, indexing, and retrieval are managed entirely by OpenAI.
 
+### [Image 70 Placeholder]
 
 ### Built-in Tool Calling
 
 * **Visual Layout:** Distribution hub. A central `Assistant` branches to native service blocks: `File Search`, `Code Interpreter`, and user-defined `Functions`.
 * **Engineering Context:** Beyond third-party functions, the platform includes a secure, sandboxed execution environment (`Code Interpreter`) allowing the assistant to write Python internally, process files, and build charts.
 
+### [Image 71 Placeholder]
 
 ### Self-Hosted vs. Assistants API
 
 * **Visual Layout:** Comparison matrix. Left: **Self-Hosted** (Full Control, High Maintenance). Right: **Managed Assistants** (Low Engineering Friction, Vendor Lock-in).
 * **Engineering Context:** Breaks down core architectural trade-offs. Self-hosting offers privacy control and open-source model flexibility but requires substantial engineering. A hosted API minimizes time-to-market but restricts you to a single vendor's opaque internal heuristics.
 
+### [Image 72 Placeholder]
 
 ### Production Assistants Architecture
 
 * **Visual Layout:** Enterprise service topology. A `Frontend` connects via a secure middleware orchestration server to the `Hosted Assistants API`, mapping multi-tenant `Users` securely to cloud `Files`.
 * **Engineering Context:** Shows that clients should *never* call OpenAI credentials directly from a frontend UI. A secure middleware server acts as the routing controller, handling authentication and executing secure system tool calls.
-
 
 ### Threads and messages
 
@@ -337,53 +343,61 @@ This is no longer just a caution to "check current docs" — there is now a conc
 
 ## 3.4 CrewAI / CrewAI.js
 
+### [Image 73 Placeholder]
+
 ### Why Multi-Agent Systems?
 
 * **Visual Layout:** Comparison. Left: One giant agent overloaded with instructions, failing. Right: A modular workspace of tightly defined, specialized agents passing clean data.
 * **Engineering Context:** When a single LLM agent receives an extensive list of instructions, it suffers from context dilution and instruction drift. Dividing workflows into specialized teams improves completion rates and accuracy.
 
+### [Image 74 Placeholder]
 
 ### What Is CrewAI?
 
 * **Visual Layout:** Conceptual grid linking: `Agents` (personas), `Roles` (job profiles), `Goals` (objectives), and `Tasks` (work assignments).
 * **Engineering Context:** Shifts developer focus from writing low-level graph logic to declarative corporate structures. You construct agents like you are hiring personnel, specifying operational boundaries.
 
+### [Image 75 Placeholder]
 
 ### CrewAI Core Architecture
 
 * **Visual Layout:** Nested container diagram. A `Crew` border encapsulates `Agent A`, `Agent B`, and `Agent C`.
 * **Engineering Context:** The Crew represents the execution environment that takes distinct agents, optimizes model settings, links shared toolsets, and oversees execution from start to finish.
 
+### [Image 76 Placeholder]
 
 ### Roles, Goals & Backstories
 
 * **Visual Layout:** Profile card: `Role: Tech Researcher`, `Goal: Discover 2026 AI Trends`, `Backstory: Expert analyst who values raw quantitative data`.
 * **Engineering Context:** Defining a critical *backstory* anchors the model's performance, reducing hallucinations and aligning its output tone with the persona's designated role.
 
+### [Image 77 Placeholder]
 
 ### Task Delegation
 
 * **Visual Layout:** Command-and-control hierarchy. A `Manager Agent` parses instructions and delegates to a `Researcher`, `Writer`, and `Reviewer`.
 * **Engineering Context:** Illustrates task distribution. Agents dynamically hand off work or ask for peer reviews, mimicking a human workplace to ensure high-quality outputs.
 
+### [Image 78 Placeholder]
 
 ### Sequential vs. Hierarchical Crews
 
 * **Visual Layout:** Comparative execution styles. **Sequential**: `A → B → C`. **Hierarchical**: `Manager` routes to `A, B, C` horizontally.
 * **Engineering Context:** Sequential workflows operate like an assembly line. Hierarchical processes introduce a supervisor agent (often an advanced model) that dynamically delegates assignments and reviews results before finalization.
 
+### [Image 79 Placeholder]
 
 ### Multi-Agent Communication
 
 * **Visual Layout:** Horizontal mesh network diagram with bi-directional arrows linking `Agent A ↔ Agent B ↔ Agent C`.
 * **Engineering Context:** CrewAI manages how agents share context and request assistance. This peer-to-peer data sharing allows agents to collaborate on tasks without hardcoded edge paths.
 
+### [Image 80 Placeholder]
 
 ### Production Multi-Agent Architecture
 
 * **Visual Layout:** Enterprise deployment blueprint. A central `Manager` routes tasks to `Specialists` using secure `Tools`, applying validation rules to compile the `Final Result`.
 * **Engineering Context:** Separating concerns—using a supervisor for quality control and specialists for data extraction—minimizes errors, remains auditable, and balances processing loads across enterprise infrastructure.
-
 
 ### Multi-agent with roles
 
