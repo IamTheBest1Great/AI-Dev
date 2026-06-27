@@ -268,7 +268,27 @@ This is more token-efficient than full ReAct for long tasks (you do not re-reaso
 
 ### 🆕 Least-to-most prompting / task decomposition before execution
 
-Break a complex problem into an ordered list of simpler sub-problems *before* attempting to solve any of them, then solve each in order, using the answer to easier sub-problems as context for harder ones. Distinct from Plan-and-Execute in that the decomposition is about *problem difficulty ordering*, not necessarily tool-use steps — it is most associated with reasoning/math tasks but applies to agentic task breakdown too.
+Think of **Least-to-Most Prompting** like climbing a staircase instead of trying to leap straight to the top floor.
+
+Instead of asking the AI to solve a massive, complicated problem all at once, this technique forces the AI to break the problem down into a series of smaller, easier questions. It then answers the easiest question first, and uses that answer to help solve the next one, building up to the final solution.
+
+### How it Works (The "Staircase" Method)
+
+1. **Break it Down:** The AI looks at the big problem and creates a list of smaller sub-problems.
+2. **Order by Difficulty:** It orders these sub-problems from easiest ("least" difficult) to hardest ("most" difficult).
+3. **Solve and Build:** It solves step one. Then, it uses the answer from step one as a clue to solve step two. It keeps rolling those answers forward until the big problem is solved.
+
+### A Simple Example
+
+### How it Differs from "Plan-and-Execute"
+
+While both methods break things down, they do it for different reasons:
+
+* **Plan-and-Execute** is like a **To-Do List of Actions**. It focuses on *what tools to use*. (e.g., "First I will search Google for the weather, then I will write an email, then I will send it.")
+* **Least-to-Most** is about **Logical Stepping Stones**. It focuses on *understanding the problem*. It's about figuring out what basic facts you need to establish before you can understand the harder parts of the question.
+
+---
+
 
 ### 📋 Interview Questions — 1.3
 
