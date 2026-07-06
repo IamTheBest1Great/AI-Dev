@@ -1,0 +1,6 @@
+1. Development commands in AI
+https://github.com/addyosmani/agent-skills
+2. AI agents project
+-> https://github.com/ashishpatel26/500-AI-Agents-Projects
+-> https://www.datacamp.com/blog/top-ai-agent-projects
+-> https://www.mindstudio.ai/blog/ai-agent-ideas
