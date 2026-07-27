@@ -28,6 +28,7 @@
   - [📋 Interview Questions — P.3](#-interview-questions--p3)
 
 > This module expands the planning concepts briefly introduced in Module 1.3 (ReAct, Plan-and-Execute, Reflexion) into full depth. Cross-references to other modules are explicit throughout — planning doesn't exist in isolation, it's the connective tissue between all agent capabilities.
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/4657419c-b549-488c-b332-73e0d6192346" />
 
 ---
 
