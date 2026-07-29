@@ -32,6 +32,8 @@
 ---
 
 ## 8.1 Computer Use Agents
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/5974c590-29e4-4c67-bbee-8036a5905276" />
+
 
 ### OS-level control (screen perception, mouse/keyboard actions)
 Computer use agents operate at the full operating-system/desktop level rather than just within a browser's DOM (Module 4.1) — the model receives a **screenshot**, reasons over it visually, and outputs an action (click at a coordinate, type text, press a key combination, scroll) as a tool call; the result is a new screenshot, and the loop — screenshot → action → new screenshot — repeats until the task completes or a step cap is hit (Claude's computer use tool defaults to a maximum of 10 agent-loop iterations, developer-adjustable). This is architecturally a direct application of the ReAct loop from Module 1.3, just with vision as the observation channel instead of text.
@@ -64,6 +66,7 @@ Computer use carries risks distinct from standard tool-calling, and the standard
 ---
 
 ## 8.2 Coding Agents
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/6c34eebc-e54f-4a63-b5ad-8c1b98388cca" />
 
 ### Autonomous coding agents (Claude Code, SWE-agent, Devin-style agents, IDE agent modes)
 Several distinct lineages exist in this space, each having shaped how the field thinks about coding agents:
@@ -101,6 +104,7 @@ Running tests after a code change gives the agent (and the developer) a concrete
 ---
 
 ## 8.3 Voice & Real-Time Agents 🆕
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/84fa8d5a-e93c-4261-9815-8c68dc1190a1" />
 
 ### Streaming speech-to-text / text-to-speech integration
 Two distinct architectures dominate this space:
@@ -133,6 +137,7 @@ Getting barge-in right is arguably the single most failure-prone piece of a voic
 ---
 
 ## 8.4 Agentic RAG 🆕
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/6b4981bf-feb9-433a-bfaa-90825f15f8f1" />
 
 ### Retrieval as a callable tool vs static context injection
 Traditional RAG performs a single, **upfront** retrieval pass — relevant chunks are fetched once and injected into the prompt before generation even begins, a fixed, one-shot step the model has no further control over. **Agentic RAG** instead exposes retrieval as a **tool** (Module 2) the model can call when, and as many times, as it decides it needs to — directly applying the Module 1.3 ReAct loop specifically to retrieval. This matters because a single, upfront retrieval pass commits to a query before the model has had any chance to reason about what it actually needs; agentic retrieval lets the model reformulate, narrow, or broaden its query based on what an initial pass actually returned — the same way a human researcher iterates on a search rather than searching once, accepting whatever comes back, and stopping.
@@ -158,6 +163,7 @@ Raw retrieval — especially pure vector-similarity search — returns results r
 ---
 
 ## 8.5 Long-Horizon / Autonomous Agents 🆕
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/cea496b7-dfe3-4d5c-9baf-70d33a9ab9d9" />
 
 ### Continuous/background operation patterns
 Long-horizon agents run **detached** from an active, synchronous user session — kicked off by some trigger, running unattended for minutes, hours, or longer, and reporting back when finished (or when they genuinely need input) rather than blocking a chat window the entire time. A concrete pattern that's become common in coding-agent tooling specifically by 2026: a ticket, a Slack mention, or a webhook fires; an isolated cloud sandbox spins up; the agent runs inside that sandbox with its full configured context (tools, project instructions, sub-agents); and a pull request or result comes back for review once it's done. This directly solves a real limitation of interactive sessions: a session tied to one developer's laptop and one local checkout can't simply be "walked away from" the way a properly decoupled background run can.
