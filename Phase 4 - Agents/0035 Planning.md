@@ -33,6 +33,7 @@
 ---
 
 ## P.1 Task Decomposition
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/36a6c40b-5caa-48e5-9a6b-87ba1ac8ba9a" />
 
 ### Why decomposition matters
 The single most common reason a capable model fails at a complex task is not a reasoning failure — it's a **working-memory/context problem**: the full task plus all its intermediate steps and relevant context eventually exceeds what can be effectively held in one coherent attention span, whether that's a human's short-term memory or an LLM's effective context utilization. A model that's excellent at 10-step problems often degrades noticeably on 50-step problems not because it became less capable, but because the problem outgrew the cognitive span it's effective within.
@@ -107,6 +108,7 @@ Concretely mapping these dependencies drives the execution order (sequential, pa
 ---
 
 ## P.2 Planner-Executor
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/ca36897f-839c-4090-a0e1-9631a424bcea" />
 
 ### The core separation of concerns
 The Planner-Executor pattern applies a fundamental software-engineering principle — **separation of concerns** — to the agent architecture: one component reasons at the *strategic* level (what needs to happen, in what order, and why), while a separate component operates at the *tactical* level (actually doing each step, using tools, observing results, handling the noise of real-world execution). Neither component tries to do both simultaneously.
@@ -175,6 +177,7 @@ Plain ReAct is the simpler default — don't add architecture complexity without
 ---
 
 ## P.3 Reflection
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5d878475-35a2-450e-96d4-f96e2fc87855" />
 
 ### What reflection means in agent systems
 In agent systems, "reflection" refers to a model explicitly **reasoning about its own outputs, reasoning, or trajectory** — treating its own prior output as an object to examine and critique, rather than blindly accepting it and moving forward. This is in deliberate contrast to a standard generator that produces output and stops. The motivating insight: the same model that generated a poor first attempt often has enough latent capability to *identify* that the attempt was poor and *articulate specifically why* — if given a structured opportunity to do so, rather than immediately being pushed to the next turn.
