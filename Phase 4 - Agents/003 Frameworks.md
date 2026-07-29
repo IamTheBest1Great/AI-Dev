@@ -52,6 +52,7 @@
 ---
 
 ## 3.1 LangChain 🆕
+<img width="1149" height="1369" alt="image" src="https://github.com/user-attachments/assets/904445d2-409f-4287-b01f-eb46f2e233fa" />
 
 ### Core abstractions (chains, runnables, agent executors)
 LangChain's composition layer is built on the **Runnable protocol** — a standard interface (`invoke`, `batch`, `stream`, and their async equivalents) that every component implements, so models, prompts, parsers, and retrievers can all be composed the same way using `.pipe()` / `RunnableSequence` / `RunnableParallel` (this composition style is often called LCEL). A **chain** is simply a fixed composition of Runnables — a predetermined sequence with no model-driven branching, matching the "fixed workflow" point on the agency spectrum from Module 1.1.
@@ -86,6 +87,7 @@ The current practitioner consensus (mid-2026) is **not** "LangChain vs LangGraph
 ---
 
 ## 3.2 LangGraph
+<img width="1182" height="1331" alt="image" src="https://github.com/user-attachments/assets/4b9f368c-6478-45bd-b450-41b3d638fea5" />
 
 ### Stateful workflows
 LangGraph models an agent (or any multi-step LLM application) as an explicit **graph**: nodes are functions that read and update a shared **state object** (typically a typed schema — `TypedDict` or a Pydantic model), and edges define how control passes between nodes. Unlike LangChain's linear Runnable composition, state here is explicit and persists across every node, rather than implicitly flowing through a pipe.
@@ -119,6 +121,7 @@ LangGraph supports **interrupts** placed before or after specific nodes (e.g., a
 ---
 
 ## 3.3 OpenAI Assistants/Agents API
+<img width="1166" height="1349" alt="image" src="https://github.com/user-attachments/assets/2838a69a-5604-4d94-89f8-20508577ca12" />
 
 ### Threads and messages
 In the original Assistants API architecture, a **thread** was a server-managed conversation container holding a sequence of **messages**; OpenAI handled storing and (when needed) truncating conversation history, removing the burden of managing context windows manually.
@@ -157,6 +160,7 @@ This is no longer just a caution to "check current docs" — there is now a conc
 ---
 
 ## 3.4 CrewAI / CrewAI.js
+<img width="1154" height="1363" alt="image" src="https://github.com/user-attachments/assets/33af6af2-7e3d-4a4c-8f6a-fa8f395e6e6b" />
 
 ### Multi-agent with roles
 CrewAI's central abstraction is the **Agent**, defined by a `role`, `goal`, and `backstory` — a short natural-language persona that shapes how that agent reasons and which tasks it's suited for (e.g., "Senior Data Analyst" vs. "Marketing Copywriter"). A more specific role tends to produce more focused, reliable behavior than a vague one, similar to the "tool descriptions as prompts" principle from Module 2.4 — role descriptions are prompts too.
@@ -192,6 +196,7 @@ Worth flagging explicitly: CrewAI's officially maintained framework is **Python-
 ---
 
 ## 3.5 AutoGen / AG2 🆕
+<img width="1154" height="1363" alt="image" src="https://github.com/user-attachments/assets/ffd94fce-efab-4b71-82bd-c2566d82c621" />
 
 ### Conversable agents
 AutoGen's foundational abstraction is the **conversable agent** — an agent defined primarily by how it participates in a message exchange: it can be configured to auto-reply, request human input at certain points, or terminate the conversation under specific conditions. Agents communicate by exchanging messages with each other, much like a multi-party chat, rather than through an explicit graph of function calls.
@@ -225,6 +230,7 @@ The broader industry direction mirrors what's happening elsewhere in this module
 ---
 
 ## 3.6 LlamaIndex Agents 🆕
+<img width="1175" height="1338" alt="image" src="https://github.com/user-attachments/assets/6666fbe8-b0bd-4437-b331-f58d256dfdb3" />
 
 ### Data agents over indexed corpora
 LlamaIndex's core differentiator versus the other frameworks in this module is its origin and strength in **data ingestion, indexing, and retrieval** — connectors for hundreds of data sources, multiple index types (vector, keyword, tree/hierarchical, knowledge-graph), and retrieval strategies (sub-question decomposition, recursive retrieval, hybrid search) that go well beyond plain vector similarity search. An "agent" in this context is most often a **reasoning loop wrapped around one or more of these retrieval/data capabilities**, making LlamaIndex a natural fit when the agent's core job is reasoning over a large, heterogeneous body of private data rather than primarily taking actions in the world.
@@ -251,6 +257,7 @@ LlamaIndex's current agent classes (`FunctionAgent` for models with native funct
 ---
 
 ## 3.7 Other Notable Frameworks 🆕
+<img width="1190" height="1322" alt="image" src="https://github.com/user-attachments/assets/355c881d-812b-426c-a5bf-77f3333610a8" />
 
 ### Semantic Kernel (Microsoft)
 Semantic Kernel was Microsoft's earlier SDK for combining LLM "skills"/plugins with planners that could sequence them — strong on enterprise integration and a multi-language story (.NET, Python, Java). **As of 2026, Semantic Kernel and AutoGen are being consolidated**: Microsoft Agent Framework (MAF) is explicitly positioned as the **unified successor to both**, combining AutoGen's multi-agent orchestration patterns with Semantic Kernel's enterprise stability and plugin model, under one multi-language (.NET + Python) programming model. Teams currently on Semantic Kernel are being actively guided toward migrating to MAF rather than continuing net-new development on Semantic Kernel alone.
@@ -280,6 +287,7 @@ An open-source, **code-first** framework, available across Python, Go, Java, and
 ---
 
 ## 3.8 Framework Selection 🆕
+<img width="1148" height="1371" alt="image" src="https://github.com/user-attachments/assets/5957a6da-6c5c-4548-9a13-dab37f1cba12" />
 
 ### Build-vs-buy: raw API + custom loop vs framework
 This is fundamentally a tradeoff between **control/transparency** and **development speed/ecosystem leverage**:
