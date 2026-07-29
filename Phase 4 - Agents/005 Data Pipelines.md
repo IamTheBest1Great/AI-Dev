@@ -38,6 +38,7 @@
 ---
 
 ## 5.1 Web Scraping + AI Cleaning
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/f0d80b53-ad93-4abb-a633-d19937f66ed3" />
 
 ### HTML parsing
 Once you have raw HTML (from a simple fetch or a headless browser per Module 4.1), you need to extract specific data from it. Traditional approaches use a parser library and either CSS selectors or XPath to navigate the DOM tree: BeautifulSoup (Python, deliberately lenient about malformed HTML), lxml (Python, faster and stricter, strong XPath support), and Cheerio (Node.js, a jQuery-like API for parsing HTML server-side without a real browser). The key architectural choice from Module 4.1 still applies here: if the content you need is rendered by client-side JavaScript, parsing the raw HTTP response with these libraries won't see it — you need the *rendered* DOM from a headless browser first.
@@ -67,6 +68,7 @@ Records that fail validation shouldn't be silently dropped *or* silently accepte
 ---
 
 ## 5.2 n8n Workflow Automation
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/11cca11c-e406-4dbf-9a63-3421325bbb0b" />
 
 ### Visual workflow builder
 n8n's core interface is a node-based canvas: **trigger nodes** (a webhook call, a scheduled time, an inbound app event) start a workflow, and **action nodes** chain together to process and route data, with conditional/branching nodes for logic. n8n is fair-code licensed and self-hostable — workflows, credentials, and data can stay entirely within your own infrastructure rather than passing through a third-party cloud, which matters for teams under compliance regimes that cloud-only automation tools can't satisfy. The visual format dramatically lowers the barrier for non-engineers to build and *iterate* on automations directly. The tradeoff shows up at scale: a sprawling, deeply-branched single workflow ("a 50-node mega-workflow") becomes difficult to debug and reason about — the standard mitigation is breaking work into smaller, focused sub-workflows invoked via an "Execute Workflow" node, rather than one monolithic canvas.
@@ -102,6 +104,7 @@ The practical takeaway: n8n in 2026 is a legitimate alternative to a code-first 
 ---
 
 ## 5.3 Self-Healing Pipelines
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/4feabfec-4cfc-4094-a1b0-1c2f5ebb7880" />
 
 ### Failure detection
 Detecting failure correctly requires distinguishing real failures from misleading "successes." A request that returns HTTP 200 but actually rendered a CAPTCHA challenge page, an error message, or a redirect to a login wall *looks* successful at the network layer while containing none of the data you actually wanted — this is a **silent failure**, and catching it requires content-level checks (does the extracted content match the expected shape, is it non-empty, does it contain expected markers) rather than relying on status codes alone. This connects directly to Module 1.5's failure modes: a status-code-only check is the pipeline equivalent of trusting a hallucinated-but-well-formed tool call without checking whether it's semantically right.
@@ -133,6 +136,7 @@ Once a fallback succeeds, a genuinely "self-healing" pipeline decides whether to
 ---
 
 ## 5.4 Change Detection
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/e49f16f0-1727-4bfe-bd4d-5bf71ca624cc" />
 
 ### Diff algorithms
 Comparing two versions of content to find what changed can happen at different levels: **structural diff** (comparing DOM trees node by node), **text diff** (line- or word-level comparison, the kind of algorithm — e.g., Myers diff — that powers `git diff`), or **semantic diff** (did the underlying *meaning* change, not just the bytes). For web content specifically, diffing **raw HTML** is extremely noisy: ad/tracking script IDs, timestamps, session tokens, and randomized CSS class names (common in some modern frontend build pipelines) can all change on every single page load, with zero actual content change. The practical fix is to diff the **cleaned, extracted content** (the output of Module 4.5's markdown extraction, or your own structured extraction from 5.1) instead of raw HTML — this eliminates most noise sources at their origin rather than trying to filter them out after the fact.
@@ -163,6 +167,7 @@ This connects directly back to 5.1: the better your structuring/extraction step,
 ---
 
 ## 5.5 Orchestration at Scale 🆕
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/519c87b5-19e0-4d97-a068-465d937ba0e2" />
 
 ### Airflow / Prefect / Dagster for scheduled pipelines
 These three tools all schedule, execute, and monitor dependency graphs of pipeline tasks, but take meaningfully different architectural approaches:
@@ -211,6 +216,7 @@ This is essentially the production-infrastructure-scale version of Module 1.5's 
 ---
 
 ## 5.6 Data Validation & Schema Enforcement 🆕
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1498d444-a285-41c1-84f2-9808b30db0f8" />
 
 ### Contract-first pipeline design
 A **data contract** is an explicit, versioned definition of what a pipeline stage is expected to produce — column types, nullability, value ranges, uniqueness constraints, referential relationships — written and agreed upon *before* the extraction/transformation logic is built, rather than left as an implicit shape that downstream consumers reverse-engineer from whatever the pipeline happens to currently output. This directly applies Module 2.1's tool-schema-design discipline to pipeline outputs instead of tool-call arguments. Tooling for this includes JSON Schema and Pydantic/Zod models for type/shape enforcement in code, and data-quality frameworks like Great Expectations, Pandera, or dbt's built-in tests/contracts for codifying business-rule assertions (ranges, uniqueness, non-null requirements, referential integrity) as **executable checks that run on every pipeline execution**, not just something documented once and never re-verified.
