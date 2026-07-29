@@ -61,6 +61,7 @@
 ***
 
 ## 1.1 Agents vs Chatbots
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0e3df8d9-10e8-4e65-8bec-c0eb8a20c5b2" />
 
 ### What "agency" means
 
@@ -131,6 +132,7 @@ Agents trade predictability and cost for flexibility. Default to a workflow inst
 ***
 
 ## 1.2 Agent Anatomy
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/d79695f7-326d-4818-bfc7-cc3aac2f9863" />
 
 Every agent, regardless of framework, is built from the same five components:
 
@@ -215,6 +217,7 @@ The world the agent acts on and observes — a codebase, a browser, a filesystem
 ***
 
 ## 1.3 Reasoning & Planning Patterns
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0b515a20-d125-463a-bf44-2bb7699637e3" />
 
 ### ReAct (Reason → Act → Observe loop)
 
@@ -313,6 +316,7 @@ While both methods break things down, they do it for different reasons:
 ***
 
 ## 1.4 Agent Memory
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6988a12c-7b59-4a70-b1b0-c79a08442583" />
 
 ### In-context memory (conversation history)
 
@@ -380,6 +384,7 @@ Not everything should be remembered forever — deciding *what* to persist and *
 ***
 
 ## 1.5 Agent Failure Modes
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/84c3e845-9772-47ce-a771-da29a46b6896" />
 
 ### Infinite loops
 
@@ -440,6 +445,7 @@ Two distinct sub-patterns:
 ***
 
 ## 1.6 Human-in-the-Loop
+<img width="1164" height="1351" alt="image" src="https://github.com/user-attachments/assets/a072bac1-12e0-4057-a1c7-1bf61350896c" />
 
 ### Critical decision checkpoints
 
