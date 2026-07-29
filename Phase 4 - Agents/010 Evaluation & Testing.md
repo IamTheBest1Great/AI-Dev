@@ -49,6 +49,7 @@
 ---
 
 ## 10.1 Agent Evaluation Frameworks
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5c097c03-3ba6-4de9-a106-f0bebebce3d7" />
 
 ### Why agent evaluation is harder than LLM evaluation
 Standard LLM evaluation is hard. Agent evaluation is harder, for structural reasons that don't go away with better tooling:
@@ -109,6 +110,7 @@ LLM evaluation architecture that scales: heuristics on every span, distilled jud
 ---
 
 ## 10.2 Public Benchmark Suites for Calibration
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/cbd07b7d-8720-4844-ac04-aa2bdf54aa14" />
 
 ### Why public benchmarks matter — and why they're not enough
 Public benchmarks serve a specific, limited function: **calibrating your intuition about how your agent compares to the broader state of the art on a defined task type**. They are emphatically not a substitute for evaluating your agent on your actual task distribution. Agent benchmarks measure something fundamentally different from LLM benchmarks. The question is not "can the model answer this question?" but "can the model complete this multi-step task that requires tools, state management, and error recovery?" A model that scores 94% on MMLU-Pro can still fail at a multi-step WebArena task that requires synthesizing information across several pages, entering it correctly into a form, and verifying the result.
@@ -160,6 +162,7 @@ This is not a fringe concern — it's a documented, systematic vulnerability acr
 ---
 
 ## 10.3 Regression Testing for Agent Behavior
+<img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/61c97310-9752-47e5-8a6b-d94d3baf546d" />
 
 ### Why regression testing is harder for agents than for software
 In traditional software, a regression test is deterministic: you run the function, compare the output to a stored expected value, and pass or fail. For agents, neither step works cleanly:
@@ -202,6 +205,7 @@ A regression test suite for agents will have inherent pass-rate variance even on
 ---
 
 ## 10.4 A/B Testing Prompts, Tool Sets, and Model Versions
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/88b511d8-d056-4a3d-852f-5d48c1fa4585" />
 
 ### What makes agent A/B testing different from product A/B testing
 Standard product A/B testing (UI changes, copy variations) has a clean structure: randomly assign users to variant A or B, measure a business metric, achieve statistical significance, ship the winner. Agent A/B testing has several additional complications:
@@ -243,6 +247,7 @@ The discipline: treat a model-version upgrade with the same rigor as a prompt-se
 ---
 
 ## 10.5 Building Simulated Environments / Sandboxes
+<img width="1125" height="1398" alt="image" src="https://github.com/user-attachments/assets/bf41b7b0-54a0-4a73-b028-d01a28a425c1" />
 
 ### Why simulation is necessary
 Running agent evaluations in production — against real APIs, real databases, real websites — is expensive, slow, has real side effects (sent emails, modified records, incurred API costs), and is non-repeatable (the world changes between runs, making two "identical" evaluations inconsistent). Simulated environments solve all four problems at once: fast, cheap, side-effect-free, and exactly reproducible across runs. This is the evaluation prerequisite for everything in this module — without a repeatable environment, the regression testing (10.3) and A/B testing (10.4) disciplines above are difficult to execute reliably.
@@ -280,6 +285,7 @@ The practical recommendation: **start with high-fidelity sandboxed live environm
 ---
 
 ## 10.6 Defining Success Metrics Beyond "Did It Run"
+<img width="1145" height="1373" alt="image" src="https://github.com/user-attachments/assets/2bcf7440-4a02-4452-9341-12bfcd0e81df" />
 
 ### The metric hierarchy
 "Did it run" is the zeroth metric — it tells you the agent didn't crash. It tells you almost nothing else. Of the major agent benchmarks, 0 out of 15 integrate cost-efficiency or safety into their primary scoring rubric. A score of 88% on SWE-Bench achieved with $50 of inference per task is treated as identical to one achieved with $0.50. 13 out of 15 rely on binary success metrics, ignoring partial completion or graceful failure. This is the benchmark ecosystem telling you what it optimizes for — not what a production agent actually needs to optimize for.
