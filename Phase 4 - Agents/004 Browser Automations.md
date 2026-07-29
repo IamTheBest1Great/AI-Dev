@@ -45,6 +45,7 @@
 ---
 
 ## 4.1 Puppeteer / Playwright
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/85ad59d4-fdcf-473d-a8f1-4f30b76a0e66" />
 
 ### Headless browser control
 Both tools drive a real browser engine programmatically, without rendering a visible window ("headless"), by talking to the browser over the **Chrome DevTools Protocol (CDP)** or an equivalent. This is the foundational layer underneath almost every AI browser agent in this module — Stagehand, browser-use, and most commercial browser-automation products are built *on top of* Playwright/Puppeteer or talk directly to the same CDP layer.
@@ -88,6 +89,7 @@ Microsoft also ships **Playwright MCP** — an MCP server (Module 6) that expose
 ---
 
 ## 4.2 Browserbase
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/99aed155-6a30-474e-9a97-ed292483c589" />
 
 ### Cloud-hosted browser sessions
 Browserbase provides **managed, cloud-hosted Chromium instances** reachable over CDP — instead of provisioning, scaling, and maintaining your own fleet of headless browsers (with all the operational toil that entails: memory leaks, crashed processes, proxy management, geographic distribution), you connect your existing automation code (Playwright, Puppeteer, or Stagehand) to a Browserbase session and let them run the infrastructure. **Browserbase is infrastructure, not an agent** — you still need a framework like Stagehand, Browser Use, or your own code to actually drive the browser; Browserbase just hosts where that driving happens.
@@ -115,6 +117,7 @@ The value proposition concentrates around everything that becomes operational to
 ---
 
 ## 4.3 Stagehand
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/7861253f-5a4f-423e-9a31-e24e1ad0c769" />
 
 ### AI-native browser control
 Stagehand (built by Browserbase) takes a deliberately **hybrid** approach rather than handing an LLM full autonomous control: you write deterministic code for the steps you know exactly how to do, and drop in natural-language AI calls only for the parts of a page that are unpredictable or change frequently. This sits in contrast to a fully autonomous browser agent (4.4) — Stagehand's philosophy is that pure LLM-driven browsing is too slow, too expensive, and too unpredictable for production, while pure deterministic scripts are too brittle when a page's layout shifts.
@@ -156,6 +159,7 @@ When a cached action fails because the page's DOM changed, Stagehand automatical
 ---
 
 ## 4.4 browser-use 🆕
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c667cbf5-f3ce-4e46-99ab-2d7b34ce40ad" />
 
 ### Open-source AI browser agent framework
 Browser-use takes the opposite philosophy from Stagehand: instead of exposing discrete AI primitives you call from your own deterministic script, it hands an LLM **full control of the browser through an agent loop** — you give it a goal in natural language, and the agent decides what to click, what to type, when to scroll, and when the task is complete, turn by turn, using its own reasoning at every step (a direct application of the ReAct-style loop from Module 1.3, specialized to a browser environment).
@@ -193,6 +197,7 @@ The decision genuinely comes down to **where you want intelligence to live in th
 ---
 
 ## 4.5 Firecrawl / Jina Reader
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/e37b51b2-ee33-4e43-8c06-ca9e9f9d8dbc" />
 
 ### Clean markdown extraction
 Both tools solve the same core problem: converting a messy, JavaScript-and-markup-heavy web page into **clean Markdown or structured JSON** that an LLM can consume directly — raw HTML is token-expensive and full of noise (scripts, styles, navigation chrome) that dilutes context quality and inflates cost. Markdown specifically preserves semantic structure (headings, lists) in a way that helps downstream chunking/embedding for RAG pipelines more than flattened plain text would.
@@ -231,6 +236,7 @@ Both tools attempt to strip navigation, ads, and boilerplate and keep only the s
 ---
 
 ## 4.6 AI-Optimized Search
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/cb6a6d4c-89eb-48a0-be30-c68b77efc50d" />
 
 ### Tavily API
 Positioned as "the web access layer for AI agents" — returns structured JSON with extracted content rather than just links, with an *optional* natural-language synthesized answer you can toggle off if you'd rather do your own ranking/summarization. Strong, long-standing integrations with LangChain, LlamaIndex, and similar frameworks made it a default choice for many teams.
@@ -276,6 +282,7 @@ What matters for an *agent* consuming search results differs from what matters f
 ---
 
 ## 4.7 Anti-Bot & Ethics Considerations 🆕
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/26d77c89-6dc9-4ccb-84af-76ba85309127" />
 
 ### CAPTCHAs and rate limiting
 CAPTCHAs and rate limits are a website's explicit signal that it wants to throttle or block automated access. Two distinct engineering/ethical postures exist here:
