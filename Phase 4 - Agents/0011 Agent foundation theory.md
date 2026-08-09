@@ -133,6 +133,9 @@ Agents trade predictability and cost for flexibility. Default to a workflow inst
 
 ## 1.2 Agent Anatomy
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/d79695f7-326d-4818-bfc7-cc3aac2f9863" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/31f40f0e-2693-4cf0-bded-39c9de80837b" />
+
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0c23e48b-73b2-4420-8cb8-f89bf18cefd2" />
 
 Every agent, regardless of framework, is built from the same five components:
 
@@ -218,6 +221,11 @@ The world the agent acts on and observes — a codebase, a browser, a filesystem
 
 ## 1.3 Reasoning & Planning Patterns
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0b515a20-d125-463a-bf44-2bb7699637e3" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/cc4b5bb8-5535-45a9-b273-cdceb5321a0b" />
+
+
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/5af94563-1f6f-417b-b737-90b2f45c6599" />
+
 
 ### ReAct (Reason → Act → Observe loop)
 
@@ -317,6 +325,10 @@ While both methods break things down, they do it for different reasons:
 
 ## 1.4 Agent Memory
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6988a12c-7b59-4a70-b1b0-c79a08442583" />
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/42867a50-8092-417a-b59e-8e9e1d13f6dd" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/80eb07d1-55ec-4423-ac38-d21ada99465e" />
+
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a4e02aab-bf3d-4755-95ae-1107bf353b01" />
 
 ### In-context memory (conversation history)
 
@@ -385,6 +397,9 @@ Not everything should be remembered forever — deciding *what* to persist and *
 
 ## 1.5 Agent Failure Modes
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/84c3e845-9772-47ce-a771-da29a46b6896" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/f675fae3-498e-49e2-a549-0d4a8a24bf59" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/676da0fb-1f37-499f-9428-eb6a7fa64438" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/0ca46bc4-0515-43ca-babd-b13cda9d05ac" />
 
 ### Infinite loops
 
@@ -446,6 +461,8 @@ Two distinct sub-patterns:
 
 ## 1.6 Human-in-the-Loop
 <img width="1164" height="1351" alt="image" src="https://github.com/user-attachments/assets/a072bac1-12e0-4057-a1c7-1bf61350896c" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c2ddbf98-fd58-45f2-927e-d9bada96a088" />
+<img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/f0fc818c-d2ab-4a1f-b1a0-38f762ae217f" />
 
 ### Critical decision checkpoints
 
