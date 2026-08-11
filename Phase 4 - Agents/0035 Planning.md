@@ -183,7 +183,8 @@ Plain ReAct is the simpler default — don't add architecture complexity without
 ## P.3 Reflection
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5d878475-35a2-450e-96d4-f96e2fc87855" />
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c0f33549-30af-4ff0-981d-d1152ce8e53a" />
-![Uploading image.png…]()
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/5eebdd81-555b-4b13-9274-15be4a837824" />
+
 
 ### What reflection means in agent systems
 In agent systems, "reflection" refers to a model explicitly **reasoning about its own outputs, reasoning, or trajectory** — treating its own prior output as an object to examine and critique, rather than blindly accepting it and moving forward. This is in deliberate contrast to a standard generator that produces output and stops. The motivating insight: the same model that generated a poor first attempt often has enough latent capability to *identify* that the attempt was poor and *articulate specifically why* — if given a structured opportunity to do so, rather than immediately being pushed to the next turn.
