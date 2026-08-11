@@ -69,6 +69,8 @@ Teach agents how to:
 
 ## 2.1 Function Calling Fundamentals
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/bb442942-a8c5-482a-a7d6-f843c35b02c8" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a66a9e0c-31ec-4f2f-bbc9-42b8a54c516a" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/fccaffe3-92d8-4b1b-81fc-e05b6dd6f753" />
 
 ### What is function calling?
 
@@ -317,6 +319,8 @@ Modern tool-calling APIs let the model request **multiple tool calls in a single
 
 ## 2.2 Tool Selection & Routing
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/d13ac1d5-6921-4030-bad7-a88110dde044" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/eb41329d-3fbe-487b-86e4-72946a608a71" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9de32fc5-d0fb-4ab6-9ca6-11fbe6e3de98" />
 
 ### How agents read tool schemas
 
@@ -406,6 +410,8 @@ Rather than always injecting every available tool's schema into context (expensi
 
 ## 2.3 Structured Output & Validation
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/b45a4acf-229c-4e23-836a-8689d1c31259" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0326204d-3f2d-4d7b-8916-ed97fb815bec" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/b97c666e-7ffa-4f94-bbc6-667426e53e2e" />
 
 ### Tool lifecycle overview
 
@@ -558,6 +564,8 @@ The standard pattern: catch the validation exception, format it as a clear error
 
 ## 2.4 Tool Descriptions as Prompts
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/f8fd4808-1803-4f79-85ab-e6e17777c2e4" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/7235f37c-b21a-4d5c-8a2e-066818bd91e9" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/72e76d7f-a9ff-4314-b8be-3d19f46365fd" />
 
 ### Good vs bad tool descriptions
 
