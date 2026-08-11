@@ -53,6 +53,8 @@
 
 ## 3.1 LangChain 🆕
 <img width="1149" height="1369" alt="image" src="https://github.com/user-attachments/assets/904445d2-409f-4287-b01f-eb46f2e233fa" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6f77467d-8667-442b-8d39-babdf7a3cff3" />
+<img width="1149" height="1369" alt="image" src="https://github.com/user-attachments/assets/a36aef73-2b86-40e6-8b7d-ec94297f3b4c" />
 
 ### Core abstractions (chains, runnables, agent executors)
 LangChain's composition layer is built on the **Runnable protocol** — a standard interface (`invoke`, `batch`, `stream`, and their async equivalents) that every component implements, so models, prompts, parsers, and retrievers can all be composed the same way using `.pipe()` / `RunnableSequence` / `RunnableParallel` (this composition style is often called LCEL). A **chain** is simply a fixed composition of Runnables — a predetermined sequence with no model-driven branching, matching the "fixed workflow" point on the agency spectrum from Module 1.1.
@@ -88,6 +90,8 @@ The current practitioner consensus (mid-2026) is **not** "LangChain vs LangGraph
 
 ## 3.2 LangGraph
 <img width="1182" height="1331" alt="image" src="https://github.com/user-attachments/assets/4b9f368c-6478-45bd-b450-41b3d638fea5" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/da9b63ed-fa72-4752-8b7d-4cc8c6e6779d" />
+<img width="1108" height="1420" alt="image" src="https://github.com/user-attachments/assets/d3890ba2-3fb0-4abe-b36b-43b005cd1ce5" />
 
 ### Stateful workflows
 LangGraph models an agent (or any multi-step LLM application) as an explicit **graph**: nodes are functions that read and update a shared **state object** (typically a typed schema — `TypedDict` or a Pydantic model), and edges define how control passes between nodes. Unlike LangChain's linear Runnable composition, state here is explicit and persists across every node, rather than implicitly flowing through a pipe.
@@ -122,6 +126,8 @@ LangGraph supports **interrupts** placed before or after specific nodes (e.g., a
 
 ## 3.3 OpenAI Assistants/Agents API
 <img width="1166" height="1349" alt="image" src="https://github.com/user-attachments/assets/2838a69a-5604-4d94-89f8-20508577ca12" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8d7047c6-8825-4846-9058-b86f273febed" />
+<img width="1065" height="1476" alt="image" src="https://github.com/user-attachments/assets/52a7acfc-6be8-4e6a-937a-d97cbe233768" />
 
 ### Threads and messages
 In the original Assistants API architecture, a **thread** was a server-managed conversation container holding a sequence of **messages**; OpenAI handled storing and (when needed) truncating conversation history, removing the burden of managing context windows manually.
@@ -161,6 +167,8 @@ This is no longer just a caution to "check current docs" — there is now a conc
 
 ## 3.4 CrewAI / CrewAI.js
 <img width="1154" height="1363" alt="image" src="https://github.com/user-attachments/assets/33af6af2-7e3d-4a4c-8f6a-fa8f395e6e6b" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/fa045820-d77a-42f3-844c-34442046f7ae" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/afd4a112-9778-4686-9931-a280a67c28e6" />
 
 ### Multi-agent with roles
 CrewAI's central abstraction is the **Agent**, defined by a `role`, `goal`, and `backstory` — a short natural-language persona that shapes how that agent reasons and which tasks it's suited for (e.g., "Senior Data Analyst" vs. "Marketing Copywriter"). A more specific role tends to produce more focused, reliable behavior than a vague one, similar to the "tool descriptions as prompts" principle from Module 2.4 — role descriptions are prompts too.
@@ -197,6 +205,8 @@ Worth flagging explicitly: CrewAI's officially maintained framework is **Python-
 
 ## 3.5 AutoGen / AG2 🆕
 <img width="1154" height="1363" alt="image" src="https://github.com/user-attachments/assets/ffd94fce-efab-4b71-82bd-c2566d82c621" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/46c0a9df-a374-4f32-af5b-c214396856b3" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/cdc3c052-b498-42f5-8823-9b95afd95b83" />
 
 ### Conversable agents
 AutoGen's foundational abstraction is the **conversable agent** — an agent defined primarily by how it participates in a message exchange: it can be configured to auto-reply, request human input at certain points, or terminate the conversation under specific conditions. Agents communicate by exchanging messages with each other, much like a multi-party chat, rather than through an explicit graph of function calls.
@@ -231,6 +241,8 @@ The broader industry direction mirrors what's happening elsewhere in this module
 
 ## 3.6 LlamaIndex Agents 🆕
 <img width="1175" height="1338" alt="image" src="https://github.com/user-attachments/assets/6666fbe8-b0bd-4437-b331-f58d256dfdb3" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/eea1545e-60f7-440d-a291-47b2d7d807ae" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/fdaea73f-8251-41c1-9ad0-0378740d2aa4" />
 
 ### Data agents over indexed corpora
 LlamaIndex's core differentiator versus the other frameworks in this module is its origin and strength in **data ingestion, indexing, and retrieval** — connectors for hundreds of data sources, multiple index types (vector, keyword, tree/hierarchical, knowledge-graph), and retrieval strategies (sub-question decomposition, recursive retrieval, hybrid search) that go well beyond plain vector similarity search. An "agent" in this context is most often a **reasoning loop wrapped around one or more of these retrieval/data capabilities**, making LlamaIndex a natural fit when the agent's core job is reasoning over a large, heterogeneous body of private data rather than primarily taking actions in the world.
@@ -288,6 +300,7 @@ An open-source, **code-first** framework, available across Python, Go, Java, and
 
 ## 3.8 Framework Selection 🆕
 <img width="1148" height="1371" alt="image" src="https://github.com/user-attachments/assets/5957a6da-6c5c-4548-9a13-dab37f1cba12" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/f6945a43-b9eb-4d2e-95a6-1491ced43de3" />
 
 ### Build-vs-buy: raw API + custom loop vs framework
 This is fundamentally a tradeoff between **control/transparency** and **development speed/ecosystem leverage**:
