@@ -33,6 +33,8 @@
 
 ## 8.1 Computer Use Agents
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/5974c590-29e4-4c67-bbee-8036a5905276" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a0efa608-cf83-4ee5-98d4-9a9dd858a066" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9c88a54a-a9dc-45a1-9a46-5a55c93a40f7" />
 
 
 ### OS-level control (screen perception, mouse/keyboard actions)
@@ -67,6 +69,8 @@ Computer use carries risks distinct from standard tool-calling, and the standard
 
 ## 8.2 Coding Agents
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/6c34eebc-e54f-4a63-b5ad-8c1b98388cca" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0926f211-f7dd-46d5-9d8a-55e94cd204b2" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/3ff291e7-aea8-4285-a4c6-bb715dc43681" />
 
 ### Autonomous coding agents (Claude Code, SWE-agent, Devin-style agents, IDE agent modes)
 Several distinct lineages exist in this space, each having shaped how the field thinks about coding agents:
@@ -105,6 +109,8 @@ Running tests after a code change gives the agent (and the developer) a concrete
 
 ## 8.3 Voice & Real-Time Agents 🆕
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/84fa8d5a-e93c-4261-9815-8c68dc1190a1" />
+<img width="1023" height="1537" alt="image" src="https://github.com/user-attachments/assets/92c665f1-986b-4f0a-8d73-d29fd1554b31" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/59e478fe-5658-4ca5-9d10-d68bb1d8f152" />
 
 ### Streaming speech-to-text / text-to-speech integration
 Two distinct architectures dominate this space:
@@ -138,6 +144,8 @@ Getting barge-in right is arguably the single most failure-prone piece of a voic
 
 ## 8.4 Agentic RAG 🆕
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/6b4981bf-feb9-433a-bfaa-90825f15f8f1" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/983631ce-acfa-4f35-a510-9ed2c3ed740b" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/351974d1-0654-4734-95f4-ac94b49be0ec" />
 
 ### Retrieval as a callable tool vs static context injection
 Traditional RAG performs a single, **upfront** retrieval pass — relevant chunks are fetched once and injected into the prompt before generation even begins, a fixed, one-shot step the model has no further control over. **Agentic RAG** instead exposes retrieval as a **tool** (Module 2) the model can call when, and as many times, as it decides it needs to — directly applying the Module 1.3 ReAct loop specifically to retrieval. This matters because a single, upfront retrieval pass commits to a query before the model has had any chance to reason about what it actually needs; agentic retrieval lets the model reformulate, narrow, or broaden its query based on what an initial pass actually returned — the same way a human researcher iterates on a search rather than searching once, accepting whatever comes back, and stopping.
@@ -164,6 +172,8 @@ Raw retrieval — especially pure vector-similarity search — returns results r
 
 ## 8.5 Long-Horizon / Autonomous Agents 🆕
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/cea496b7-dfe3-4d5c-9baf-70d33a9ab9d9" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/c5f4bde1-7500-46ce-b7fd-baea282d2a5b" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c8e029f0-d0fd-4143-aebc-f3a1f1d467fc" />
 
 ### Continuous/background operation patterns
 Long-horizon agents run **detached** from an active, synchronous user session — kicked off by some trigger, running unattended for minutes, hours, or longer, and reporting back when finished (or when they genuinely need input) rather than blocking a chat window the entire time. A concrete pattern that's become common in coding-agent tooling specifically by 2026: a ticket, a Slack mention, or a webhook fires; an isolated cloud sandbox spins up; the agent runs inside that sandbox with its full configured context (tools, project instructions, sub-agents); and a pull request or result comes back for review once it's done. This directly solves a real limitation of interactive sessions: a session tied to one developer's laptop and one local checkout can't simply be "walked away from" the way a properly decoupled background run can.
