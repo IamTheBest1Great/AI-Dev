@@ -41,6 +41,8 @@
 
 ## 11.1 Sync vs Async Execution Models
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/dfd63ef0-b9d4-4324-8590-77b08e6df1cc" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/86eb0146-e32a-4eb4-a0a0-18545dda76cb" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c499f600-0333-4f6a-8538-a4c56071ea3d" />
 
 ### The fundamental distinction
 **Synchronous execution** holds the calling connection open for the entire duration of an agent's run — the client sends a request and waits, blocked, until the agent finishes and returns a result. This is the natural default when building an agent for the first time (it's the HTTP request-response model most developers reach for instinctively) and is entirely appropriate for short, fast tasks. Its ceiling is straightforward: anything that takes longer than a few seconds starts to run into real problems — HTTP connection timeouts (typically 30–120 seconds by default), user-facing latency degradation, and an inability to do any other work while waiting.
@@ -86,6 +88,8 @@ Three components the queue layer adds that an in-process model doesn't have:
 
 ## 11.2 Durable Execution and State Persistence
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/6d64584f-b64b-4704-9c0a-70b1faed1966" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/7211717c-d3ab-472e-ab66-3697f50ca7da" />
+<img width="1096" height="1436" alt="image" src="https://github.com/user-attachments/assets/17e0af73-c5c6-4e17-b65e-4a21d52caa61" />
 
 ### Why in-memory state is a production anti-pattern for agents
 Most agent frameworks, by default, keep the agent's execution state — the conversation history, the current step in the plan, the results of completed tool calls — entirely in memory. This is fine for a demo. In production, it means:
@@ -162,6 +166,8 @@ The right choice depends on task horizon and operational maturity: DB-backed che
 
 ## 11.3 Scaling Considerations
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/0d7ae140-8550-4927-81a3-1523a2f87649" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/577823c6-f68d-46e0-b0a0-002ee9e22242" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8c2129be-7c94-4937-b5da-80c39c0b2dd7" />
 
 ### Concurrency limits and worker pools
 At low volume, every agent task can run immediately. At real production volume, three distinct concurrency constraints require active management rather than assuming the infrastructure will handle them:
@@ -203,6 +209,8 @@ Module 9.4 covered per-step model routing for cost optimization. At the deployme
 
 ## 11.4 Versioning Agents, Prompts, and Tool Schemas
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/4f4a3305-d890-460a-8b41-a1eb71ea8a5e" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/663add18-be99-41ec-bae0-c741df7534b5" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6a41f854-3c19-41ab-81f0-e5f61f0819a4" />
 
 ### Why versioning is harder for agents than for software
 Software versioning is well-understood: the artifact (a binary, a library, a container image) has a precise, reproducible definition. Agent "behavior" is defined by the combination of model weights, system prompt, tool schemas, and orchestration logic — and any of these can change independently, with the interaction effects between them being non-obvious and often surprising. A prompt change that's safe with model version A may produce a regression with model version B. A tool schema change may be backward-compatible in schema terms but change the agent's selection behavior in ways the schema alone doesn't predict.
@@ -246,6 +254,8 @@ Practically this means:
 
 ## 11.5 Rollout Strategies
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/fdc4a6c0-a76c-4689-8af9-d35cc34b663f" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9843faaf-08ea-4cda-9c23-81ffbe70b3a4" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/742bc037-cfc8-450c-831a-b5278d4c2764" />
 
 ### Why standard software rollout strategies apply — with extra care
 The standard software deployment playbook — canary releases, feature flags, gradual rollout, rollback triggers — applies directly to agent deployments. The extra care: agent behavior changes are **more opaque** than software behavior changes. A code change has a diff; you can read what changed. A prompt or model change may have a clear human-readable diff but an unclear behavioral diff — two prompts that look almost identical can produce meaningfully different agent behavior on specific input categories that weren't anticipated when the change was written. This opacity means rollout strategies need to be more conservative and more instrumented for agents than for equivalent software changes.
