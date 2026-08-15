@@ -173,7 +173,8 @@ Raw retrieval — especially pure vector-similarity search — returns results r
 
 ## 8.5 Long-Horizon / Autonomous Agents 🆕
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/cea496b7-dfe3-4d5c-9baf-70d33a9ab9d9" />
-<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/c5f4bde1-7500-46ce-b7fd-baea282d2a5b" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/bb872606-021d-4d9b-8c7c-7bf3ef00f44b" />
+
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c8e029f0-d0fd-4143-aebc-f3a1f1d467fc" />
 
 ### Continuous/background operation patterns
