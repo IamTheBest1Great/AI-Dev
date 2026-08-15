@@ -168,7 +168,8 @@ This is not a fringe concern — it's a documented, systematic vulnerability acr
 
 ## 10.3 Regression Testing for Agent Behavior
 <img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/61c97310-9752-47e5-8a6b-d94d3baf546d" />
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/bb2ae327-b2a6-47ce-8b2c-4ed5ef2a081d" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/33e80c3e-3662-409c-b829-6a08fb92f81a" />
+
 <img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/4c00809f-2bea-4cb4-89d6-ed87df220422" />
 
 ### Why regression testing is harder for agents than for software
@@ -213,7 +214,8 @@ A regression test suite for agents will have inherent pass-rate variance even on
 
 ## 10.4 A/B Testing Prompts, Tool Sets, and Model Versions
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/88b511d8-d056-4a3d-852f-5d48c1fa4585" />
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1efcb784-bb0f-4983-8c05-1d97338f2261" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/3ef1681f-2c7e-44da-8ab4-efabbf84399f" />
+
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a3a58664-c763-4f27-b4d8-505a24a7370e" />
 
 ### What makes agent A/B testing different from product A/B testing
