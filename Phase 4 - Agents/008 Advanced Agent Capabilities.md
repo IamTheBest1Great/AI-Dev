@@ -34,7 +34,8 @@
 ## 8.1 Computer Use Agents
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/5974c590-29e4-4c67-bbee-8036a5905276" />
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a0efa608-cf83-4ee5-98d4-9a9dd858a066" />
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9c88a54a-a9dc-45a1-9a46-5a55c93a40f7" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/19e91155-c8cc-431b-b367-8541dc2bfe08" />
+
 
 
 ### OS-level control (screen perception, mouse/keyboard actions)
