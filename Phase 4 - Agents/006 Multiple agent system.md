@@ -45,6 +45,9 @@
 
 ## 7.1 Orchestration Patterns
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/3496e09b-075c-478f-9ac5-7242a40f6a39" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/81531814-af91-404c-87de-9b68bd7afc92" />
+<img width="1149" height="1369" alt="image" src="https://github.com/user-attachments/assets/bd041639-bebe-4cbb-9b61-570828e4f4bb" />
+
 
 Four recurring topologies show up across almost every multi-agent framework in Module 3, even when each framework uses its own terminology for them:
 
@@ -83,6 +86,8 @@ A shared, structured workspace (the "blackboard") that every agent can read from
 
 ## 7.2 Agent-to-Agent Communication Protocols and Message Passing
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/de4a92bb-534c-4e0d-8a05-bbb9e1d55f7f" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/33b37ce8-9878-4961-b834-51ec288d04d2" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9cf3a069-8723-4357-b577-3f8352cb2b8b" />
 
 ### The core problem
 Once agents need to exchange task requests, results, and status updates — especially across different codebases, teams, or vendors — you face the same standardization problem Module 6.4 covered for agent-to-*tool* communication, but one level up: agent-to-*agent*. Without a shared protocol, every pair of interoperating agents needs its own bespoke integration, the same N×M problem from Module 6.4, just with agents on both sides instead of an agent and a tool.
@@ -116,6 +121,8 @@ When all the agents in a system run in the same codebase/process and there's no 
 
 ## 7.3 Task Decomposition and Delegation Strategies
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/56f45cdc-d0a6-4b83-b580-bc7ae09c2ccb" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0e1da6df-889d-47ba-a9dc-a08bf0ff80ef" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/96359afb-60e7-49d1-a224-ddfb5744c7e1" />
 
 ### Breaking down the goal
 Decomposition means splitting a large goal into smaller, assignable sub-tasks — ideally structured so each sub-task maps naturally to whichever agent (or agent role) is best suited to it. This applies the same reasoning patterns from Module 1.3 (Plan-and-Execute, least-to-most decomposition), with one key difference: the "executor" for each sub-task here is a **distinct agent**, not the same agent looping back on itself.
@@ -149,6 +156,8 @@ What happens when a delegated sub-task fails needs to be designed explicitly, no
 
 ## 7.4 Parallel Agents / Sub-Agent Spawning
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/ae933e99-2e33-42ae-8b6e-e698634f0e12" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a37941bb-b816-4e94-bc4a-3353143eabb5" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6c1a91d2-7430-4255-b4c0-aa7fb7de39cd" />
 
 ### Running sub-tasks concurrently
 When sub-tasks are genuinely independent (no shared dependency between them), an orchestrator can spawn multiple worker agents to run **concurrently** rather than sequentially — directly analogous to Module 2.1's parallel tool calls, except each "call" here is a full agent with its own reasoning loop, not a single function invocation. The benefit is real and significant: a task like "research these 5 competitors" can drop from 5x sequential latency to roughly 1x wall-clock latency by running 5 research sub-agents in parallel instead of one after another.
@@ -178,6 +187,8 @@ An agent deciding **mid-task** to spawn additional sub-agents for newly discover
 
 ## 7.5 Shared State and Coordination Problems
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/bc747480-beca-4c7d-b5e6-3eee3c878e7a" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/ff814ad1-547a-4acc-a02f-47ab4c3ec9a7" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/d1bde62b-bebd-4239-bfd1-f99b71f6187e" />
 
 ### Race conditions
 Two or more agents read a piece of shared state, each independently decides on an action based on that (now possibly stale) read, and both act — e.g., two agents both see "ticket is unassigned" and both assign themselves to it, or two agents both read an inventory count and both commit to fulfilling an order only one of them can actually complete. The core problem is the **gap between reading state and acting on it**, during which the state can change underneath an agent without it knowing.
@@ -214,6 +225,8 @@ Multi-agent coordination problems are genuinely **a distributed-systems problem 
 
 ## 7.6 Cost/Latency Tradeoffs of Multi-Agent vs Single-Agent-with-Tools
 <img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/fd8e3fe1-db0d-4485-a1af-36a899e90fc4" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c40c88f8-9682-4e4a-b7da-ecdabcd3e611" />
+<img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/b7ba0004-4879-4338-a3a0-d85b591d0854" />
 
 ### The core question
 Before reaching for a multi-agent architecture, the question to ask is genuinely simple: **does this task benefit from being split across multiple distinct agents, or would a single agent with the same overall tool access perform just as well at a fraction of the cost and complexity?** Multi-agent systems are not a strictly more powerful upgrade over a single agent with tools — they're a different tool with real, non-obvious costs.
