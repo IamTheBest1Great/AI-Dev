@@ -61,7 +61,8 @@ Both caps need to be enforced by the **orchestrator** — code the model cannot 
 ## 9.2 Trace Logging & Observability
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/dd51430d-690b-4a12-bb9e-5ef10cf8f21c" />
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8c50cb18-bbf7-4ca3-85f7-0221e98582ca" />
-<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/637e3171-9d2f-4770-9b81-436edce96436" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/890805ab-93c2-43d4-8cba-97fb2785c2eb" />
+
 
 ### LangSmith / Langfuse integration
 **LangSmith** is the LangChain team's own managed observability platform — when you're using LangChain or LangGraph, tracing is close to automatic (often just setting environment variables), and it includes annotation queues for human review and dataset management built on top of traces. The tradeoff is real vendor coupling: it's closed-source with no self-hosted deployment option, priced per-seat plus per-trace, making it the right call specifically when a team is committed to staying on LangChain/LangGraph and values the tightest possible native integration over deployment flexibility.
