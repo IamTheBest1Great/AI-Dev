@@ -31,6 +31,8 @@
 
 ## 9.1 Circuit Breakers
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/93a472e2-5553-4e03-b964-5088606e6ad1" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6350b46d-aedc-4dc0-9ddb-8ec0e7827c0b" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/f2eaf895-a90c-41f3-8046-7cd6aa05205f" />
 
 ### Agent timeouts and circuit breakers
 A **timeout** bounds how long any single operation — a tool call, a model response, the agent task as a whole — is allowed to run before it's treated as failed, the production-infrastructure expression of Module 1.5's timeout-handling failure mode. A **circuit breaker** goes a step further, borrowing directly from traditional distributed-systems practice (the same "distributed systems problem wearing an AI costume" framing from Module 7.5): after a defined number of consecutive failures calling a given dependency — an external API, a flaky tool, even the model itself returning malformed output repeatedly — the breaker "trips" and stops attempting that call entirely for a cooldown period, rather than continuing to hammer an already-failing dependency. This applies at multiple layers in an agentic system: individual tool calls, the agent's own reasoning loop (consecutive parsing/validation failures should halt the loop, not retry indefinitely), and spawned sub-agents (Module 7.4's runaway-spawn risk — a circuit breaker on sub-agent creation prevents uncontrolled growth in agent count, not just uncontrolled retries).
@@ -58,6 +60,8 @@ Both caps need to be enforced by the **orchestrator** — code the model cannot 
 
 ## 9.2 Trace Logging & Observability
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/dd51430d-690b-4a12-bb9e-5ef10cf8f21c" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8c50cb18-bbf7-4ca3-85f7-0221e98582ca" />
+<img width="1054" height="1492" alt="image" src="https://github.com/user-attachments/assets/637e3171-9d2f-4770-9b81-436edce96436" />
 
 ### LangSmith / Langfuse integration
 **LangSmith** is the LangChain team's own managed observability platform — when you're using LangChain or LangGraph, tracing is close to automatic (often just setting environment variables), and it includes annotation queues for human review and dataset management built on top of traces. The tradeoff is real vendor coupling: it's closed-source with no self-hosted deployment option, priced per-seat plus per-trace, making it the right call specifically when a team is committed to staying on LangChain/LangGraph and values the tightest possible native integration over deployment flexibility.
@@ -93,6 +97,8 @@ The core value proposition shared across all these tools: rendering a full agent
 
 ## 9.3 Agent Security
 <img width="1160" height="1355" alt="image" src="https://github.com/user-attachments/assets/ef6dc05a-db3c-4a88-a2a8-bd2999366234" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/d71c67b4-edc6-4c6c-96bb-07f5fcd25780" />
+<img width="1163" height="1353" alt="image" src="https://github.com/user-attachments/assets/af915524-2390-4478-a2fd-c7c437a70d21" />
 
 ### Sandboxed execution
 Isolating any agent-executed code or action — not just computer use (Module 8.1) specifically, but any agent that runs code, modifies files, or takes side-effecting actions — inside a constrained container or VM, separate from production systems or a user's real environment. This generalizes Module 8.1's computer-use-specific sandboxing requirement into the broader principle it actually is: any agent capable of taking real-world actions should have its blast radius contained by default, not as an exception reserved for unusually risky agent types.
@@ -141,6 +147,8 @@ A model that has a raw API key, password, or token sitting in its context can �
 
 ## 9.4 Cost & Token Management 🆕
 <img width="1163" height="1352" alt="image" src="https://github.com/user-attachments/assets/c04c0b1b-dfa7-41e5-9639-9d686990802f" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/35e8c13a-2f92-452e-a69a-81ba611a8076" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a925db35-5861-442a-bfc8-998c8816e30e" />
 
 ### Token budget tracking per task/session
 Distinct from the hard max-cost *cap* in 9.1, this is about ongoing **visibility**: knowing where tokens are actually being spent — which steps, which tools, which sub-agents — is a prerequisite for optimizing cost at all, not just enforcing a ceiling on it. This ties directly to Module 9.2's observability tools, several of which (Langfuse, LangSmith, Arize) explicitly surface token-cost-per-session and per-step cost breakdowns as a first-class metric rather than an afterthought bolted onto general-purpose logging.
