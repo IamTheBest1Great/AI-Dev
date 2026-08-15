@@ -39,6 +39,8 @@
 
 ## 5.1 Web Scraping + AI Cleaning
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/f0d80b53-ad93-4abb-a633-d19937f66ed3" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a9c643a0-65ff-4d0e-9b5f-ea1cf799ba03" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/2216f5fb-1566-4694-9c6f-1bf93a269936" />
 
 ### HTML parsing
 Once you have raw HTML (from a simple fetch or a headless browser per Module 4.1), you need to extract specific data from it. Traditional approaches use a parser library and either CSS selectors or XPath to navigate the DOM tree: BeautifulSoup (Python, deliberately lenient about malformed HTML), lxml (Python, faster and stricter, strong XPath support), and Cheerio (Node.js, a jQuery-like API for parsing HTML server-side without a real browser). The key architectural choice from Module 4.1 still applies here: if the content you need is rendered by client-side JavaScript, parsing the raw HTTP response with these libraries won't see it — you need the *rendered* DOM from a headless browser first.
@@ -69,6 +71,8 @@ Records that fail validation shouldn't be silently dropped *or* silently accepte
 
 ## 5.2 n8n Workflow Automation
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/11cca11c-e406-4dbf-9a63-3421325bbb0b" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/e6364fc8-8c08-4d11-bdc6-9a5e825978d8" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/b6e63c86-245d-4400-ad39-6699086bade3" />
 
 ### Visual workflow builder
 n8n's core interface is a node-based canvas: **trigger nodes** (a webhook call, a scheduled time, an inbound app event) start a workflow, and **action nodes** chain together to process and route data, with conditional/branching nodes for logic. n8n is fair-code licensed and self-hostable — workflows, credentials, and data can stay entirely within your own infrastructure rather than passing through a third-party cloud, which matters for teams under compliance regimes that cloud-only automation tools can't satisfy. The visual format dramatically lowers the barrier for non-engineers to build and *iterate* on automations directly. The tradeoff shows up at scale: a sprawling, deeply-branched single workflow ("a 50-node mega-workflow") becomes difficult to debug and reason about — the standard mitigation is breaking work into smaller, focused sub-workflows invoked via an "Execute Workflow" node, rather than one monolithic canvas.
@@ -105,6 +109,8 @@ The practical takeaway: n8n in 2026 is a legitimate alternative to a code-first 
 
 ## 5.3 Self-Healing Pipelines
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/4feabfec-4cfc-4094-a1b0-1c2f5ebb7880" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/7ec47203-538b-4353-b8e0-2f6904fa04f7" />
+<img width="1149" height="1369" alt="image" src="https://github.com/user-attachments/assets/ef9db0f0-3106-4ec7-9e39-0d684b4828ed" />
 
 ### Failure detection
 Detecting failure correctly requires distinguishing real failures from misleading "successes." A request that returns HTTP 200 but actually rendered a CAPTCHA challenge page, an error message, or a redirect to a login wall *looks* successful at the network layer while containing none of the data you actually wanted — this is a **silent failure**, and catching it requires content-level checks (does the extracted content match the expected shape, is it non-empty, does it contain expected markers) rather than relying on status codes alone. This connects directly to Module 1.5's failure modes: a status-code-only check is the pipeline equivalent of trusting a hallucinated-but-well-formed tool call without checking whether it's semantically right.
@@ -137,6 +143,8 @@ Once a fallback succeeds, a genuinely "self-healing" pipeline decides whether to
 
 ## 5.4 Change Detection
 <img width="1055" height="1491" alt="image" src="https://github.com/user-attachments/assets/e49f16f0-1727-4bfe-bd4d-5bf71ca624cc" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/16f2ae5b-91a3-420a-878b-d3298704895b" />
+<img width="1146" height="1373" alt="image" src="https://github.com/user-attachments/assets/4434ade1-ef24-4b46-bd4a-5e35fd940d98" />
 
 ### Diff algorithms
 Comparing two versions of content to find what changed can happen at different levels: **structural diff** (comparing DOM trees node by node), **text diff** (line- or word-level comparison, the kind of algorithm — e.g., Myers diff — that powers `git diff`), or **semantic diff** (did the underlying *meaning* change, not just the bytes). For web content specifically, diffing **raw HTML** is extremely noisy: ad/tracking script IDs, timestamps, session tokens, and randomized CSS class names (common in some modern frontend build pipelines) can all change on every single page load, with zero actual content change. The practical fix is to diff the **cleaned, extracted content** (the output of Module 4.5's markdown extraction, or your own structured extraction from 5.1) instead of raw HTML — this eliminates most noise sources at their origin rather than trying to filter them out after the fact.
@@ -168,6 +176,8 @@ This connects directly back to 5.1: the better your structuring/extraction step,
 
 ## 5.5 Orchestration at Scale 🆕
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/519c87b5-19e0-4d97-a068-465d937ba0e2" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6b1de287-c871-4d8a-8c3f-0b9cdd2192f8" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a9457953-d1ac-43f9-8f49-6c368e968eab" />
 
 ### Airflow / Prefect / Dagster for scheduled pipelines
 These three tools all schedule, execute, and monitor dependency graphs of pipeline tasks, but take meaningfully different architectural approaches:
@@ -217,6 +227,8 @@ This is essentially the production-infrastructure-scale version of Module 1.5's 
 
 ## 5.6 Data Validation & Schema Enforcement 🆕
 <img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1498d444-a285-41c1-84f2-9808b30db0f8" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/c04ec9a3-2d0e-427c-a8f0-366876883e55" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a35ea6dc-a618-41e2-8c4e-16a7d33be806" />
 
 ### Contract-first pipeline design
 A **data contract** is an explicit, versioned definition of what a pipeline stage is expected to produce — column types, nullability, value ranges, uniqueness constraints, referential relationships — written and agreed upon *before* the extraction/transformation logic is built, rather than left as an implicit shape that downstream consumers reverse-engineer from whatever the pipeline happens to currently output. This directly applies Module 2.1's tool-schema-design discipline to pipeline outputs instead of tool-call arguments. Tooling for this includes JSON Schema and Pydantic/Zod models for type/shape enforcement in code, and data-quality frameworks like Great Expectations, Pandera, or dbt's built-in tests/contracts for codifying business-rule assertions (ranges, uniqueness, non-null requirements, referential integrity) as **executable checks that run on every pipeline execution**, not just something documented once and never re-verified.
