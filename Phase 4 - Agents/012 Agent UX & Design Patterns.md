@@ -52,6 +52,9 @@ Everything else – all subsections, tables, examples, the Seven-Point Trust Che
 ---
 
 ## 12.1 Streaming vs Batching Output
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/18aee3a8-4660-4299-8e6d-9a6d6173c675" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/24cad72c-e94a-430f-a3da-a85f2683e563" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/1fed56f6-3327-4253-8eae-2e7a4be45883" />
 
 ### The core decision
 > **Output delivery shapes perceived speed, effort, and reliability before the user reads a single word.**
@@ -126,6 +129,9 @@ The right choice depends on: **task duration**, **output type**, **user role**, 
 ---
 
 ## 12.2 Showing vs Hiding Intermediate Reasoning
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/e6036e12-906a-4faa-bc6f-c07e6bb0a7bb" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/b824d1db-6308-4db2-b2a7-d5f647be2cfa" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/0ef44095-413a-433d-8373-0f6b88b0bb66" />
 
 ### The scratchpad problem
 
@@ -224,6 +230,9 @@ Show the *action plan* (what it will do, in what order, toward what goal) **befo
 ---
 
 ## 12.3 Interruptibility and Steerability Mid‑Task
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/28ea9fc4-49a6-4c66-ad14-3371ee3abe03" />
+<img width="1149" height="1369" alt="image" src="https://github.com/user-attachments/assets/f1fb7eda-d491-48e1-a59e-c11854db7f45" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/6cb34c02-e464-49d4-b741-051ad2a9afdf" />
 
 ### Why interruptibility is a design problem, not just an engineering one
 
@@ -302,6 +311,9 @@ Beyond a simple stop button:
 ---
 
 ## 12.4 Designing for Trust
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/7e8e5261-344c-4aaa-b41f-40504df05c8c" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/14df9b4f-c925-4ca8-b4bf-3d8b082bdac0" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/8e18ae69-f212-4a0e-aa0b-3736681779a2" />
 
 ### Why trust is the primary design constraint
 
@@ -385,6 +397,9 @@ For agents with **persistent memory** (Module 1.4):
 ---
 
 ## 12.5 Error Recovery UX
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9e47a8a2-6684-4a1d-b184-5c489551f407" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/180ddcc3-2fc4-4607-bf1a-2a59476bda29" />
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/14fa4ab0-2169-405e-be2a-44dc2850805e" />
 
 ### Why error recovery UX is structurally different for agents
 
