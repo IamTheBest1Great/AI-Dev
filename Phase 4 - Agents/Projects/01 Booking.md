@@ -1072,3 +1072,2370 @@ The key concepts you'll learn from this single project are:
 > **Agent orchestration → tool calling → planning → state → memory → parallel execution → deterministic decision engines → retries → error recovery → human-in-the-loop → external API integration → production agent architecture.**
 
 This is a substantially better project for learning agentic AI than building a simple chatbot or calculator agent.
+
+
+Yes. The best way is **not to build the entire agent architecture at once**.
+
+Build it in layers, where every phase produces a **working application**. Then add the next capability.
+
+# Recommended build sequence
+
+```text
+PHASE 0
+Project Setup
+    ↓
+PHASE 1
+Basic FastAPI API
+    ↓
+PHASE 2
+Database + Trip Storage
+    ↓
+PHASE 3
+Weather Integration
+    ↓
+PHASE 4
+Travel Date Selection Logic
+    ↓
+PHASE 5
+Flight Search Tool
+    ↓
+PHASE 6
+Hotel Search Tool
+    ↓
+PHASE 7
+Cab Search Tool
+    ↓
+PHASE 8
+Recommendation Engine
+    ↓
+PHASE 9
+LangGraph Orchestration
+    ↓
+PHASE 10
+LLM Agent + Tool Calling
+    ↓
+PHASE 11
+Memory
+    ↓
+PHASE 12
+Human Approval
+    ↓
+PHASE 13
+Real Booking
+    ↓
+PHASE 14
+Production Hardening
+```
+
+The important principle:
+
+> **First build the capabilities. Then orchestrate them. Then add intelligence.**
+
+Do **not** start with LangGraph + multiple agents + memory + LLM. You will get lost debugging too many moving parts.
+
+---
+
+# PHASE 0 — Project setup
+
+## Goal
+
+Get this working:
+
+```text
+User
+  ↓
+FastAPI
+  ↓
+Hello World
+```
+
+Build:
+
+```text
+travel-agent/
+│
+├── app/
+│   ├── main.py
+│   ├── api/
+│   │   └── routes/
+│   │       └── travel.py
+│   │
+│   └── core/
+│       └── config.py
+│
+├── requirements.txt
+├── .env
+└── docker-compose.yml
+```
+
+At the end:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+And:
+
+```text
+GET /health
+```
+
+returns:
+
+```json
+{
+  "status": "healthy"
+}
+```
+
+### What you learn
+
+* FastAPI project structure
+* routers
+* environment variables
+* dependency management
+
+---
+
+# PHASE 1 — Build the Trip API without AI
+
+Before building an agent, build a normal API.
+
+Create:
+
+```text
+POST /travel/plan
+```
+
+Input:
+
+```json
+{
+  "origin": "Mumbai",
+  "destination": "Goa",
+  "duration": 4,
+  "budget": 30000
+}
+```
+
+Initially return:
+
+```json
+{
+  "message": "Trip request received"
+}
+```
+
+Flow:
+
+```text
+User
+  ↓
+POST /travel/plan
+  ↓
+travel.py
+  ↓
+Validate Input
+  ↓
+Return Response
+```
+
+### Files
+
+```text
+api/routes/travel.py
+schemas/trip.py
+```
+
+### What you learn
+
+* request validation
+* Pydantic
+* API design
+
+---
+
+# PHASE 2 — Database and Trip Storage
+
+Now save the trip.
+
+Add:
+
+```text
+database/
+├── session.py
+└── base.py
+
+models/
+├── user.py
+└── trip.py
+
+migrations/
+```
+
+Flow:
+
+```text
+POST /travel/plan
+        │
+        ▼
+Create Trip
+        │
+        ▼
+PostgreSQL
+
+Status = PLANNING
+```
+
+Database:
+
+```text
+TRIP
+
+id
+user_id
+origin
+destination
+duration
+budget
+status
+created_at
+```
+
+Now your API becomes:
+
+```text
+User Request
+     ↓
+FastAPI
+     ↓
+Validate
+     ↓
+Save Trip
+     ↓
+Return trip_id
+```
+
+Example:
+
+```json
+{
+  "trip_id": "123",
+  "status": "PLANNING"
+}
+```
+
+### Important
+
+At this stage:
+
+```text
+❌ No AI
+❌ No LangGraph
+❌ No agents
+```
+
+Just build a clean backend foundation.
+
+---
+
+# PHASE 3 — Build Weather as a standalone capability
+
+Now introduce the first external tool.
+
+Build:
+
+```text
+services/
+└── weather_service.py
+
+tools/
+└── weather_tools.py
+```
+
+Flow:
+
+```text
+weather_tools.py
+        │
+        ▼
+weather_service.py
+        │
+        ▼
+Weather API
+        │
+        ▼
+Clean Weather Data
+```
+
+Your API can be:
+
+```text
+GET /weather?destination=Goa
+```
+
+Example output:
+
+```json
+{
+  "destination": "Goa",
+  "forecast": [
+    {
+      "date": "2026-09-10",
+      "temperature": 28,
+      "rain_probability": 10,
+      "condition": "Clear"
+    }
+  ]
+}
+```
+
+### What you learn
+
+* external API integration
+* service abstraction
+* tools
+
+---
+
+# PHASE 4 — Build the Weather Decision Engine
+
+Now the application becomes intelligent, but still **without an LLM**.
+
+Create:
+
+```text
+services/
+└── weather_scoring_service.py
+```
+
+Input:
+
+```text
+7 days of weather forecast
++
+Trip duration = 4 days
+```
+
+Your algorithm:
+
+```text
+Weather Data
+      │
+      ▼
+Calculate Daily Score
+      │
+      ▼
+Find Best Consecutive 4 Days
+      │
+      ▼
+Return Best Travel Dates
+```
+
+Example:
+
+```text
+Sept 10 → Score 90
+Sept 11 → Score 85
+Sept 12 → Score 88
+Sept 13 → Score 92
+
+Average = 88.75
+
+BEST WINDOW
+Sept 10 → Sept 13
+```
+
+Now:
+
+```text
+User Request
+      ↓
+Weather API
+      ↓
+Weather Scoring
+      ↓
+Best Dates
+```
+
+This is your **first decision-making component**.
+
+---
+
+# PHASE 5 — Flight search
+
+Build this independently.
+
+```text
+services/
+└── flight_service.py
+
+tools/
+└── flight_tools.py
+```
+
+For the first version, you can use:
+
+```text
+Mock Data
+```
+
+Example:
+
+```json
+[
+  {
+    "airline": "IndiGo",
+    "price": 5000,
+    "duration": 2,
+    "stops": 0
+  },
+  {
+    "airline": "Air India",
+    "price": 4500,
+    "duration": 6,
+    "stops": 1
+  }
+]
+```
+
+Build a function:
+
+```text
+search_flights(
+    origin,
+    destination,
+    departure_date
+)
+```
+
+Test it separately.
+
+Do **not** connect it to LangGraph yet.
+
+---
+
+# PHASE 6 — Hotel search
+
+Same approach.
+
+```text
+hotel_tools.py
+        │
+        ▼
+hotel_service.py
+```
+
+Input:
+
+```json
+{
+  "destination": "Goa",
+  "check_in": "2026-09-10",
+  "check_out": "2026-09-14",
+  "budget": 10000
+}
+```
+
+Output:
+
+```json
+[
+  {
+    "name": "Hotel A",
+    "price": 8000,
+    "rating": 8.7,
+    "distance_from_beach": 2
+  }
+]
+```
+
+Again:
+
+> Build and test it independently.
+
+---
+
+# PHASE 7 — Cab search
+
+Now:
+
+```text
+cab_tools.py
+       │
+       ▼
+cab_service.py
+```
+
+Input:
+
+```text
+Airport
+   ↓
+Hotel
+```
+
+Output:
+
+```json
+{
+  "vehicle": "Sedan",
+  "price": 1500,
+  "provider": "Provider A"
+}
+```
+
+At this point, you have four working capabilities:
+
+```text
+✓ Weather
+✓ Flights
+✓ Hotels
+✓ Cabs
+```
+
+---
+
+# PHASE 8 — Build one normal Travel Planner
+
+This is a critical phase.
+
+Before LangGraph, manually orchestrate everything.
+
+Create:
+
+```text
+services/
+└── travel_planner_service.py
+```
+
+Flow:
+
+```text
+Travel Request
+       │
+       ▼
+Get Weather
+       │
+       ▼
+Find Best Dates
+       │
+       ▼
+Search Flights ───────┐
+                      │
+Search Hotels ────────┼──► Collect Results
+                      │
+Search Cabs ──────────┘
+                      │
+                      ▼
+                 Recommend
+```
+
+Your Python code might logically do:
+
+```text
+1. Get weather
+2. Find best dates
+3. Search flights
+4. Search hotels
+5. Search cabs
+6. Calculate total
+7. Return recommendation
+```
+
+At this stage, your application is already useful.
+
+Example:
+
+```json
+{
+  "trip": {
+    "departure": "2026-09-10",
+    "return": "2026-09-14",
+
+    "flight": {
+      "airline": "IndiGo",
+      "price": 5000
+    },
+
+    "hotel": {
+      "name": "Example Hotel",
+      "price": 8000
+    },
+
+    "cab": {
+      "price": 1500
+    },
+
+    "total": 14500
+  }
+}
+```
+
+---
+
+# PHASE 9 — Add the recommendation engine
+
+Now make the selection smarter.
+
+You have:
+
+```text
+20 Flights
+15 Hotels
+5 Cab Options
+```
+
+You need to choose.
+
+Create:
+
+```text
+services/
+└── recommendation_service.py
+```
+
+Example:
+
+```text
+                    OPTIONS
+                       │
+                       ▼
+              RECOMMENDATION ENGINE
+                       │
+       ┌───────────────┼────────────────┐
+       ▼               ▼                ▼
+     PRICE           QUALITY         PREFERENCE
+       │               │                │
+       └───────────────┼────────────────┘
+                       ▼
+                   SCORE
+                       │
+                       ▼
+                BEST COMBINATION
+```
+
+For example:
+
+```text
+Trip Score =
+
+Price Score × 40%
++
+Weather Score × 30%
++
+Hotel Score × 20%
++
+Convenience × 10%
+```
+
+Now you have a deterministic planner.
+
+---
+
+# PHASE 10 — NOW add LangGraph
+
+Only now.
+
+You already have working functions.
+
+Before:
+
+```text
+travel_planner_service.py
+
+weather()
+    ↓
+dates()
+    ↓
+flights()
+    ↓
+hotels()
+    ↓
+cabs()
+```
+
+Now convert this into a graph.
+
+Create:
+
+```text
+graph/
+├── state.py
+├── nodes.py
+└── graph.py
+```
+
+---
+
+## Step 10.1 — Create State
+
+```text
+TravelState
+
+origin
+destination
+duration
+budget
+
+weather_results
+selected_dates
+
+flights
+hotels
+cabs
+
+recommendation
+```
+
+---
+
+## Step 10.2 — Create nodes
+
+```text
+START
+  │
+  ▼
+weather_node
+  │
+  ▼
+date_selection_node
+  │
+  ├──────────────┬──────────────┐
+  ▼              ▼              ▼
+flight_node   hotel_node      cab_node
+  │              │              │
+  └──────────────┼──────────────┘
+                 ▼
+          recommendation_node
+                 │
+                 ▼
+                END
+```
+
+Now each node simply calls the capabilities you already built.
+
+Example:
+
+```text
+weather_node
+       │
+       ▼
+weather_service
+```
+
+This is why we built everything first.
+
+You are not debugging:
+
+```text
+LLM
++
+LangGraph
++
+Weather API
++
+Flight API
+```
+
+all at once.
+
+---
+
+# PHASE 11 — Add async parallel execution
+
+Flights, hotels, and cabs don't necessarily depend on each other.
+
+So:
+
+```text
+                Dates Selected
+                       │
+                       ▼
+           ┌───────────┼───────────┐
+           │           │           │
+           ▼           ▼           ▼
+
+       Flights      Hotels       Cabs
+           │           │           │
+           │           │           │
+           └───────────┼───────────┘
+                       │
+                       ▼
+                    Merge
+```
+
+Now learn:
+
+```python
+asyncio.gather()
+```
+
+This will make your agent workflow faster.
+
+---
+
+# PHASE 12 — Add LLM and Agent behavior
+
+**Only here should you introduce the LLM.**
+
+Now the user can say:
+
+> "I want to go somewhere cool, not too expensive, and I hate early flights."
+
+This is harder for normal APIs.
+
+Flow:
+
+```text
+Natural Language
+        │
+        ▼
+       LLM
+        │
+        ▼
+Extract Intent
+
+Origin = ?
+Destination = Goa
+Budget = ?
+Preferences =
+    - Cool weather
+    - Cheap
+    - No early flights
+        │
+        ▼
+Structured Travel Request
+        │
+        ▼
+LangGraph
+```
+
+The LLM can help with:
+
+```text
+✓ Understanding the user
+✓ Extracting preferences
+✓ Asking missing questions
+✓ Choosing which tool to call
+✓ Explaining recommendations
+```
+
+But don't let it handle deterministic calculations.
+
+```text
+LLM
+ ❌ Calculate prices
+
+Python
+ ✓ Calculate prices
+
+
+LLM
+ ❌ Decide mathematical weather score
+
+Python
+ ✓ Calculate weather score
+```
+
+---
+
+# PHASE 13 — Add conversation state and memory
+
+Now add:
+
+```text
+memory/
+├── short_term.py
+└── long_term.py
+```
+
+## Short-term
+
+Current conversation:
+
+```text
+User: I want Goa.
+
+Agent: When?
+
+User: Next month.
+```
+
+The agent remembers:
+
+```text
+destination = Goa
+travel_period = next month
+```
+
+## Long-term
+
+Persistent preferences:
+
+```text
+User:
+
+Prefers:
+✓ Direct flights
+✓ Window seat
+✓ 4-star hotels
+
+Avoid:
+✗ Early flights
+✗ Extremely hot destinations
+```
+
+Store initially in PostgreSQL.
+
+Later:
+
+```text
+PostgreSQL
++
+pgvector
+```
+
+---
+
+# PHASE 14 — Add human approval
+
+Before this phase:
+
+```text
+Agent finds trip
+        │
+        ▼
+Returns recommendation
+```
+
+Now:
+
+```text
+Agent finds trip
+        │
+        ▼
+Save proposed plan
+        │
+        ▼
+Status = WAITING_FOR_APPROVAL
+        │
+        ▼
+        USER
+        │
+   ┌────┴────┐
+   │         │
+Reject      Approve
+   │         │
+   ▼         ▼
+Replan    Booking Graph
+```
+
+This is where:
+
+```text
+booking.py
+booking_agent.py
+booking_tools.py
+```
+
+become important.
+
+---
+
+# PHASE 15 — Real booking
+
+Initially use:
+
+```text
+Mock Booking
+```
+
+Example:
+
+```text
+Flight Selected
+       │
+       ▼
+Fake Booking API
+       │
+       ▼
+Booking ID: TEST123
+```
+
+Then replace it with real providers.
+
+The architecture remains:
+
+```text
+booking_agent
+      │
+      ▼
+booking_tools
+      │
+      ▼
+booking_service
+      │
+      ▼
+Real Provider
+```
+
+---
+
+# PHASE 16 — Error handling and recovery
+
+This is where it becomes a real agent system.
+
+Example:
+
+```text
+Book Flight
+     │
+     ▼
+SUCCESS
+     │
+     ▼
+Book Hotel
+     │
+     ▼
+FAILED ❌
+```
+
+Now what?
+
+```text
+              Hotel Failed
+                   │
+                   ▼
+          Try Alternative Hotel
+                   │
+             ┌─────┴─────┐
+             │           │
+         SUCCESS       FAIL
+             │           │
+             ▼           ▼
+          Continue   Ask User
+```
+
+You need:
+
+```text
+Retry
+Fallback
+Alternative Provider
+Replanning
+Compensation / Cancellation
+```
+
+---
+
+# Final complete roadmap
+
+```text
+┌─────────────────────────────────────────────┐
+│ PHASE 0                                    │
+│ Project Setup                              │
+│ FastAPI + PostgreSQL + Docker              │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 1                                    │
+│ Basic Trip API                             │
+│ POST /travel/plan                          │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 2                                    │
+│ Database                                   │
+│ Save Trips                                 │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 3                                    │
+│ Weather Integration                        │
+│ Weather API + Service + Tool               │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 4                                    │
+│ Weather Decision Engine                     │
+│ Find Best Travel Dates                     │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 5                                    │
+│ Flight Search                              │
+│ Mock Tool → Real API                       │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 6                                    │
+│ Hotel Search                               │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 7                                    │
+│ Cab Search                                 │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 8                                    │
+│ Normal Travel Planner                      │
+│ Connect All Capabilities                   │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 9                                    │
+│ Recommendation Engine                      │
+│ Rank and Select Best Options               │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 10                                   │
+│ LangGraph                                  │
+│ Convert Workflow Into Agent Graph          │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 11                                   │
+│ Async + Parallel Execution                 │
+│ Flights + Hotels + Cabs                    │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 12                                   │
+│ LLM Agent                                  │
+│ Natural Language → Structured Intent       │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 13                                   │
+│ Memory                                     │
+│ Short-term + Long-term Preferences         │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 14                                   │
+│ Human-in-the-Loop                          │
+│ Approval Before Booking                    │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 15                                   │
+│ Real Booking                               │
+│ Flight + Hotel + Cab                       │
+└──────────────────────┬──────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────┐
+│ PHASE 16                                   │
+│ Production Hardening                       │
+│ Retries + Recovery + Tests + Monitoring    │
+└─────────────────────────────────────────────┘
+```
+
+## The key sequence to remember
+
+```text
+FIRST
+Build Functions
+
+        ↓
+
+THEN
+Connect Functions
+
+        ↓
+
+THEN
+Build Workflow
+
+        ↓
+
+THEN
+Add LLM Intelligence
+
+        ↓
+
+THEN
+Add Memory
+
+        ↓
+
+THEN
+Add Real Actions
+
+        ↓
+
+FINALLY
+Handle Failures and Production Issues
+```
+
+This is the order I would use for you because it lets you learn **FastAPI → APIs/tools → business logic → orchestration → LangGraph → LLM agents → memory → human approval → production reliability** progressively, instead of treating “agentic AI” as a black box.
+
+
+Exactly. You should have a **fixed implementation sequence for every feature**.
+
+Do **not** randomly create files.
+
+For each feature, follow this pipeline:
+
+# Universal feature-building sequence
+
+```text
+1. Define Feature
+        ↓
+2. Define Database Changes
+        ↓
+3. Create SQLAlchemy Model
+        ↓
+4. Create Pydantic Schemas
+        ↓
+5. Create Service / Business Logic
+        ↓
+6. Create External API Integration (if needed)
+        ↓
+7. Create Tool (if agent needs it)
+        ↓
+8. Create Graph Node (if part of workflow)
+        ↓
+9. Connect Node to LangGraph
+        ↓
+10. Create API Route
+        ↓
+11. Test Feature
+```
+
+But the exact sequence changes depending on the feature.
+
+---
+
+# The core rule
+
+Think of every feature like this:
+
+```text
+                    FEATURE
+
+                       │
+          ┌────────────┴────────────┐
+          │                         │
+     Does it need DB?          Does it need
+                               external API?
+          │                         │
+         YES                       YES
+          │                         │
+          ▼                         ▼
+        Model                    Service
+          │                         │
+          ▼                         ▼
+        Schema                    Tool
+          │                         │
+          └────────────┬────────────┘
+                       ▼
+                Business Logic
+                       │
+                       ▼
+                  Graph Node
+                       │
+                       ▼
+                     Route
+                       │
+                       ▼
+                    Test
+```
+
+---
+
+# FEATURE 1 — Create a Trip
+
+User sends:
+
+```text
+"Plan a trip from Mumbai to Goa for 4 days."
+```
+
+## Build sequence
+
+```text
+STEP 1
+Define Request/Response
+        ↓
+STEP 2
+Create Schema
+        ↓
+STEP 3
+Create Database Model
+        ↓
+STEP 4
+Create Migration
+        ↓
+STEP 5
+Create Service
+        ↓
+STEP 6
+Create Route
+        ↓
+STEP 7
+Test
+```
+
+## Files
+
+```text
+schemas/trip.py
+      ↓
+models/trip.py
+      ↓
+migrations/
+      ↓
+services/trip_service.py
+      ↓
+api/routes/travel.py
+      ↓
+tests/test_trip.py
+```
+
+## Flow
+
+```text
+POST /travel/plan
+
+        │
+        ▼
+
+schemas/trip.py
+Validate Input
+
+        │
+        ▼
+
+travel.py
+Receive Request
+
+        │
+        ▼
+
+trip_service.py
+Business Logic
+
+        │
+        ▼
+
+models/trip.py
+
+        │
+        ▼
+
+PostgreSQL
+
+        │
+        ▼
+
+Response Schema
+
+        │
+        ▼
+
+User
+```
+
+---
+
+# FEATURE 2 — Weather Search
+
+User already has a trip.
+
+We want:
+
+```text
+Trip
+  ↓
+Check Weather
+```
+
+This feature doesn't necessarily need its own database table initially.
+
+## Build sequence
+
+```text
+STEP 1
+Define Weather Data Format
+        ↓
+STEP 2
+Create Weather Schema
+        ↓
+STEP 3
+Create Weather Service
+        ↓
+STEP 4
+Create Weather Tool
+        ↓
+STEP 5
+Test Tool
+        ↓
+STEP 6
+Connect to Graph
+```
+
+## Files
+
+```text
+schemas/weather.py
+        ↓
+services/weather_service.py
+        ↓
+tools/weather_tools.py
+        ↓
+graph/nodes.py
+        ↓
+graph/graph.py
+```
+
+## Flow
+
+```text
+Weather Node
+      │
+      ▼
+weather_tools.py
+      │
+      ▼
+weather_service.py
+      │
+      ▼
+Weather API
+      │
+      ▼
+Raw Weather Data
+      │
+      ▼
+Normalize Data
+      │
+      ▼
+Weather Schema
+      │
+      ▼
+Update Graph State
+```
+
+### Important distinction
+
+```text
+weather_service.py
+```
+
+knows:
+
+> How to call the Weather API.
+
+```text
+weather_tools.py
+```
+
+knows:
+
+> How to expose weather capability to an agent.
+
+---
+
+# FEATURE 3 — Best Weather Date Selection
+
+This feature is mostly **business logic**.
+
+Input:
+
+```text
+Weather Forecast
++
+Trip Duration
+```
+
+Output:
+
+```text
+Best 4-Day Window
+```
+
+## Build sequence
+
+```text
+STEP 1
+Define Input
+        ↓
+STEP 2
+Create Weather Scoring Logic
+        ↓
+STEP 3
+Create Date Selection Logic
+        ↓
+STEP 4
+Unit Test
+        ↓
+STEP 5
+Add Graph Node
+```
+
+Files:
+
+```text
+services/
+├── weather_scoring_service.py
+└── date_selection_service.py
+
+tests/
+└── test_date_selection.py
+
+graph/
+└── nodes.py
+```
+
+## Flow
+
+```text
+Weather Forecast
+       │
+       ▼
+weather_scoring_service
+       │
+       ▼
+Daily Scores
+
+Sept 10 → 90
+Sept 11 → 85
+Sept 12 → 92
+Sept 13 → 88
+
+       │
+       ▼
+
+date_selection_service
+       │
+       ▼
+
+Best Consecutive Dates
+       │
+       ▼
+
+Graph State
+```
+
+No LLM needed here.
+
+---
+
+# FEATURE 4 — Flight Search
+
+This feature has an external provider.
+
+## Build sequence
+
+```text
+1. Define Flight Schema
+        ↓
+2. Build Flight Service
+        ↓
+3. Add Provider Integration
+        ↓
+4. Normalize Provider Response
+        ↓
+5. Create Flight Tool
+        ↓
+6. Test Independently
+        ↓
+7. Add Flight Graph Node
+```
+
+## Files
+
+```text
+schemas/flight.py
+        │
+        ▼
+services/flight_service.py
+        │
+        ▼
+tools/flight_tools.py
+        │
+        ▼
+graph/nodes.py
+        │
+        ▼
+graph/graph.py
+```
+
+## Flow
+
+```text
+Graph State
+
+origin
+destination
+selected_dates
+
+        │
+        ▼
+
+flight_node()
+
+        │
+        ▼
+
+search_flights()
+
+        │
+        ▼
+
+flight_service.py
+
+        │
+        ▼
+
+Flight API
+
+        │
+        ▼
+
+Raw Provider Response
+
+        │
+        ▼
+
+Normalize
+
+        │
+        ▼
+
+FlightSchema[]
+
+        │
+        ▼
+
+state["flights"]
+```
+
+---
+
+# FEATURE 5 — Hotel Search
+
+Exactly the same pattern.
+
+## Build sequence
+
+```text
+Schema
+   ↓
+Service
+   ↓
+External API
+   ↓
+Normalize
+   ↓
+Tool
+   ↓
+Test
+   ↓
+Graph Node
+```
+
+Files:
+
+```text
+schemas/hotel.py
+services/hotel_service.py
+tools/hotel_tools.py
+graph/nodes.py
+tests/test_hotel.py
+```
+
+Flow:
+
+```text
+Hotel Node
+    ↓
+Hotel Tool
+    ↓
+Hotel Service
+    ↓
+Hotel Provider
+    ↓
+Normalized Hotels
+    ↓
+Graph State
+```
+
+---
+
+# FEATURE 6 — Cab Search
+
+Same pattern:
+
+```text
+schemas/cab.py
+        ↓
+services/cab_service.py
+        ↓
+tools/cab_tools.py
+        ↓
+graph/nodes.py
+```
+
+Flow:
+
+```text
+Selected Flight
+       +
+Selected Hotel
+       │
+       ▼
+Cab Node
+       │
+       ▼
+Cab Tool
+       │
+       ▼
+Cab Service
+       │
+       ▼
+Cab Provider
+       │
+       ▼
+Cab Options
+```
+
+---
+
+# FEATURE 7 — Recommendation Engine
+
+This combines all results.
+
+Input:
+
+```text
+Weather
++
+Flights
++
+Hotels
++
+Cabs
++
+User Budget
++
+Preferences
+```
+
+Output:
+
+```text
+Recommended Trip
+```
+
+## Build sequence
+
+```text
+1. Define Recommendation Schema
+        ↓
+2. Create Scoring Rules
+        ↓
+3. Create Recommendation Service
+        ↓
+4. Test Multiple Scenarios
+        ↓
+5. Add Recommendation Node
+```
+
+Files:
+
+```text
+schemas/recommendation.py
+
+services/
+├── flight_ranking_service.py
+├── hotel_ranking_service.py
+└── recommendation_service.py
+
+graph/nodes.py
+```
+
+## Flow
+
+```text
+Flights ──────┐
+              │
+Hotels ───────┼────► Recommendation Engine
+              │
+Cabs ─────────┤
+              │
+Weather ──────┘
+                      │
+                      ▼
+               Calculate Scores
+                      │
+                      ▼
+                Check Budget
+                      │
+                      ▼
+              Recommended Plan
+                      │
+                      ▼
+                Update State
+```
+
+---
+
+# FEATURE 8 — Store Trip Results
+
+Now persist the result.
+
+## Build sequence
+
+```text
+1. Update Trip Model
+        ↓
+2. Create Recommendation Model/Table
+        ↓
+3. Create Migration
+        ↓
+4. Create Repository/Service
+        ↓
+5. Save Recommendation
+```
+
+Example database:
+
+```text
+TRIPS
+│
+├── id
+├── origin
+├── destination
+├── budget
+└── status
+
+
+TRIP_OPTIONS
+│
+├── id
+├── trip_id
+├── flight_data
+├── hotel_data
+├── cab_data
+├── total_price
+└── score
+```
+
+Flow:
+
+```text
+Recommendation Node
+        │
+        ▼
+Recommendation Service
+        │
+        ▼
+Trip Model
+        │
+        ▼
+Trip Option Model
+        │
+        ▼
+PostgreSQL
+```
+
+---
+
+# FEATURE 9 — LangGraph Workflow
+
+Only after individual capabilities work.
+
+## Build sequence
+
+```text
+1. Define State
+        ↓
+2. Create Nodes
+        ↓
+3. Define Edges
+        ↓
+4. Add Conditional Routing
+        ↓
+5. Compile Graph
+        ↓
+6. Test Graph
+```
+
+Files:
+
+```text
+graph/
+├── state.py
+├── nodes.py
+└── graph.py
+```
+
+## Actual implementation order
+
+### First:
+
+```text
+START
+  ↓
+Weather
+  ↓
+END
+```
+
+Then:
+
+```text
+START
+  ↓
+Weather
+  ↓
+Date Selection
+  ↓
+END
+```
+
+Then:
+
+```text
+START
+  ↓
+Weather
+  ↓
+Date Selection
+  ↓
+Flight
+  ↓
+END
+```
+
+Then:
+
+```text
+START
+  ↓
+Weather
+  ↓
+Date Selection
+  ├──────┬──────┐
+  ▼      ▼      ▼
+Flight Hotel   Cab
+  │      │      │
+  └──────┼──────┘
+         ▼
+Recommendation
+         │
+        END
+```
+
+Build the graph gradually.
+
+---
+
+# FEATURE 10 — Add the LLM Agent
+
+Now the LLM sits **before or inside the graph**.
+
+## Build sequence
+
+```text
+1. Define LLM Input
+        ↓
+2. Define Structured Output
+        ↓
+3. Create Agent Service
+        ↓
+4. Add Tools
+        ↓
+5. Add Agent Node
+        ↓
+6. Test Tool Calls
+```
+
+Files:
+
+```text
+agents/
+├── orchestrator.py
+└── travel_agent.py
+
+schemas/
+└── agent.py
+```
+
+Flow:
+
+```text
+User Message
+
+"I want a cheap trip to Goa,
+but I don't want rain."
+
+        │
+        ▼
+
+LLM
+
+        │
+        ▼
+
+Structured Intent
+
+{
+ origin: Mumbai,
+ destination: Goa,
+ preferences: {
+    cheap: true,
+    avoid_rain: true
+ }
+}
+
+        │
+        ▼
+
+TravelState
+
+        │
+        ▼
+
+LangGraph
+```
+
+---
+
+# FEATURE 11 — Long-Term Memory
+
+This needs persistence.
+
+## Build sequence
+
+```text
+1. Define Memory Data
+        ↓
+2. Create User Preference Model
+        ↓
+3. Create Migration
+        ↓
+4. Create Memory Service
+        ↓
+5. Retrieve Memory
+        ↓
+6. Inject into Agent Context
+```
+
+Files:
+
+```text
+models/user_preference.py
+
+schemas/preference.py
+
+services/memory_service.py
+
+memory/long_term.py
+```
+
+Flow:
+
+```text
+User Request
+      │
+      ▼
+
+Retrieve Preferences
+
+      │
+      ▼
+
+PostgreSQL
+
+      │
+      ▼
+
+{
+  preferred_airline,
+  hotel_rating,
+  avoid_early_flights
+}
+
+      │
+      ▼
+
+Agent Context
+      │
+      ▼
+
+Personalized Plan
+```
+
+---
+
+# FEATURE 12 — Human Approval
+
+This feature requires **database state + route + graph interruption**.
+
+## Build sequence
+
+```text
+1. Add Trip Status
+        ↓
+2. Create Approval Schema
+        ↓
+3. Create Approval Route
+        ↓
+4. Pause Graph
+        ↓
+5. Wait for User
+        ↓
+6. Resume Graph
+```
+
+Files:
+
+```text
+models/trip.py
+
+schemas/booking.py
+
+api/routes/booking.py
+
+graph/graph.py
+
+agents/booking_agent.py
+```
+
+Flow:
+
+```text
+Recommendation
+      │
+      ▼
+
+Save Trip
+
+status =
+WAITING_FOR_APPROVAL
+
+      │
+      ▼
+
+Return Plan to User
+
+      │
+      ▼
+
+User Approves
+
+POST /booking/approve
+
+      │
+      ▼
+
+Validate Approval Schema
+
+      │
+      ▼
+
+Update Trip Status
+
+      │
+      ▼
+
+Resume Booking Workflow
+```
+
+---
+
+# FEATURE 13 — Actual Booking
+
+This is the most important feature to build carefully.
+
+## Build sequence
+
+```text
+1. Define Booking Models
+        ↓
+2. Create Booking Schemas
+        ↓
+3. Create Provider Services
+        ↓
+4. Create Booking Tools
+        ↓
+5. Create Booking Workflow
+        ↓
+6. Add Retry Logic
+        ↓
+7. Add Failure Recovery
+        ↓
+8. Save Booking Result
+```
+
+Files:
+
+```text
+models/booking.py
+
+schemas/booking.py
+
+services/
+├── flight_booking_service.py
+├── hotel_booking_service.py
+└── cab_booking_service.py
+
+tools/booking_tools.py
+
+agents/booking_agent.py
+```
+
+Flow:
+
+```text
+User Approval
+      │
+      ▼
+booking.py
+      │
+      ▼
+booking_agent
+      │
+      ▼
+Booking Workflow
+      │
+      ├──── Flight Booking
+      │
+      ├──── Hotel Booking
+      │
+      └──── Cab Booking
+              │
+              ▼
+          Save Results
+              │
+              ▼
+        PostgreSQL
+```
+
+---
+
+# The master pattern for every feature
+
+Whenever you build a new feature, ask these questions **in this order**:
+
+```text
+┌──────────────────────────────────────────────┐
+│ 1. What data comes INTO this feature?        │
+└───────────────────────┬──────────────────────┘
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 2. What data should come OUT?                │
+└───────────────────────┬──────────────────────┘
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 3. Does this data need to be stored?         │
+└───────────────────────┬──────────────────────┘
+                        ▼
+                  YES / NO
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 4. Does it need external communication?      │
+│    Weather API? Flight API?                  │
+└───────────────────────┬──────────────────────┘
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 5. What is the business logic?               │
+└───────────────────────┬──────────────────────┘
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 6. Does an LLM need to call this capability? │
+└───────────────────────┬──────────────────────┘
+                        ▼
+                    YES / NO
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 7. Does this feature participate in a graph? │
+└───────────────────────┬──────────────────────┘
+                        ▼
+                    YES / NO
+                        │
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 8. How does the user access it?              │
+│    API Route / Chat / Background Job         │
+└───────────────────────┬──────────────────────┘
+                        ▼
+┌──────────────────────────────────────────────┐
+│ 9. How will we test it?                      │
+└──────────────────────────────────────────────┘
+```
+
+# The practical coding order I recommend
+
+For a **simple CRUD feature**:
+
+```text
+Schema
+→ Model
+→ Migration
+→ Service
+→ Route
+→ Test
+```
+
+For an **external API feature**:
+
+```text
+Schema
+→ Service
+→ External API integration
+→ Normalize response
+→ Tool
+→ Test
+→ Graph Node
+```
+
+For an **agent feature**:
+
+```text
+Input Schema
+→ State Update
+→ Business Logic / Tool
+→ Agent or Node
+→ Graph Edge
+→ Route
+→ Test
+```
+
+For a **feature with database + agent + external API**, the full sequence is:
+
+```text
+1. Define Input/Output
+        ↓
+2. Schema
+        ↓
+3. Model
+        ↓
+4. Migration
+        ↓
+5. Service
+        ↓
+6. External Integration
+        ↓
+7. Tool
+        ↓
+8. Graph Node
+        ↓
+9. Graph Connection
+        ↓
+10. Route
+        ↓
+11. Integration Test
+```
+
+## The one sentence to remember
+
+> **Start from the data contract, build the business capability, expose it to the workflow, then expose the workflow to the user.**
+
+That gives you a repeatable sequence for every feature instead of guessing whether to create the route, service, tool, or agent first.
