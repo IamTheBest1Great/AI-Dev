@@ -1,3 +1,5 @@
+
+```text
 PRODUCTION AI / AGENT SYSTEMS ENGINEERING
 │
 ├── 1. ENGINEERING FOUNDATIONS
@@ -81,8 +83,11 @@ PRODUCTION AI / AGENT SYSTEMS ENGINEERING
 └── 12. RESEARCH & CONTINUOUS DEVELOPMENT
     │
     └── Layer 44 — Research Literacy
+```
 
+### The full hierarchy at one level higher
 
+```text
                          PRODUCTION AI ENGINEER
                                   │
      ┌────────────────────────────┼────────────────────────────┐
@@ -159,9 +164,12 @@ Py   API  Distributed     LLM    RAG   Tools      Intelligence Runtime Ecosystem
                                   │
                                   ▼
                        CONTINUOUS EVOLUTION
+```
 
 
-                          CORE AI ENGINEERING
+
+```text
+                         CORE AI ENGINEERING
                                   │
         ┌─────────────────────────┼─────────────────────────┐
         │                         │                         │
@@ -180,7 +188,9 @@ Py   API  Distributed     LLM    RAG   Tools      Intelligence Runtime Ecosystem
                          DOMAIN SPECIALIZATION
                                   │
                          RESEARCH / EVOLUTION
-                       
+```
+
+                     
 # Production AI Engineer 2026+ — Master Roadmap & Study Guide
 
 ## Python + FastAPI + RAG + Agents + MCP + A2A + Multimodal + Production AI
