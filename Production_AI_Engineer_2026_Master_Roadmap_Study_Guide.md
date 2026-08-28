@@ -1,3 +1,186 @@
+PRODUCTION AI / AGENT SYSTEMS ENGINEERING
+│
+├── 1. ENGINEERING FOUNDATIONS
+│   │
+│   ├── Layer 0 — Python Engineering Foundations
+│   ├── Layer 1 — FastAPI Production Backend
+│   └── Layer 2 — Databases & Distributed Systems
+│
+├── 2. AI & MODEL FOUNDATIONS
+│   │
+│   ├── Layer 3 — LLM & Foundation Model Fundamentals
+│   └── Layer 4 — LLM Application Fundamentals
+│
+├── 3. KNOWLEDGE & ACTION
+│   │
+│   ├── Layer 5 — Embeddings, Search & RAG
+│   └── Layer 7 — Tool Calling & Action Systems
+│
+├── 4. AGENT INTELLIGENCE
+│   │
+│   ├── Layer 8 — Agent Fundamentals
+│   ├── Layer 9 — Agent Frameworks & Orchestration
+│   ├── Layer 10 — Context Engineering
+│   └── Layer 11 — Agent Memory
+│
+├── 5. AGENT INFRASTRUCTURE & ECOSYSTEM
+│   │
+│   ├── Layer 12 — Agent Runtime / Harness Engineering
+│   ├── Layer 13 — Durable Execution & Long-Running Agents
+│   ├── Layer 14 — Agent Skills
+│   ├── Layer 15 — MCP
+│   ├── Layer 16 — A2A
+│   └── Layer 17 — Agent Protocol Landscape
+│
+├── 6. ADVANCED AGENT CAPABILITIES
+│   │
+│   ├── Layer 18 — Multi-Agent Systems
+│   ├── Layer 19 — Browser Automation
+│   ├── Layer 20 — Computer-Use Agents
+│   ├── Layer 21 — Coding Agents
+│   ├── Layer 22 — Multimodal AI
+│   └── Layer 23 — Voice & Real-Time AI
+│
+├── 7. TRUST, QUALITY & CONTROL
+│   │
+│   ├── Layer 6 — Evaluation-First AI Engineering
+│   ├── Layer 24 — AI Security
+│   ├── Layer 25 — AI Governance & Enterprise Controls
+│   ├── Layer 26 — AI Observability
+│   ├── Layer 27 — Reliability Engineering
+│   └── Layer 28 — AI Cost & Unit Economics
+│
+├── 8. AI PLATFORM & INFRASTRUCTURE
+│   │
+│   ├── Layer 29 — AI Gateway / Model Gateway
+│   ├── Layer 30 — AI Platform Engineering
+│   ├── Layer 31 — Inference Engineering & Local Models
+│   ├── Layer 32 — Fine-Tuning & Custom Models
+│   ├── Layer 33 — AI Data Engineering & Document Intelligence
+│   ├── Layer 36 — Background Jobs & Automation
+│   ├── Layer 37 — Cloud & Infrastructure
+│   ├── Layer 38 — CI/CD for AI
+│   └── Layer 39 — Testing Strategy
+│
+├── 9. AI EXPERIENCE & APPLICATION DELIVERY
+│   │
+│   ├── Layer 34 — AI UX / Generative UI
+│   └── Layer 35 — Bots, Messaging & Integrations
+│
+├── 10. PRODUCT & COMMERCIALIZATION
+│   │
+│   ├── Layer 40 — Product Engineering
+│   ├── Layer 41 — SaaS & Multi-Tenancy
+│   └── Layer 45 — Business / Career Layer
+│
+├── 11. DOMAIN & SPECIALIZATION
+│   │
+│   ├── Layer 42 — Domain Specialization
+│   └── Layer 43 — Specialized AI Opportunities
+│
+└── 12. RESEARCH & CONTINUOUS DEVELOPMENT
+    │
+    └── Layer 44 — Research Literacy
+
+
+                         PRODUCTION AI ENGINEER
+                                  │
+     ┌────────────────────────────┼────────────────────────────┐
+     │                            │                            │
+ ENGINEERING                    AI CORE                     AGENT SYSTEMS
+     │                            │                            │
+ ┌───┼────┐                ┌──────┼──────┐          ┌─────────┼─────────┐
+ │   │    │                │      │      │          │         │         │
+Py   API  Distributed     LLM    RAG   Tools      Intelligence Runtime Ecosystem
+ │   │    Systems          │      │      │          │         │         │
+ │   │    │                │      │      │          │         │         │
+ └───┼────┘                └──────┼──────┘          └─────────┼─────────┘
+     │                            │                            │
+     └────────────────────────────┼────────────────────────────┘
+                                  │
+                         ADVANCED CAPABILITIES
+                                  │
+                   ┌──────────────┼──────────────┐
+                   │              │              │
+                Multi-Agent   Computer Use   Coding Agents
+                   │              │              │
+              Browser       Multimodal       Voice
+                   │              │              │
+                   └──────────────┼──────────────┘
+                                  │
+                           TRUST & CONTROL
+                                  │
+             ┌────────────────────┼────────────────────┐
+             │                    │                    │
+          Evaluation           Security             Governance
+             │                    │                    │
+        Observability        Reliability             Cost
+             │                    │                    │
+             └────────────────────┼────────────────────┘
+                                  │
+                        PLATFORM & INFRASTRUCTURE
+                                  │
+             ┌────────────────────┼────────────────────┐
+             │                    │                    │
+         AI Platform         Cloud / CI/CD        Inference
+             │                    │                    │
+         AI Gateway          Workers / Jobs       Fine-tuning
+             │                    │                    │
+       Data Engineering      Testing               Models
+                                  │
+                                  ▼
+                       EXPERIENCE & DELIVERY
+                                  │
+                        ┌─────────┴─────────┐
+                        │                   │
+                   Generative UI       Integrations
+                        │                   │
+                       Bots             Messaging
+                        │                   │
+                        └─────────┬─────────┘
+                                  ▼
+                       PRODUCT & COMMERCIAL
+                                  │
+                    ┌─────────────┼─────────────┐
+                    │             │             │
+                 Product        SaaS         Business
+                    │             │             │
+                    └─────────────┼─────────────┘
+                                  ▼
+                     DOMAIN SPECIALIZATION
+                                  │
+                         ┌────────┴────────┐
+                         │                 │
+                       Domain        Specialized AI
+                         │                 │
+                         └────────┬────────┘
+                                  ▼
+                         RESEARCH LITERACY
+                                  │
+                                  ▼
+                       CONTINUOUS EVOLUTION
+
+
+                          CORE AI ENGINEERING
+                                  │
+        ┌─────────────────────────┼─────────────────────────┐
+        │                         │                         │
+   Foundations              AI Capabilities          Agent Systems
+        │                         │                         │
+        └─────────────────────────┼─────────────────────────┘
+                                  │
+                        PLATFORM & RUNTIME
+                                  │
+                     TRUST / QUALITY / CONTROL
+                                  │
+                       EXPERIENCE & DELIVERY
+                                  │
+                       PRODUCT & BUSINESS
+                                  │
+                         DOMAIN SPECIALIZATION
+                                  │
+                         RESEARCH / EVOLUTION
+                       
 # Production AI Engineer 2026+ — Master Roadmap & Study Guide
 
 ## Python + FastAPI + RAG + Agents + MCP + A2A + Multimodal + Production AI
