@@ -1060,173 +1060,575 @@ A Transformer block also contains other components, especially feed-forward tran
 ---
 
 
-## 5.2.2 Transformer Architecture Families
+Yes. To make the categorization **clear and logically separated**, I would structure your notes like this.
 
-🧠 **Simple Understanding:**
-Transformer models can be organized differently depending on whether they mainly **understand**, **generate**, or transform one sequence into another.
+# 5.2 Transformer Architecture
 
-### Encoder-Only
-
-```text
-Input sequence
-   ↓
-Bidirectional contextual processing
-   ↓
-Representations
-   ↓
-Classification / retrieval / tagging / understanding
-```
-
-Typical strengths:
-
-* representation learning
-* classification
-* token labeling
-* semantic understanding
-
-### Decoder-Only
+## Final categorization to memorize
 
 ```text
-Existing tokens
-   ↓
-Causal self-attention
-   ↓
-Next-token distribution
-   ↓
-Generate token
-   ↓
-Repeat
+5.2 Transformer Architecture
+│
+├── 5.2.1 What is a Transformer?
+│
+├── 5.2.2 Architecture Families
+│   ├── 5.2.2.1 Encoder-only
+│   ├── 5.2.2.2 Decoder-only
+│   └── 5.2.2.3 Encoder–Decoder
+│
+├── 5.2.3 Model Styles / Paradigms
+│   ├── 5.2.3.1 BERT-style
+│   └── 5.2.3.2 GPT-style
+│
+├── 5.2.4 Training Objectives
+│   ├── 5.2.4.1 Causal Language Modeling
+│   └── 5.2.4.2 Masked Language Modeling
+│
+└── 5.2.5 Sequence-to-Sequence Generation
 ```
 
-Modern conversational LLMs are commonly decoder-style because autoregressive generation fits interactive language generation naturally.
+## 5.2.1 What Is a Transformer?
 
-### Encoder–Decoder
+**Category: Architecture**
 
-```text
-Input
- ↓
-Encoder
- ↓
-Encoded representation
- ↓
-Decoder
- ↓
-Output sequence
-```
-
-Historically common for sequence-to-sequence tasks such as translation and summarization.
-
-### Comparison
-
-| Architecture | Main Attention Pattern | Typical Role |
-| --- | --- | --- |
-| Encoder-only | Bidirectional over input | Understanding / representation |
-| Decoder-only | Causal | Generation |
-| Encoder–decoder | Encoder + decoder cross-attention | Input-to-output transformation |
-
-🎯 **Interview Tip:** Do not say one architecture is universally better. Architecture choice follows the task and training objective.
+* Transformer = overall neural-network architecture
+* Built around attention, feed-forward layers, normalization, residual connections, etc.
 
 ---
 
-Architecture and training objective are related but are not the same concept.
+# 5.2.2 Transformer Architecture Families
 
-| Family | Typical attention pattern | Common objective | Typical use |
-|---|---|---|---|
-| Encoder-only | Bidirectional | Masked-language-style objectives | Classification, representation, retrieval |
-| Decoder-only | Causal | Next-token / causal language modeling | Autoregressive generation |
-| Encoder–decoder | Encoder + decoder + cross-attention | Sequence-to-sequence | Translation, summarization, transformation |
+**Category: Architecture**
 
-### BERT-style vs GPT-style mental model
-
-```text
-BERT-style:
-See surrounding context
-→ reconstruct/represent masked information
-
-GPT-style:
-See previous permitted tokens
-→ predict the next token
-→ repeat for generation
-```
-
-### Why a normal encoder does not autoregressively generate by itself
-
-An encoder primarily transforms an input sequence into contextual representations.
-Autoregressive generation requires a generation mechanism that repeatedly predicts
-and appends new output tokens, which is naturally provided by a causal decoder.
-
-### Precision note about attention
-
-Attention should not be described as a literal linguistic rule engine. A safer
-engineering statement is:
-
-> **Attention provides a mechanism through which token representations can
-> incorporate information from other relevant positions.**
-
----
-
+These describe **how the Transformer is structurally organized**.
 
 ### 5.2.2.1 Encoder-Only Models
 
-Encoder-only Transformers process an input sequence into contextual representations, commonly with bidirectional attention over the permitted input. They are naturally suited to classification, token labeling, representation learning, retrieval features, and other understanding-oriented tasks.
+
+An **encoder-only model** takes the **whole input** and tries to **understand it**, rather than generating a response one token at a time.
+
+### Think of it like this:
+
+```text
+Input sentence
+      ↓
+Encoder
+      ↓
+Understand the context
+      ↓
+Useful representation
+      ↓
+Task
+```
+
+### Example
+
+Input:
+
+> **"The ship arrived safely."**
+
+The encoder looks at the words **together** and creates a representation that captures their meaning and relationships.
+
+It can then be used for:
+
+* **Classification** → Is this sentence positive or negative?
+* **Token labeling** → Identify names, locations, dates, etc.
+* **Retrieval** → Find text with similar meaning.
+* **Semantic understanding** → Understand what the sentence means.
+
+### What does "bidirectional" mean?
+
+It means a token can use information from **both sides** of the input.
+
+For:
+
+> **"The bank is near the river."**
+
+The model can use **"near the river"** to understand that **bank** means the river bank.
+
+```text
+The ← bank → is → near → the → river
+       ↑
+   uses context
+   from both sides
+```
+
+### Easy memory trick
+
+> **Encoder-only = Understand the input**
+
+It produces **representations**, which are then used for tasks like classification, retrieval, tagging, and understanding.
 
 
 ### 5.2.2.2 Decoder-Only Models
 
-Decoder-only Transformers use causal attention so each position can depend only on earlier permitted positions. They naturally support next-token prediction and autoregressive generation, which is why GPT-style conversational LLMs commonly use this family.
+
+A **decoder-only model** is designed mainly to **generate text**.
+
+It reads the tokens it already has and predicts **what token should come next**.
+
+### Simple flow
+
+```text
+Existing text
+     ↓
+Look at previous tokens
+     ↓
+Predict next token
+     ↓
+Add that token
+     ↓
+Predict the next one
+     ↓
+Repeat...
+```
+
+### Example
+
+Suppose you give:
+
+> **"The cat is"**
+
+The model might calculate:
+
+```text
+The cat is
+      ↓
+next-token probabilities
+      ↓
+sleeping → 60%
+hungry   → 20%
+running  → 10%
+...
+```
+
+It selects a token such as **"sleeping"**.
+
+Now the input becomes:
+
+> **"The cat is sleeping"**
+
+Then it predicts the **next token again**.
+
+```text
+"The cat is"
+      ↓
+"sleeping"
+      ↓
+"The cat is sleeping"
+      ↓
+next token
+      ↓
+...
+```
+
+### What does "causal" mean?
+
+**Causal attention** means the model can look at the tokens **before the current position**, but not future tokens.
+
+```text
+The   cat   is   sleeping
+ ↑     ↑     ↑
+Can use previous information
+
+Future tokens
+❌ Cannot see them
+```
+
+This prevents the model from cheating by seeing the answer beforehand.
+
+### Why is it used for ChatGPT-style models?
+
+Because conversation requires **generating text one token at a time**:
+
+> User: "Explain gravity."
+
+The model generates:
+
+```text
+Gravity
+→ is
+→ a
+→ force
+→ ...
+```
+
+### Easy memory trick
+
+> **Encoder-only = understand the input**
+> **Decoder-only = generate the output**
+
+A decoder-only model repeatedly performs **next-token prediction**, which makes it suitable for chat, text completion, code generation, and other autoregressive generation tasks.
 
 
 ### 5.2.2.3 Encoder–Decoder Models
 
-Encoder–decoder systems first transform the source input with an encoder. A decoder then generates an output sequence while using its own prior generated tokens and information from the encoder, typically through cross-attention. This family is historically prominent for translation and sequence-to-sequence tasks.
+*## Encoder–Decoder — Simple Explanation
 
+An **Encoder–Decoder model** uses **two parts**:
 
-### 5.2.2.4 BERT-Style vs GPT-Style Models
+* **Encoder → understands the input**
+* **Decoder → generates the output**
+
+### Simple flow
 
 ```text
-BERT-style
-→ encoder-oriented
-→ bidirectional context
-→ masked/reconstruction-style objectives
-→ representation / understanding tasks
-
-GPT-style
-→ decoder-oriented
-→ causal context
-→ next-token prediction
-→ autoregressive generation
+Input
+  ↓
+Encoder
+  ↓
+Understand / represent the input
+  ↓
+Decoder
+  ↓
+Generate output
 ```
 
-The training objective and architecture are related but should not be treated as identical concepts.
+### Example: Translation
 
+Input:
 
-### 5.2.2.5 Causal Language Modeling
+> **"Hello, how are you?"**
 
-Causal language modeling trains a model to predict the next token using only the tokens that are allowed to precede it. A causal mask blocks future positions so training matches the information constraint used during generation.
-
-
-### 5.2.2.6 Masked Language Modeling
-
-Masked language modeling hides or corrupts selected input tokens and trains the model to reconstruct them from surrounding context. Because the model can use context from both directions, the objective is well suited to encoder-style representation learning rather than direct left-to-right autoregressive generation.
-
-
-### 5.2.2.7 Sequence-to-Sequence Generation
-
-Sequence-to-sequence generation maps one input sequence to another output sequence.
+The encoder reads and understands the complete English sentence.
 
 ```text
-Source sequence
+English sentence
+       ↓
+    Encoder
+       ↓
+Meaning / representation
+       ↓
+    Decoder
+       ↓
+"Bonjour, comment ça va ?"
+```
+
+The decoder generates the translated sentence **step by step**.
+
+### Another example: Summarization
+
+Input:
+
+> A long article
+
+```text
+Long article
+     ↓
+  Encoder
+     ↓
+Understand article
+     ↓
+  Decoder
+     ↓
+Short summary
+```
+
+### Easy memory trick
+
+> **Encoder = Understand**
+> **Decoder = Generate**
+
+So:
+
+> **Encoder–Decoder = Understand the input → Generate a new output**
+
+It is commonly associated with **translation, summarization, and other sequence-to-sequence tasks**.
+
+
+---
+
+# 5.2.3 Model Styles / Paradigms
+
+**Category: Model / Style**
+
+These are **common ways of building and training models using Transformer architectures**.
+
+### 5.2.3.1 BERT-Style Models
+
+## BERT-Style vs GPT-Style — Simple Explanation
+
+These are two **different ways of using Transformer architecture**.
+
+### 🟦 BERT-style
+
+BERT-style models are mainly built for **understanding text**.
+
+They look at the context **from both sides**.
+
+Example:
+
+> **The bank is near the river.**
+
+To understand **bank**, the model can use:
+
+```text
+The ← bank → is → near → the → river
+      ↑
+  context from both sides
+```
+
+BERT-style training commonly involves **hiding a word and asking the model to figure it out**.
+
+```text
+The bank is near the [MASK].
+                    ↓
+                  river
+```
+
+### 5.2.3.2 GPT-Style Models
+
+GPT-style models are mainly built for **generating text**.
+
+They look at the tokens that came **before** and predict the next token.
+
+```text
+The cat is
+    ↓
+predict next token
+    ↓
+sleeping
+    ↓
+predict next token
+    ↓
+on
+    ↓
+...
+```
+
+It cannot look at future tokens while making the prediction.
+
+---
+
+### Easy comparison
+
+| BERT-style                                              | GPT-style                         |
+| ------------------------------------------------------- | --------------------------------- |
+| Mainly **understand**                                   | Mainly **generate**               |
+| Encoder-oriented                                        | Decoder-oriented                  |
+| Looks at both sides of context                          | Looks at previous tokens          |
+| Masked/reconstruction objective                         | Next-token prediction             |
+| Good for representations, classification, understanding | Good for text generation and chat |
+
+### 🧠 Easy memory trick
+
+> **BERT = Understand the whole context**
+> **GPT = Predict what comes next**
+
+This matches your notes' distinction between **BERT-style: bidirectional context + masked/reconstruction-style objectives** and **GPT-style: causal context + next-token prediction**.
+
+
+
+
+
+
+---
+
+# 5.2.4 Training Objectives
+
+Exactly — these two are **training objectives**, not architectures.
+
+### Causal Language Modeling (CLM)
+
+The model is trained to **predict the next token** from the tokens that came before it.
+
+```text
+"The cat is"
+      ↓
+Predict next token
+      ↓
+"sleeping"
+```
+
+During training:
+
+```text
+The → predict "cat"
+The cat → predict "is"
+The cat is → predict "sleeping"
+```
+
+The model **cannot see future tokens** because of the **causal mask**.
+
+```text
+Previous tokens → ✅ can see
+Future tokens   → ❌ cannot see
+```
+
+**Commonly associated with:** GPT-style / decoder-only models.
+
+---
+
+### Masked Language Modeling (MLM)
+
+The model is trained by **hiding some tokens** and asking it to predict the missing token using the surrounding context.
+
+```text
+"The cat is [MASK] on the mat."
+             ↓
+          "sitting"
+```
+
+Here the model can use information from **both sides**:
+
+```text
+The cat is ← [MASK] → on the mat
+```
+
+So it learns to understand the **full context**.
+
+**Commonly associated with:** BERT-style / encoder-only models.
+
+---
+
+### The relationship
+
+This is the clean mental model:
+
+```text
+Transformer Architecture
+        ↓
+   ┌───────────────┐
+   │               │
+Encoder-oriented  Decoder-oriented
+   │               │
+   ↓               ↓
+BERT-style       GPT-style
+   │               │
+   ↓               ↓
+Masked LM        Causal LM
+```
+
+So:
+
+| Concept                         | What is it?            |
+| ------------------------------- | ---------------------- |
+| **Transformer**                 | Architecture           |
+| **Encoder-only / Decoder-only** | Architectural setups   |
+| **BERT-style / GPT-style**      | Common model paradigms |
+| **Masked Language Modeling**    | Training objective     |
+| **Causal Language Modeling**    | Training objective     |
+
+### Easy memory trick
+
+> **Causal LM → predict what comes NEXT**
+> **Masked LM → predict what is MISSING**
+
+And this is why your notes say **architecture and training objective are related, but they are not the same concept**.
+
+
+---
+
+# 5.2.5 Sequence-to-Sequence Generation
+
+## Sequence-to-Sequence Generation
+
+**Sequence-to-sequence (Seq2Seq)** is mainly a **task/generation setup**, not a specific architecture.
+
+Its job is:
+
+> **Take one sequence as input and generate another sequence as output.**
+
+### Simple example: Translation
+
+```text
+English sentence
+      ↓
+"How are you?"
+      ↓
+  Generate output
+      ↓
+"Comment allez-vous ?"
+```
+
+The input and output are both **sequences of tokens**, but they can have different lengths.
+
+### Typical flow
+
+```text
+Input sequence
+      ↓
+   Encoder
+      ↓
+Understand input
+      ↓
+   Decoder
+      ↓
+Generate output sequence
+```
+
+For example:
+
+```text
+Article
    ↓
 Encoder
    ↓
-Encoded representation
+Meaning / representation
    ↓
-Decoder + cross-attention
+Decoder
    ↓
-Generated target sequence
+Summary
 ```
 
-Translation and summarization are classic examples, although modern decoder-only models can also perform these tasks through prompting.
+### Common examples
+
+* **Translation** → English → French
+* **Summarization** → Long article → Short summary
+* **Question answering** → Question/context → Answer
+* **Text transformation** → Input text → Rewritten text
+
+### How it differs from CLM and MLM
+
+| Concept       | What it does                                     |
+| ------------- | ------------------------------------------------ |
+| **Causal LM** | Predict the **next token**                       |
+| **Masked LM** | Predict a **missing token**                      |
+| **Seq2Seq**   | Transform **one sequence into another sequence** |
+
+### Important mental model
+
+```text
+Transformer = architecture
+        ↓
+Possible setups
+├── Encoder-only
+├── Decoder-only
+└── Encoder–Decoder
+        ↓
+Training / task objectives
+├── Masked LM
+├── Causal LM
+└── Sequence-to-Sequence
+```
+
+So remember:
+
+> **Causal LM = next-token prediction**
+> **Masked LM = fill the missing token**
+> **Seq2Seq = input sequence → output sequence**
+
+
+
+
+---
+
+
+
+### 🧠 The easiest way to remember the categories
+
+| Category                    | Question it answers                       |
+| --------------------------- | ----------------------------------------- |
+| **Architecture**            | **How is the model built?**               |
+| **Model style**             | **What common design does it follow?**    |
+| **Training objective**      | **What is it trained to predict/learn?**  |
+| **Task / generation setup** | **What transformation is it performing?** |
+
+So your mental hierarchy becomes:
+
+> **Transformer → Architecture → Model Style → Training Objective → Task**
+
+
 
 
 ## 5.2.3 Transformer Block — High-Level Architecture
