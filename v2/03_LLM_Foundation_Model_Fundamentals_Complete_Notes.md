@@ -1674,31 +1674,290 @@ Position   → encode order / relative location
 
 Attention begins by projecting each hidden representation into three learned spaces:
 
-$$Q=XW_Q,\quad K=XW_K,\quad V=XW_V$$
 
-### 5.2.4.1 Query
-A **query** represents what a position is looking for from the available context.
+The easiest way to understand **Q, K, and V** is:
 
-### 5.2.4.2 Key
-A **key** represents how a position can be matched/retrieved by a query.
+> **Q asks → K matches → V gives the information**
 
-### 5.2.4.3 Value
-A **value** contains the information that will be aggregated if the corresponding key receives attention weight.
+They are three different representations created from the **same input hidden vectors**.
 
-### 5.2.4.4 Q/K/V Linear Projections
-The model does not usually use one fixed human-interpretable notion of query/key/value. The learned matrices create representation spaces useful for the training objective.
+---
 
-Memory aid:
+## 1. What do they take as input?
+
+Suppose a Transformer has hidden representations:
 
 ```text
-Q → What information am I looking for?
-K → What kind of information is available here?
-V → What information should be aggregated if selected?
+Input hidden representations
+              X
+              ↓
+      ┌───────┼───────┐
+      ↓       ↓       ↓
+      Q       K       V
 ```
+
+Mathematically:
+
+```text
+Q = XWQ
+K = XWK
+V = XWV
+```
+
+So:
+
+* **Input:** hidden-state/vector `X`
+* The model creates **three different vectors** from it.
+* `WQ`, `WK`, and `WV` are learned weights.
+
+---
+
+# 2. Query (Q)
+
+### What does it represent?
+
+**Q represents what this token is looking for.**
+
+Think:
+
+> **"What information do I need from the other tokens?"**
+
+### What does it take?
+
+```text
+Hidden vector X
+   ↓
+Query projection
+   ↓
+Q
+```
+
+### What does it give?
+
+A **query vector** that is used to compare against keys.
+
+### What does it help with?
+
+It helps the model **find relevant tokens**.
+
+---
+
+# 3. Key (K)
+
+### What does it represent?
+
+**K represents what information a token can be matched for.**
+
+Think:
+
+> **"What kind of information do I contain that another token may be looking for?"**
+
+### What does it take?
+
+```text
+Hidden vector X
+   ↓
+Key projection
+   ↓
+K
+```
+
+### What does it give?
+
+A **key vector** that can be compared with queries.
+
+### What does it help with?
+
+It helps determine:
+
+> **"Is this token relevant to the query?"**
+
+---
+
+# 4. Value (V)
+
+### What does it represent?
+
+**V represents the actual information that can be passed to another token.**
+
+Think:
+
+> **"If I am relevant, what information should I provide?"**
+
+### What does it take?
+
+```text
+Hidden vector X
+   ↓
+Value projection
+   ↓
+V
+```
+
+### What does it give?
+
+A **value vector containing information that can be aggregated**.
+
+### What does it help with?
+
+It provides the **actual information** that gets combined into the new representation.
+
+---
+
+# 5. How do Q, K and V work together?
+
+Suppose:
+
+> **"The ship arrived safely."**
+
+The representation for **"ship"** may need information about what happened to the ship.
+
+### Step 1 — Query
+
+`ship` creates a **Query**:
+
+> "Which other token has information relevant to me?"
+
+### Step 2 — Keys
+
+Other tokens have **Keys**.
+
+```text
+The      → K
+ship     → K
+arrived  → K
+safely   → K
+```
+
+The query compares with these keys.
+
+```text
+Q(ship) ↔ K(The)
+Q(ship) ↔ K(arrived)
+Q(ship) ↔ K(safely)
+```
+
+This produces **attention scores**.
+
+### Step 3 — Values
+
+Suppose `arrived` gets a high attention weight.
+
+Then its **Value** contributes more information:
+
+```text
+High attention to "arrived"
+           ↓
+Take more of V(arrived)
+           ↓
+Combine information
+           ↓
+Updated representation of "ship"
+```
+
+---
+
+# 6. The complete flow
+
+```text
+Hidden vectors
+      ↓
+ ┌────┼────┐
+ ↓    ↓    ↓
+ Q    K    V
+ ↓    ↓
+Compare
+ Q × K
+   ↓
+Attention scores
+   ↓
+Softmax
+   ↓
+Attention weights
+   ↓
+Weights × V
+   ↓
+Combined information
+   ↓
+Updated hidden representation
+```
+
+### The most important point
+
+**Q and K decide WHERE to look.**
+
+**V provides WHAT information to take.**
+
+---
+
+# 7. Very simple analogy: Search engine
+
+Imagine searching for information about **ships**.
+
+### Query
+
+Your search:
+
+> **"ship safety"**
+
+That's the **Query**.
+
+### Key
+
+A document has labels/indexes such as:
+
+> `ship`, `safety`, `navigation`
+
+That's the **Key**.
+
+The system checks whether the document's key matches the query.
+
+### Value
+
+The actual document content is the **Value**.
+
+So:
+
+```text
+Query → What am I looking for?
+Key   → What information do you have?
+Value → What information should I give?
+```
+
+---
+
+# 🧠 Easy table
+
+|                | Query (Q)               | Key (K)                   | Value (V)                       |
+| -------------- | ----------------------- | ------------------------- | ------------------------------- |
+| **Represents** | What I'm looking for    | What I can be matched for | Information I can provide       |
+| **Takes**      | Hidden vector X         | Hidden vector X           | Hidden vector X                 |
+| **Gives**      | Query vector            | Key vector                | Value vector                    |
+| **Main job**   | Search                  | Match                     | Provide information             |
+| **Helps with** | Finding relevant tokens | Measuring relevance       | Building the new representation |
+
+## ⭐ Memorize this
+
+> **Q = Search**
+> **K = Match**
+> **V = Information**
+
+Or even simpler:
+
+> **Query asks → Key matches → Value gives**
+
 
 
 ## 5.2.5 Attention
 
+                ATTENTION
+                    │
+          ┌─────────┴─────────┐
+          ↓                   ↓
+   Self-Attention       Cross-Attention
+          │                   │
+    Same source          Different sources
+      for Q/K/V             for Q vs K/V
 🧠 **Simple Understanding:**
 Attention lets the model decide which pieces of the available representation are important when computing a new representation.
 
