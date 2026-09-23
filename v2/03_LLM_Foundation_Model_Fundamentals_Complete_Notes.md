@@ -2106,325 +2106,879 @@ This is commonly achieved with a causal mask:
 
 ## 5.2.7 Causal Masking
 
-In autoregressive generation, the representation at a position must not use tokens that occur in the future relative to that position.
+### Simple explanation
 
-A causal mask enforces this:
+**Causal masking means: a token can look at itself and the tokens before it, but it cannot look at future tokens.**
+
+Example:
 
 ```text
-        key position
-        1  2  3  4
-Q1      ✓  ✗  ✗  ✗
-Q2      ✓  ✓  ✗  ✗
-Q3      ✓  ✓  ✓  ✗
-Q4      ✓  ✓  ✓  ✓
+The   cat   is   sleeping
+ ↓     ↓     ↓
+Can see previous tokens
+
+❌ Future tokens are hidden
 ```
 
-### Why future tokens must be hidden
-If the model could see the answer token while training to predict it, the training task would leak the target and would not match generation-time conditions.
+For example, when predicting token 3:
 
-### Bidirectional vs causal attention
+```text
+Token 1   Token 2   Token 3   Token 4
+   ✓         ✓         ✓         ✗
+```
 
-| Bidirectional | Causal |
-|---|---|
-| Can use context on both sides when permitted | Can use only current/previous permitted positions |
-| Common in encoders | Common in autoregressive decoders |
-| Strong for representation/understanding | Natural for generation |
+### Why?
 
+Because during generation, the model **doesn't know the future yet**.
+
+Suppose:
+
+> `The cat is ___`
+
+The model must predict the missing next token.
+
+It would be unfair if it could already see:
+
+> `The cat is sleeping`
+
+So the **causal mask hides future tokens**.
+
+### Easy memory trick
+
+> **Causal = look backward, not forward.**
+
+### Bidirectional vs Causal
+
+| Bidirectional                   | Causal                                  |
+| ------------------------------- | --------------------------------------- |
+| Can use context from both sides | Can use only current/previous positions |
+| Common in encoders              | Common in autoregressive decoders       |
+| Good for understanding          | Good for generation                     |
+
+---
 
 ## 5.2.8 Multi-Head Attention
 
-Instead of computing only one attention pattern, multi-head attention learns several query/key/value projection sets in parallel.
+### Simple explanation
 
-$$head_i=Attention(QW_i^Q,KW_i^K,VW_i^V)$$
+Instead of having **one attention operation**, the model uses **multiple attention heads in parallel**.
 
-$$MultiHead=Concat(head_1,\ldots,head_h)W^O$$
+Think of it as:
 
-### Why multiple heads?
-Different heads can represent different useful relationships or subspaces. It is safer to say they **can specialize** than to assume every head has one fixed linguistic meaning.
+> **Several attention mechanisms looking at the same sentence from different perspectives.**
 
-### Head dimension
-If the model hidden dimension is distributed across `h` heads, each head operates on a lower-dimensional representation. Exact layouts vary by architecture.
+### Example
 
-### Concatenation and output projection
-The head outputs are combined and passed through a learned output projection before the residual path continues.
+Sentence:
 
+> **"The ship arrived safely."**
 
-## 5.2.9 MHA, MQA and GQA
+One head might learn relationships related to:
 
-🧠 **Simple Understanding:**
-Instead of learning only one attention pattern, a model can use multiple attention heads so different representational relationships can be modeled in parallel.
+```text
+ship ↔ arrived
+```
 
-### Multi-Head Attention (MHA)
+Another might capture:
+
+```text
+ship ↔ safely
+```
+
+Another may capture some other useful relationship.
+
+The important point from your notes is:
+
+> Different heads **can specialize in different relationships or subspaces**, but we should not assume that every head has one fixed linguistic meaning.
+
+---
+
+## How it works
+
+Each head gets its own Q, K and V projections:
+
+```text
+              Input
+                ↓
+       ┌────────┼────────┐
+       ↓        ↓        ↓
+     Head 1   Head 2   Head 3   ... Head h
+       ↓        ↓        ↓
+   Attention Attention Attention
+       ↓        ↓        ↓
+       └────────┼────────┘
+                ↓
+          Concatenate
+                ↓
+        Output projection
+                ↓
+             Output
+```
+
+Mathematically:
+
+```text
+head₁ = Attention(QWQ₁, KWK₁, VWV₁)
+
+head₂ = Attention(QWQ₂, KWK₂, VW₂)
+...
+```
+
+Then:
+
+```text
+MultiHead = Concat(head₁, head₂, ..., headₕ) WO
+```
+
+---
+
+## Why multiple heads?
+
+A single attention pattern may not be enough.
+
+Multiple heads allow the model to work with **different learned representation subspaces at the same time**.
+
+### Simple analogy
+
+Imagine **8 people reading the same paragraph**.
+
+Each person may focus on something different:
+
+```text
+Person 1 → relationships
+Person 2 → context
+Person 3 → nearby words
+Person 4 → another pattern
+...
+```
+
+Then their observations are combined.
+
+That's roughly the intuition behind **multi-head attention**.
+
+---
+
+## What is head dimension?
+
+The model has an overall hidden size.
+
+For example:
+
+```text
+Model hidden size = 768
+Number of heads = 12
+```
+
+The representation is distributed across the heads, so each head works with a **smaller-dimensional representation**.
 
 Conceptually:
 
 ```text
-Hidden states
-    ↓
- ┌──┼──┬──┐
- ↓  ↓  ↓  ↓
-H1 H2 H3 H4
- \  |  |  /
-   Combine
-     ↓
-Output
+768 dimensions
+      ↓
+ ┌────┬────┬────┐
+ ↓    ↓    ↓
+Head1 Head2 Head3 ... 
 ```
 
-Each head has its own learned projections and may specialize in different useful patterns.
+The exact way dimensions are arranged depends on the architecture.
 
-A simplified view:
+---
 
-$$
-head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)
-$$
+## What happens after the heads?
 
-and then:
+Each head produces an output.
 
-$$
-MultiHead(Q,K,V)=Concat(head_1,\ldots,head_h)W^O
-$$
-
-### Multi-Query Attention (MQA)
-
-MQA uses multiple query heads but shares key/value heads more aggressively.
-
-**Why?** Reducing K/V heads can reduce KV-cache memory and improve serving efficiency.
-
-### Grouped-Query Attention (GQA)
-
-GQA is a compromise:
+Those outputs are:
 
 ```text
-Many query heads
-      ↓
-Grouped sharing
-      ↓
-Fewer K/V heads than MHA
-but more than MQA
+Head 1 ─┐
+Head 2 ─┤
+Head 3 ─┼──→ Concatenate
+...     ┤
+Head h ─┘
+             ↓
+      Output projection
+             ↓
+      Transformer block
 ```
 
-### Engineering Trade-off
+The **output projection** combines the information from all heads into the representation that continues through the Transformer.
 
-| Method | K/V Memory | Flexibility | Common Motivation |
-| --- | ---: | --- | --- |
-| MHA | Higher | High | Full attention-head flexibility |
-| GQA | Medium | High/Medium | Better serving efficiency |
-| MQA | Lower | More shared | Strong KV-cache efficiency |
+---
 
-⭐ **Key Point:** These are not separate model types. They are attention-design choices that affect quality and inference efficiency.
+# 🧠 Easy memory trick
+
+### Causal Masking
+
+> **Don't look into the future.**
+
+### Multi-Head Attention
+
+> **Multiple attention heads = multiple learned perspectives.**
+
+And remember:
+
+```text
+Causal masking
+→ controls WHAT tokens can see
+
+Multi-head attention
+→ controls HOW MANY attention patterns are learned
+```
+
+
+## 5.2.9 MHA, MQA and GQA
+
+# 5.2.9 MHA, MQA and GQA
+
+These are **different attention-design choices**. The main difference is **how many Q (Query), K (Key), and V (Value) heads are used or shared**.
+
+## 1. Multi-Head Attention — MHA
+
+In **MHA**, every attention head has its **own Q, K and V**.
+
+```text
+Input
+  ↓
+ ┌───────┬───────┬───────┐
+ ↓       ↓       ↓
+Head 1  Head 2  Head 3  ...
+(Q,K,V) (Q,K,V) (Q,K,V)
+  ↓       ↓       ↓
+      Combine
+         ↓
+       Output
+```
+
+### Simple meaning
+
+> **MHA = every head gets its own Q, K and V.**
+
+So different heads can learn different useful relationships.
+
+**Example:**
+
+```text
+Head 1 → one relationship
+Head 2 → another relationship
+Head 3 → another relationship
+```
+
+**Main benefit:** More flexibility.
+
+**Downside:** More K/V data must be stored, so the **KV cache is larger**.
+
+---
+
+# 2. Multi-Query Attention — MQA
+
+In **MQA**, we still have **many Query heads**, but they **share fewer K/V heads**.
+
+```text
+Many Q heads
+     ↓
+   Shared
+   K / V
+```
+
+For example:
+
+```text
+Q1 ─┐
+Q2 ─┤
+Q3 ─┼──→ shared K/V
+Q4 ─┘
+```
+
+### Simple meaning
+
+> **MQA = many Qs, shared K/V.**
+
+Because there are fewer K/V heads, the model needs to store **less K/V information**.
+
+### Main benefit
+
+> **Smaller KV cache → better serving/inference efficiency**
+
+---
+
+# 3. Grouped-Query Attention — GQA
+
+GQA sits **between MHA and MQA**.
+
+Instead of:
+
+* every Q having its own K/V → **MHA**
+* all Q sharing K/V → **MQA**
+
+GQA puts Q heads into **groups**, with each group sharing K/V.
+
+```text
+Q1 ─┐
+Q2 ─┤ → K/V group 1
+
+Q3 ─┐
+Q4 ─┤ → K/V group 2
+```
+
+### Simple meaning
+
+> **GQA = many Q heads, but K/V are shared in groups.**
+
+So:
+
+```text
+MHA → many K/V heads
+GQA → fewer K/V heads
+MQA → very few/shared K/V heads
+```
+
+---
+
+# Easy comparison
+
+| Method  | Query heads | Key/Value heads | KV Cache |
+| ------- | ----------: | --------------: | -------- |
+| **MHA** |        Many |            Many | Higher   |
+| **GQA** |        Many |  Fewer, grouped | Medium   |
+| **MQA** |        Many | Very few/shared | Lower    |
+
+## 🧠 Easy analogy
+
+Imagine **10 students asking questions**.
+
+### MHA
+
+Every student has their **own question book + answer book**.
+
+```text
+10 Q + 10 K/V
+```
+
+### MQA
+
+All students share **one answer book**.
+
+```text
+10 Q + 1 K/V
+```
+
+### GQA
+
+Students are divided into groups, and each group shares an answer book.
+
+```text
+10 Q + a few K/V groups
+```
+
+---
+
+## Why do we use GQA/MQA?
+
+The main reason in your notes is **serving efficiency**, especially reducing **KV-cache memory**.
+
+```text
+MHA
+↓
+More K/V
+↓
+More KV-cache memory
+
+GQA
+↓
+Fewer K/V
+↓
+Less memory
+
+MQA
+↓
+Even fewer/shared K/V
+↓
+Lower KV-cache memory
+```
+
+### ⭐ Memorize this
+
+> **MHA = separate K/V for each head**
+> **GQA = K/V shared by groups of heads**
+> **MQA = K/V shared more aggressively**
+
+And the key point:
+
+> **MHA, GQA and MQA are not different model types; they are different ways of designing the attention mechanism.**
+
 
 ---
 
 
 ## 5.2.10 Feed-Forward Networks — FFN / MLP
 
-🧠 **Simple Understanding:**
-Attention lets tokens exchange information. The feed-forward network then performs a learned nonlinear transformation on each token representation.
+### Simple explanation
 
-### Basic Flow
+**Attention and FFN do different jobs.**
+
+> **Attention = lets tokens communicate with each other.**
+> **FFN = processes each token's information.**
+
+After attention has allowed tokens to exchange information, the **FFN takes each token's representation and transforms it**.
+
+### Basic flow
 
 ```text
 Token representation
-      ↓
-Linear projection
-      ↓
-Nonlinear activation / gating
-      ↓
-Linear projection
-      ↓
+        ↓
+   Linear layer
+        ↓
+Nonlinear activation
+        ↓
+   Linear layer
+        ↓
 Updated representation
 ```
 
-A simplified classical form is:
+So the FFN is basically:
 
-$$
-FFN(x)=W_2\sigma(W_1x+b_1)+b_2
-$$
+> **Take a vector → process it → produce a better/updated vector.**
 
-Modern architectures may use gated variants and activations such as GELU or SwiGLU-like designs.
+### What happens inside?
+
+A simplified FFN is:
+
+```text
+x
+↓
+W1x + b1
+↓
+Activation
+↓
+W2(...)
+↓
+output
+```
+
+The activation adds **non-linearity**, which allows the network to learn more complex patterns.
+
+Modern models can use different activations and **gated FFN variants**, such as GELU or SwiGLU-like designs.
 
 ### Attention vs FFN
 
-| Attention | Feed-Forward Network |
-| --- | --- |
-| Mixes information across token positions | Transforms each position's representation |
-| Relationship-focused | Feature-transformation-focused |
-| Context exchange | Nonlinear computation |
+| Attention                             | FFN                  |
+| ------------------------------------- | -------------------- |
+| Tokens exchange information           | Processes each token |
+| Looks at relationships between tokens | Transforms features  |
+| **Communicate**                       | **Compute**          |
 
-🧠 **Memory Aid:**
+### 🧠 Easy memory trick
 
-> **Attention = communicate. FFN = compute.**
+> **Attention = Communicate**
+> **FFN = Compute**
 
 ---
 
-
 ## 5.2.11 Residual Connections
 
-A residual connection adds the input of a sub-layer back to its transformed output:
+### Simple explanation
 
-$$y=x+F(x)$$
-
-Residual pathways make deep networks easier to optimize and help preserve information as it flows through many layers.
+A **residual connection** takes the original input and **adds it back** to the transformed output.
 
 ```text
 Input ────────────────┐
-  ↓                   │
+   ↓                  │
 Transformation        │
-  ↓                   │
-Output ─────────────── +
+   ↓                  │
+Output ───────────────+
           ↓
-Combined representation
+     Combined output
 ```
 
-They are important for both forward information flow and stable gradient flow during training.
+Mathematically:
+
+```text
+y = x + F(x)
+```
+
+Here:
+
+* `x` = original input
+* `F(x)` = result after transformation
+* `y` = original information + transformed information
+
+### Why do we use it?
+
+Imagine the model has many Transformer layers.
+
+Without residual connections, information can become harder to preserve as it passes through many transformations.
+
+The residual path gives the original information a **direct path forward**.
+
+So it helps:
+
+* **preserve information**
+* make deep networks easier to optimize
+* support more stable **gradient flow during training**
+
+### Simple analogy
+
+Imagine you are editing a document.
+
+Instead of replacing the original document completely:
+
+```text
+Original document
+       +
+New changes
+       ↓
+Updated document
+```
+
+You **keep the original and add the improvements**.
+
+### 🧠 Easy memory trick
+
+> **Residual connection = Keep the original + add the new information.**
+
+Or:
+
+```text
+Residual = Original + Transformation
+```
+
 
 
 ## 5.2.12 Normalization
 
-Normalization keeps representation scales well behaved during deep computation.
+### Simple explanation
+
+**Normalization keeps the numbers inside the Transformer under control.**
+
+As information passes through many Transformer layers, the values in the vectors can become too large, too small, or unstable. **Normalization adjusts these values to a more suitable scale**, making the network easier to train.
+
+Think:
+
+> **Normalization = keep the representation values well behaved.**
+
+---
 
 ### 5.2.12.1 LayerNorm
-Layer normalization normalizes features within a representation using learned scale/shift parameters.
 
-### 5.2.12.2 RMSNorm
-RMSNorm uses a related but simpler root-mean-square normalization approach and is common in modern LLMs.
+**LayerNorm** normalizes the values/features within each token representation.
 
-### 5.2.12.3 Pre-Norm
-Normalization is applied **before** the attention or FFN sub-layer.
+It then uses **learned scale and shift parameters** to adjust the normalized result.
 
-### 5.2.12.4 Post-Norm
-Normalization is applied after the transformed/residual combination.
-
-### 5.2.12.5 Why it matters
-The exact choice affects training stability and optimization. For an AI engineer, the key is to understand its role rather than memorize every derivation.
+Simple idea:
 
 ```text
-Residual → preserve / route information
-Normalization → stabilize representation scale
+Input vector
+    ↓
+LayerNorm
+    ↓
+Better-scaled vector
 ```
+
+> **LayerNorm = normalize the features of the representation.**
+
+---
+
+### 5.2.12.2 RMSNorm
+
+**RMSNorm** is a simpler normalization method based on the **root mean square (RMS)** of the values.
+
+```text
+Input vector
+    ↓
+RMSNorm
+    ↓
+Better-scaled vector
+```
+
+It is commonly used in modern LLM architectures.
+
+> **RMSNorm = simpler way to control the scale of the vector.**
+
+---
+
+### 5.2.12.3 Pre-Norm
+
+**Pre-Norm means normalization happens before the main sub-layer.**
+
+For example:
+
+```text
+Input
+  ↓
+Normalization
+  ↓
+Attention
+  ↓
+Output
+```
+
+Or:
+
+```text
+Input
+  ↓
+Normalization
+  ↓
+FFN
+  ↓
+Output
+```
+
+> **Pre-Norm = Normalize first, then compute.**
+
+---
+
+### 5.2.12.4 Post-Norm
+
+**Post-Norm means normalization happens after the transformation/residual combination.**
+
+```text
+Input
+  ↓
+Attention / FFN
+  ↓
+Residual addition
+  ↓
+Normalization
+  ↓
+Output
+```
+
+> **Post-Norm = Compute first, then normalize.**
+
+---
+
+### 5.2.12.5 Why does normalization matter?
+
+A Transformer has **many layers**.
+
+Without proper normalization, the numerical representations can become harder to manage as they pass through the network.
+
+Normalization helps with:
+
+* **training stability**
+* **optimization**
+* keeping representation values at a useful scale
+
+### 🧠 Easy memory trick
+
+```text
+Residual       → Preserve / route information
+Normalization  → Stabilize the numbers
+```
+
+And remember:
+
+> **Pre-Norm = normalize before the sub-layer**
+> **Post-Norm = normalize after the sub-layer**
+
 
 
 ## 5.2.13 Positional Mechanisms
 
-🧠 **Simple Understanding:**
-Attention by itself does not inherently tell the model the original order of tokens. Position mechanisms provide information about where tokens occur.
+### Simple explanation
 
-### 📌 Quick Info
+A Transformer sees tokens as **vectors**, but attention by itself does not automatically know **where each token is located**.
 
-| Field     | Answer                                                                 |
-| --------- | ---------------------------------------------------------------------- |
-| **What?** | Information or mechanism representing token position                   |
-| **Why?**  | Word order changes meaning                                             |
-| **How?**  | Various positional methods modify or augment representations/attention |
-| **When?** | During transformer processing                                          |
-
-### Why Position Matters
-
-These are not equivalent:
-
-```text
-"dog bites man"
-"man bites dog"
-```
-
-The same words can have radically different meaning based on order.
-
-### Common Position Strategies
-
-| Strategy                                 | Basic Idea                                         |
-| ---------------------------------------- | -------------------------------------------------- |
-| Absolute positional embeddings           | Explicit position representation                   |
-| Sinusoidal positional encoding           | Deterministic position functions                   |
-| Relative position methods                | Represent relationships between positions          |
-| Rotary position mechanisms               | Rotate query/key representations based on position |
-| Other learned attention-position schemes | Integrate position into attention computation      |
-
-### 🧠 Analogy
-
-Tokens are like people in a queue.
-
-Knowing **who is present** is insufficient. You also need to know **where each person stands**.
-
-### 💡 Key Insight
-
-Position is not merely metadata. It directly affects the relationships the model computes.
-
-### ⚠️ Common Mistake
-
-Different models can use materially different position mechanisms. Do not assume every Transformer uses classic sinusoidal positional encoding.
-
-### ⚡ Quick Revision
-
-> **Attention gives relationships; position information helps preserve order.**
-
----
-
-
-## 5.2.14 Rotary Position Embeddings — RoPE
-
-🧠 **Simple Understanding:**  
-RoPE is a positional mechanism that injects position information by rotating query
-and key representations according to token position.
-
-### Why it exists
-
-Attention by itself is not inherently aware of token order. A position mechanism is
-therefore required so that the model can distinguish sequences such as:
+For example:
 
 ```text
 dog bites man
 ```
 
-from:
+and
 
 ```text
 man bites dog
 ```
 
-### Conceptual flow
+contain the same words, but the **order changes the meaning**.
+
+So the model needs **position information**.
+
+> **Positional mechanism = tells the model where each token is in the sequence.**
+
+### Simple example
 
 ```text
-Token representations
-        ↓
-Q and K projections
-        ↓
-Position-dependent rotation
-        ↓
-Attention similarity
-        ↓
-Relative positional relationships influence attention
+The   cat   sat   there
+ ↓     ↓     ↓      ↓
+Pos1  Pos2  Pos3   Pos4
 ```
 
-### Why Q and K?
+The model needs both:
 
-The attention score depends on the relationship between queries and keys. Applying
-the position-dependent transformation to Q and K allows position to influence the
-similarity used by attention.
+```text
+What is the token?
++
+Where is the token?
+```
 
-### Intuition
+### Common ways to represent position
 
-Think of each position as rotating a representation by a different angle. The
-relative difference between rotations helps encode relative positional structure.
+| Method                  | Simple idea                                       |
+| ----------------------- | ------------------------------------------------- |
+| **Absolute position**   | Tell each token its exact position                |
+| **Sinusoidal encoding** | Use mathematical patterns to represent position   |
+| **Relative position**   | Tell the model how far tokens are from each other |
+| **RoPE**                | Rotate Q/K based on token position                |
 
-### Long-context considerations
+### Easy analogy
 
-Extending a model beyond the position range used during training is not automatically
-safe. Systems may use position scaling or interpolation strategies, but quality must
-still be evaluated because:
+Imagine people standing in a queue.
 
-* attention patterns may degrade
-* distant information may be used less reliably
-* long prompts increase compute and memory pressure
-* a larger supported context does not guarantee equal quality at every position
+Knowing:
 
-### Quick comparison
+> **Who is present**
 
-| Method | Core idea |
-|---|---|
-| Absolute positional embeddings | Add/associate a position representation |
-| Sinusoidal encoding | Deterministic position functions |
-| Relative position methods | Represent position differences |
-| RoPE | Rotate Q/K representations as a function of position |
+is not enough.
+
+You also need:
+
+> **Who is standing where?**
+
+### 🧠 Memory trick
+
+> **Attention = relationships**
+> **Position = order**
+
+---
+
+## 5.2.14 Rotary Position Embeddings — RoPE
+
+### Simple explanation
+
+**RoPE is one way of giving position information to the Transformer.**
+
+Instead of simply adding a position number to every token, RoPE **rotates the Query and Key vectors based on their positions**.
+
+Think of it like:
+
+```text
+Token vector
+     ↓
+Q / K
+     ↓
+Rotate according to position
+     ↓
+Attention
+```
+
+### Why does it do this?
+
+Attention calculates relationships using:
+
+```text
+Q × K
+```
+
+So if we modify Q and K based on their positions, then **position becomes part of the attention relationship**.
+
+That allows the model to understand things like:
+
+```text
+"dog bites man"
+```
+
+versus
+
+```text
+"man bites dog"
+```
+
+---
+
+## Easy intuition
+
+Imagine every token has a direction arrow.
+
+```text
+Position 1 → small rotation
+Position 2 → different rotation
+Position 3 → another rotation
+Position 4 → another rotation
+```
+
+The difference between these rotations helps the model understand **relative positions**.
+
+So:
+
+> **RoPE = rotate Q and K according to position.**
+
+---
+
+## Why Q and K, not V?
+
+Because **Q and K are used to calculate attention similarity**.
+
+```text
+Q × K
+ ↓
+Attention score
+```
+
+By putting position information into Q and K, the **attention score itself becomes position-aware**.
+
+You can think of it as:
+
+```text
+Q + position
+     ↕
+K + position
+     ↓
+Attention relationship
+```
+
+---
+
+# RoPE vs other position methods
+
+| Method                            | Basic idea                               |
+| --------------------------------- | ---------------------------------------- |
+| **Absolute positional embedding** | Add/associate a position representation  |
+| **Sinusoidal encoding**           | Use fixed mathematical position patterns |
+| **Relative position**             | Represent distance between tokens        |
+| **RoPE**                          | Rotate Q/K according to position         |
+
+---
+
+# Long-context point
+
+A model having a large context limit does **not automatically mean it understands every position equally well**.
+
+Very long inputs can still cause:
+
+* weaker use of distant information
+* higher computation and memory requirements
+* degradation of attention patterns
+
+So:
+
+> **More context capacity ≠ guaranteed equal quality everywhere.**
+
+---
+
+## 🧠 Easiest memory trick
+
+### Positional Mechanism
+
+> **Tells the model WHERE tokens are.**
+
+### RoPE
+
+> **Rotates Q and K based on WHERE the tokens are.**
+
+### One-line mental model
+
+```text
+Token meaning → Embedding
+Token relationships → Attention
+Token order → Position mechanism
+RoPE → Adds position to attention by rotating Q/K
+```
+
 
 ### Interview answer
 
