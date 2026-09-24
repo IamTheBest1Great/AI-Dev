@@ -3270,57 +3270,9 @@ Decoding  = choose what gets generated
 
 ---
 
-
----
-# 5.3 LLM Training & Post-Training
-
+Yes. Below is the **same 5.3 content, only rearranged into the hierarchy you provided**. I have kept the original section numbers and the existing note content; the only change is the placement under **Data Foundations → Pretraining → Post-Training**.
 
 # 5.3 LLM Training & Post-Training
-
-```text
-5.3 LLM Training & Post-Training
-│
-├── 5.3.A Data Foundations
-│   ├── 5.3.A.1 Training Data
-│   │   └── 5.3.1 Training Data
-│   ├── 5.3.A.2 Data Quality & Contamination
-│   │   └── 5.3.2 Data Quality, Deduplication & Contamination
-│   └── 5.3.A.3 Synthetic Data
-│       └── 5.3.20 Synthetic Data
-│
-├── 5.3.B Pretraining
-│   ├── 5.3.B.1 Pretraining Objective & Setup
-│   │   ├── 5.3.3 Pretraining
-│   │   ├── 5.3.4 Next-Token Prediction
-│   │   └── 5.3.5 Teacher Forcing
-│   │
-│   ├── 5.3.B.2 Forward Pass & Loss
-│   │   ├── 5.3.6 Forward Pass
-│   │   ├── 5.3.7 Cross-Entropy Loss
-│   │   └── 5.3.8 Perplexity
-│   │
-│   ├── 5.3.B.3 Optimization & Training Mechanics
-│   │   ├── 5.3.9 Backpropagation
-│   │   ├── 5.3.10 Optimizers
-│   │   ├── 5.3.11 Learning Rate & Optimization Controls
-│   │   ├── 5.3.12 Batches, Steps, Epochs & Checkpoints
-│   │   └── 5.3.13 Mixed Precision Training
-│   │
-│   └── 5.3.B.4 Scaling
-│       └── 5.3.14 Scaling Laws & Compute–Data–Parameter Trade-offs
-│
-└── 5.3.C Post-Training
-    ├── 5.3.C.1 Supervised Fine-Tuning
-    │   └── 5.3.15 Supervised Fine-Tuning — SFT
-    │
-    ├── 5.3.C.2 Preference Optimization & Alignment
-    │   ├── 5.3.16 Preference Optimization
-    │   ├── 5.3.17 RLHF
-    │   └── 5.3.18 DPO
-    │
-    └── 5.3.C.3 Reasoning Post-Training
-        └── 5.3.19 GRPO & Reasoning Post-Training
-```
 
 ---
 
@@ -3328,9 +3280,15 @@ Decoding  = choose what gets generated
 
 ## 5.3.A.1 Training Data
 
-## 5.3.1 Training Data
+### 5.3.1 Training Data
 
-Model quality depends not only on the quantity of training data but also on its quality, composition, provenance, and filtering.
+### Simple explanation
+
+**Training data is the information the model learns from.**
+
+The model learns patterns from the data it sees, so the quality of that data strongly affects the quality of the model.
+
+> **More data is not automatically better data.**
 
 ### End-to-end data pipeline
 
@@ -3345,9 +3303,9 @@ Deduplication
    ↓
 Quality scoring
    ↓
-PII / safety filtering
+PII / Safety filtering
    ↓
-Domain / language balancing
+Domain / Language balancing
    ↓
 Mixture weighting
    ↓
@@ -3356,118 +3314,262 @@ Tokenization
 Training
 ```
 
-### Concepts to understand
+### What can be in training data?
 
-* **Data quality** — malformed, low-quality, or misleading data can damage training.
-* **Deduplication** — repeated data wastes compute and can distort memorization.
-* **Contamination** — evaluation examples leaking into training can inflate scores.
-* **Data mixture** — domains and languages may need deliberate weighting.
-* **Synthetic data** — useful when generation is followed by filtering and validation.
-* **Domain balance** — overrepresenting one domain can distort behavior.
-* **Multilingual balance** — tokenization and data volume can affect language quality.
-* **PII filtering** — sensitive information may require detection/removal.
-* **Safety filtering** — training pipelines may filter unwanted material.
-* **Licensing/provenance** — production use may require clear data rights and lineage.
-* **Training-data leakage** — held-out or private information appearing in training can invalidate evaluation or create governance concerns.
+```text
+Web pages
+Books
+Code
+Research papers
+News
+Forums / Q&A
+Structured data
+Multilingual data
+Images + text
+```
 
-### Key insight
+### Important concepts
 
-> **More data is not automatically better data.**
+**Data quality** → Bad or misleading data can teach the model bad patterns.
+
+**Deduplication** → Remove repeated or near-repeated data.
+
+**Contamination** → Evaluation examples accidentally appearing in training data.
+
+**Data mixture** → Different domains/languages may need different amounts.
+
+**Synthetic data** → AI-generated data can be useful after filtering and validation.
+
+**PII filtering** → Detect and remove sensitive personal information where required.
+
+**Safety filtering** → Filter harmful or unwanted material.
+
+**Licensing / provenance** → Know where data came from and whether it can be used.
+
+### 🧠 Memory trick
+
+> **Good data → better learning**
 
 ---
 
 ## 5.3.A.2 Data Quality & Contamination
 
-## 5.3.2 Data Quality, Deduplication & Contamination
-
-🧠 **Simple Understanding:** Model quality is constrained by the quality and composition of its training data.
+### 5.3.2 Data Quality, Deduplication & Contamination
 
 ### Data Quality
 
-Training pipelines may consider:
+The model learns from its training data.
 
-* source quality
-* language balance
-* domain balance
-* spam/noise filtering
-* unsafe or unwanted content
-* duplicated documents
-* malformed text
-* code quality
-* licensing and provenance requirements
+So:
 
-### Deduplication
+> **Bad data → bad learning**
 
-Duplicate data can cause:
-
-* wasted training compute
-* memorization of repeated examples
-* distorted frequency patterns
-* misleading benchmark results
-
-### Benchmark Contamination
-
-If benchmark/test examples appear in training data, the benchmark can overestimate true generalization.
+Things to check:
 
 ```text
-Evaluation data leaked into training
-          ↓
-Model has seen the answer pattern
-          ↓
-Benchmark score looks excellent
-          ↓
-Real unseen performance may be weaker
+Source quality
+Language balance
+Domain balance
+Spam / noise
+Unsafe content
+Duplicates
+Malformed text
+Code quality
+Licensing / provenance
 ```
 
-⭐ **Key Point:** Evaluation quality depends on separation between training evidence and genuine held-out evaluation.
+### Examples of bad data
+
+```text
+Noisy data
+→ irrelevant / low-quality information
+
+Malformed text
+→ broken or garbled content
+
+Low-quality code
+→ wrong / non-working examples
+
+Domain imbalance
+→ too much data from one area
+
+Unsafe content
+→ harmful patterns
+```
+
+---
+
+## Deduplication
+
+**Deduplication means removing duplicate or near-duplicate training data.**
+
+Example:
+
+```text
+"The cat is sleeping."
+"The cat is sleeping."
+"The cat is sleeping."
+"The cat is sleeping."
+```
+
+After deduplication:
+
+```text
+"The cat is sleeping."
+```
+
+### Why?
+
+Duplicates can cause:
+
+* wasted compute
+* repeated memorization
+* distorted frequency patterns
+* misleading evaluation
+
+> **Deduplication = remove repeated learning material.**
+
+---
+
+## Benchmark Contamination
+
+Suppose a benchmark question appears in the training data.
+
+```text
+Evaluation example
+        ↓
+Leaks into training
+        ↓
+Model has already seen it
+        ↓
+Benchmark score can look better
+        ↓
+True unseen performance may be weaker
+```
+
+> **Training data should be separated from genuine evaluation data.**
 
 ---
 
 ## 5.3.A.3 Synthetic Data
 
-## 5.3.20 Synthetic Data
+### 5.3.20 Synthetic Data
 
-🧠 **Simple Understanding:** Synthetic data is training data generated or transformed by computational systems rather than collected entirely from direct human-produced examples.
+### 🧠 Simple idea
 
-### Examples
+**Synthetic data = training data created by a computer/AI instead of being collected entirely from humans.**
 
-A teacher model can generate:
-
-* instruction/response pairs
-* reasoning examples
-* edge cases
-* coding tasks
-* classification data
-* multilingual examples
-* preference candidates
-
-### Pipeline
+A powerful **teacher model** can create training examples for a smaller model.
 
 ```text
-Teacher / Generator
-       ↓
+Teacher Model
+      ↓
+Generate examples
+      ↓
 Synthetic Dataset
-       ↓
-Filtering / Validation
-       ↓
-Training
-       ↓
-Student / Specialized Model
+      ↓
+Filter + Validate
+      ↓
+Train Student Model
 ```
 
-### Risks
+## Example
 
-Synthetic data can contain:
+Suppose we want 100,000 coding questions.
 
-* hallucinated facts
-* stylistic artifacts
-* distribution bias
-* duplicated patterns
-* teacher-model errors
+Instead of humans manually writing all of them:
 
-### 💡 Key Insight
+```text
+Teacher AI
+   ↓
+Generate 100,000 coding questions
+   ↓
+Check / Filter
+   ↓
+Use good examples for training
+```
 
-Synthetic data is useful only when **generation + filtering + validation** produce data that improves the target model.
+Synthetic data can include:
+
+* Instruction/response pairs
+* Coding problems
+* Reasoning examples
+* Edge cases
+* Classification examples
+* Multilingual examples
+* Preference examples
+
+## Why is Synthetic Data Useful?
+
+Real human-generated data can be:
+
+* Expensive
+* Slow to collect
+* Difficult to scale
+
+Synthetic data can be generated much faster.
+
+```text
+Human Data
+   ↓
+Expensive + limited
+
+Synthetic Data
+   ↓
+Can generate large quantities
+```
+
+## Problems with Synthetic Data
+
+AI-generated data isn't automatically good.
+
+### 1. Hallucinations
+
+The teacher may generate incorrect information.
+
+### 2. Bias
+
+The generated data may overrepresent certain patterns.
+
+### 3. Repetition
+
+The model may generate many similar examples.
+
+### 4. Teacher Errors
+
+If the teacher makes a mistake:
+
+```text
+Teacher mistake
+      ↓
+Synthetic data mistake
+      ↓
+Student learns mistake
+```
+
+## Most Important Rule
+
+Never assume:
+
+> **Synthetic = good**
+
+Instead:
+
+```text
+Generation
+    ↓
+Filtering
+    ↓
+Validation
+    ↓
+High-quality synthetic data
+    ↓
+Training
+```
+
+### 🧠 Remember
+
+> **Synthetic data = AI-generated training data; its value depends on good generation, filtering, and validation.** 
 
 ---
 
@@ -3475,78 +3577,114 @@ Synthetic data is useful only when **generation + filtering + validation** produ
 
 ## 5.3.B.1 Pretraining Objective & Setup
 
-## 5.3.3 Pretraining
+### 5.3.3 Pretraining
 
-🧠 **Simple Understanding:** Pretraining teaches a model broad statistical patterns from very large datasets before specializing it for particular behaviors.
+### Simple explanation
 
-### 📌 Quick Info
+**Pretraining is the large first stage where the model learns broad patterns from huge datasets.**
 
-| **Field** | **Answer**                                                        |
-| --------- | ----------------------------------------------------------------- |
-| **What?** | Large-scale foundational model training                           |
-| **Why?**  | Learn language, patterns, representations, and broad capabilities |
-| **How?**  | Optimize model parameters over massive training corpora           |
-| **When?** | Before instruction tuning or downstream specialization            |
+Think:
 
-### Simplified Objective
+> **Pretraining = teach the model general language, knowledge and patterns.**
 
-For next-token prediction:
+### Basic objective
 
-```math
-P(xt∣x1,…,xt−1)
-```
-
-The model learns parameters that improve predictions over training data.
-
-### Lifecycle
+For decoder-style models:
 
 ```text
-Large Dataset
+Previous tokens
+      ↓
+Predict next token
+```
+
+Mathematically:
+
+```text
+P(xₜ | x₁, ..., xₜ₋₁)
+```
+
+### Pretraining lifecycle
+
+```text
+Large dataset
     ↓
 Tokenization
     ↓
-Training Batches
+Training batches
     ↓
-Forward Pass
+Forward pass
     ↓
 Loss
     ↓
 Backpropagation
     ↓
-Parameter Update
+Parameter update
     ↓
 Repeat
 ```
 
-### What Pretraining Can Teach
+### What can pretraining teach?
 
 Potentially:
 
-* linguistic structure
-* factual associations
+* language structure
 * syntax
+* factual associations
 * coding patterns
 * reasoning patterns
 * world knowledge
 * multimodal relationships, depending on model design
 
-### ⚠️ Common Mistake
+### Important misconception
 
-Pretraining is not simply "putting documents into a database."
+Pretraining is **not**:
 
-The model parameters are optimized through training.
+> “Put documents into a database.”
+
+Instead:
+
+```text
+Data
+ ↓
+Prediction
+ ↓
+Loss
+ ↓
+Gradients
+ ↓
+Weight update
+```
 
 ---
 
-## 5.3.4 Next-Token Prediction
+### 5.3.4 Next-Token Prediction
 
-For a decoder-style model, a central objective is:
+### Simple explanation
 
-```math
-P(xt∣x1,…,xt−1)
+**Next-token prediction means the model uses previous tokens to predict what token should come next.**
+
+Example:
+
+```text
+"The cat is"
+      ↓
+"sleeping"
 ```
 
-The model receives previous permitted tokens and learns to assign high probability to the actual next token.
+Training can look like:
+
+```text
+"The"
+      → predict "cat"
+
+"The cat"
+      → predict "is"
+
+"The cat is"
+      → predict "sleeping"
+```
+
+### Training flow
 
 ```text
 Input tokens
@@ -3557,275 +3695,469 @@ Logits
       ↓
 Softmax
       ↓
-P(next token)
+Probabilities
       ↓
-Compare with actual token
+Compare with actual next token
+      ↓
+Loss
 ```
 
-This same next-token mechanism later powers autoregressive inference, but the mechanics of training and inference differ substantially.
+### Important
+
+Next-token prediction is:
+
+* a major **training objective**
+* the basis of **autoregressive generation**
+
+But training and inference are different processes.
 
 ---
 
-## 5.3.5 Teacher Forcing
+### 5.3.5 Teacher Forcing
 
-This distinction connects next-token training to real generation.
+### Simple explanation
+
+**Teacher forcing means that during training, the model receives the correct previous tokens instead of its own previous predictions.**
+
+Correct sentence:
+
+> **The cat is sleeping**
 
 ### During training
 
-The model is given the true previous tokens while learning to predict the next token.
-
 ```text
-Ground-truth sequence
-        ↓
-All permitted previous tokens available
-        ↓
-Causal mask
-        ↓
-Predict next token at many positions
-        ↓
-Cross-entropy loss
+"The"
+   ↓
+predict "cat"
+
+"The cat"
+   ↓
+predict "is"
+
+"The cat is"
+   ↓
+predict "sleeping"
 ```
 
-This is commonly described as **teacher forcing**.
+The model always receives the **correct previous tokens**.
 
 ### During inference
 
-The future correct tokens are not available.
+The model has to use its own output.
 
 ```text
-Prompt
- ↓
-Generate token 1
- ↓
-Append generated token 1
- ↓
-Generate token 2
- ↓
-Append generated token 2
- ↓
-Repeat
+"The"
+   ↓
+predicts "dog" ❌
+
+"The dog"
+   ↓
+predicts "runs"
+
+"The dog runs"
+   ↓
+predicts "fast"
 ```
 
-### Comparison
+### Key difference
 
-| **Training**                                                              | **Inference**                        |
-| ------------------------------------------------------------------------- | ------------------------------------ |
-| Ground-truth previous tokens are available                                | Previously generated tokens are used |
-| Many sequence positions can be processed in parallel under causal masking | Decode is sequential                 |
-| Computes loss                                                             | Produces output                      |
-| Backpropagation updates parameters                                        | Parameters are normally fixed        |
+| Training                                    | Inference                        |
+| ------------------------------------------- | -------------------------------- |
+| Correct previous tokens                     | Model's own previous predictions |
+| Teacher forcing                             | Autoregressive generation        |
+| Many positions can be processed in parallel | Generation is sequential         |
 
-### Key insight
-
-> **Training can parallelize next-token prediction across positions, but generation must repeatedly consume its own previous outputs.**
-
-This is one reason training and inference have very different performance profiles.
+> **Teacher forcing = teacher gives the correct previous answer.**
 
 ---
 
-# 5.3.B.2 Forward Pass & Loss
+## 5.3.B.2 Forward Pass & Loss
 
-## 5.3.6 Forward Pass
+### 5.3.6 Forward Pass
 
-A **forward pass** computes model outputs from an input batch using the current parameters.
+### Simple explanation
 
-```text
-Input batch
-   ↓
-Embeddings + Transformer layers
-   ↓
-Logits / predictions
-   ↓
-Loss computation
-```
+A **forward pass** means:
 
-During the forward pass, weights are used but not yet changed. The result provides the values needed to calculate the training loss.
-
----
-
-## 5.3.7 Cross-Entropy Loss
-
-### Softmax
-
-Softmax converts a vector of scores into a probability distribution:
-
-```math
-Pi=ezi∑jezj
-```
-
-where `z` values are logits.
-
-### Cross-Entropy Loss
-
-🧠 **Simple Understanding:** During training, the model is penalized when it assigns low probability to the correct next token.
-
-For the correct token `y`:
-
-```math
-Loss=−log⁡P(y)
-```
-
-Across many tokens, the training objective averages this loss.
-
-### Example
-
-Correct next token = `Paris`.
+> **Put the input through the model and get its prediction.**
 
 ```text
-Paris   → 0.70
-London  → 0.20
-Berlin  → 0.10
-```
-
-The model receives less loss than if it predicted:
-
-```text
-Paris   → 0.05
-London  → 0.80
-Berlin  → 0.15
-```
-
-### Training Chain
-
-```text
-Input tokens
+Input
  ↓
-Model
+Embeddings
+ ↓
+Transformer layers
  ↓
 Logits
  ↓
-Probabilities
- ↓
-Compare with true next token
- ↓
-Cross-entropy loss
- ↓
-Backpropagation
- ↓
-Parameter update
+Prediction
 ```
 
-⭐ **Key Point:** Next-token prediction is not merely an inference mechanism; it is also a central pretraining objective for decoder-style LLMs.
+During the forward pass:
+
+> **Weights are used, but they are not updated yet.**
+
+The output is then used to calculate the training loss.
+
+### 🧠 Memory trick
+
+> **Forward pass = run the model forward to get a prediction.**
 
 ---
 
-## 5.3.8 Perplexity
+### 5.3.7 Cross-Entropy Loss
 
-🧠 **Simple Understanding:** Perplexity is a traditional language-model metric related to how surprised the model is by the correct sequence.
+### Simple explanation
 
-A common relationship is:
+Cross-entropy loss tells the model:
 
-```math
-Perplexity=eaverage negative log-likelihood
+> **“How wrong was your prediction?”**
+
+Correct answer:
+
+> **Paris**
+
+### Good prediction
+
+```text
+Paris   → 70%
+London  → 20%
+Berlin  → 10%
 ```
 
-Lower perplexity generally indicates better predictive fit **on the same data/tokenization setup**.
+Correct answer gets high probability.
 
-### Important Limitations
+→ **Low loss ✅**
 
-Perplexity does **not** directly measure:
+### Bad prediction
 
-* factuality
-* tool-use reliability
-* instruction following
-* safety
-* agent task success
-* business usefulness
+```text
+Paris   → 5%
+London  → 80%
+Berlin  → 15%
+```
 
-🎯 **Interview Tip:** Perplexity is useful for model/language modeling evaluation, but it is not a substitute for application-specific evaluation.
+Correct answer gets low probability.
+
+→ **High loss ❌**
+
+### Formula
+
+```text
+Loss = -log P(correct token)
+```
+
+Therefore:
+
+```text
+P(correct) = 0.90
+→ low loss
+
+P(correct) = 0.05
+→ high loss
+```
+
+### 🧠 Memory trick
+
+> **High probability for correct token → low loss**
+> **Low probability for correct token → high loss**
 
 ---
 
-# 5.3.B.3 Optimization & Training Mechanics
+### 5.3.8 Perplexity
 
-## 5.3.9 Backpropagation
+### Simple explanation
 
-Backpropagation computes gradients: how a small change in each trainable parameter would affect the loss.
+**Perplexity tells us how surprised the model is by the correct sequence.**
+
+Think:
+
+> **“How well does the model predict the next token?”**
+
+### Good prediction
+
+```text
+Paris   → 90%
+London  → 5%
+Berlin  → 5%
+```
+
+The model is not very surprised.
+
+→ **Lower perplexity**
+
+### Bad prediction
+
+```text
+Paris   → 5%
+London  → 90%
+Berlin  → 5%
+```
+
+The model is very surprised.
+
+→ **Higher perplexity**
+
+### Important
+
+Lower perplexity generally means better predictive fit **when comparing the same data/tokenization setup**.
+
+### What perplexity does NOT directly measure
+
+```text
+Factuality
+Safety
+Instruction following
+Tool-use reliability
+Agent success
+Business usefulness
+```
+
+> **Perplexity measures language prediction quality, not overall application quality.**
+
+---
+
+## 5.3.B.3 Optimization & Training Mechanics
+
+### 5.3.9 Backpropagation
+
+### Simple explanation
+
+**Backpropagation finds out how the model's parameters contributed to the error.**
+
+Think:
+
+> **“Which weights should change, and in what direction?”**
+
+### Flow
 
 ```text
 Loss
  ↓
-Backpropagation / chain rule
+Backpropagation
  ↓
 Gradients
  ↓
 Optimizer
  ↓
-Weight updates
+Update weights
 ```
 
-### Gradients
+### Gradient
 
-A gradient gives the local direction and magnitude of change of the loss with respect to a parameter.
+A gradient tells us:
 
-### Chain rule — conceptual understanding
+> **How a small change in a parameter would affect the loss.**
 
-Deep models are compositions of many functions. The chain rule allows error information to propagate backward through those compositions.
-
-### How errors change weights
-
-The optimizer uses the gradients to update parameters so that future predictions are expected to reduce the training objective.
-
----
-
-## 5.3.10 Optimizers
-
-Optimizers convert gradients into parameter updates.
-
-### Gradient Descent / SGD
-
-Basic gradient descent moves parameters against the loss gradient. Stochastic gradient descent estimates this using minibatches rather than the entire dataset.
-
-### Adam
-
-Adam maintains adaptive statistics of gradients so different parameters can receive differently scaled updates.
-
-### AdamW
-
-AdamW is an Adam-style optimizer that decouples weight decay from the core adaptive update. It is widely used in Transformer training.
-
-The important engineering idea is:
+So:
 
 ```text
 Gradient
-  +
-Optimizer state / rules
-  +
-Learning rate
-  ↓
-Parameter update
+→ direction + amount of change
+```
+
+### Why “back”?
+
+The error information travels backward through the network.
+
+```text
+Loss
+ ↓
+Backward through layers
+ ↓
+Calculate gradients
+```
+
+### Chain rule
+
+The network is made from many connected operations/layers.
+
+The chain rule lets us trace the effect of the final error backward through those operations.
+
+> **Chain rule = trace the effect of the error backward.**
+
+---
+
+### 5.3.10 Optimizers
+
+### Simple explanation
+
+An **optimizer decides how the model's weights should change after gradients are calculated.**
+
+```text
+Loss
+ ↓
+Backpropagation
+ ↓
+Gradients
+ ↓
+Optimizer
+ ↓
+Update weights
+```
+
+Think:
+
+> **Gradient = tells the direction of change**
+> **Optimizer = decides how to apply the change**
+
+---
+
+### Gradient Descent / SGD
+
+Basic idea:
+
+> Move weights in a direction that reduces the loss.
+
+```text
+Current weights
+      ↓
+Gradient
+      ↓
+Move weights
+      ↓
+Lower loss
+```
+
+**SGD** generally estimates gradients from a smaller batch rather than the full dataset.
+
+> **SGD = basic gradient update**
+
+---
+
+### Adam
+
+Adam keeps statistics about previous gradients.
+
+That allows it to make **adaptive-sized updates** for different parameters.
+
+> **Adam = adaptive gradient updates**
+
+---
+
+### AdamW
+
+AdamW is Adam-style optimization with **weight decay handled separately from the adaptive update**.
+
+> **AdamW = Adam + decoupled weight decay**
+
+### 🧠 Memory trick
+
+```text
+SGD  = basic update
+Adam = adaptive update
+AdamW = Adam + separate weight decay
 ```
 
 ---
 
-## 5.3.11 Learning Rate & Optimization Controls
+### 5.3.11 Learning Rate & Optimization Controls
 
-### Learning Rate
+These control **how aggressively and stably the model learns**.
 
-Controls update magnitude.
+---
+
+## Learning Rate
+
+The learning rate controls the **size of the weight update**.
 
 ```text
-Too high → instability / overshooting
-Too low  → very slow learning / poor convergence
+Gradient
+   +
+Learning rate
+   ↓
+Update size
 ```
 
-### Learning-Rate Schedules
+### Too high
 
-The learning rate normally changes throughout training instead of remaining constant.
+```text
+Huge updates
+ ↓
+Overshooting
+ ↓
+Instability
+```
 
-### Warmup
+### Too low
 
-Gradually increases the learning rate early in training to reduce instability.
+```text
+Tiny updates
+ ↓
+Very slow learning
+```
 
-### Weight Decay
+> **Learning rate = size of the learning step**
 
-A regularization mechanism that discourages uncontrolled parameter growth.
+---
 
-### Gradient Clipping
+## Learning-Rate Schedule
 
-Caps extreme gradient magnitudes to reduce destabilizing updates.
+The learning rate usually changes during training.
 
-The basic training loop is:
+```text
+Start
+ ↓
+Warmup
+ ↓
+Main training
+ ↓
+Decay
+```
+
+---
+
+## Warmup
+
+The learning rate starts smaller and gradually increases.
+
+```text
+Small LR
+   ↓
+Increase gradually
+   ↓
+Normal LR
+```
+
+> **Warmup = start gently, then increase.**
+
+---
+
+## Weight Decay
+
+Weight decay discourages the parameters from becoming unnecessarily large.
+
+> **Weight decay = control excessive weight growth**
+
+It is a regularization mechanism.
+
+---
+
+## Gradient Clipping
+
+Sometimes gradients become extremely large.
+
+```text
+Normal gradient → okay
+
+Huge gradient → risky
+```
+
+Gradient clipping limits the gradient magnitude.
+
+```text
+Huge gradient
+     ↓
+Clipping
+     ↓
+Safer update
+```
+
+> **Gradient clipping = limit extreme gradients.**
+
+---
+
+## Complete training loop
 
 ```text
 Dataset
@@ -3849,152 +4181,396 @@ Optimizer
 Parameter update
 ```
 
-### Adam / AdamW
+---
 
-You do not need to derive the optimizer equations for agent engineering, but you should understand that Adam-style optimizers use gradient statistics to adapt updates. AdamW separates weight-decay behavior from the core adaptive update.
+## Batch terminology
 
-### Learning-rate schedule
+| Term                         | Simple meaning                                                |
+| ---------------------------- | ------------------------------------------------------------- |
+| **Microbatch**               | Small portion that fits in device memory                      |
+| **Gradient accumulation**    | Combine gradients from multiple microbatches before an update |
+| **Global / effective batch** | Total examples/tokens contributing to one update              |
+| **Step**                     | Usually one optimizer update                                  |
+| **Epoch**                    | One full pass through the dataset                             |
+| **Checkpoint**               | Saved model/training state                                    |
 
-Training commonly changes the learning rate over time.
+### Gradient accumulation example
 
-```text
-Start
- ↓
-Warmup
- ↓
-Main training schedule
- ↓
-Decay / completion
-```
-
-**Warmup** gradually increases the learning rate early in training, helping avoid unstable large updates before optimization settles.
-
-### Weight decay
-
-Weight decay is a regularization mechanism that discourages uncontrolled parameter growth.
-
-### Gradient clipping
-
-Gradient clipping limits unusually large gradient magnitudes that could destabilize training.
-
-### Batch terminology
-
-| **Term**               | **Meaning**                                                      |
-| ---------------------- | ---------------------------------------------------------------- |
-| Microbatch             | Portion that fits in device memory for one forward/backward pass |
-| Gradient accumulation  | Combine gradients over multiple microbatches                     |
-| Global/effective batch | Total examples/tokens contributing to an optimizer update        |
-| Step                   | Usually one optimizer update                                     |
-| Epoch                  | One pass through a defined dataset                               |
-| Checkpoint             | Saved model/training state                                       |
-
-### Why prediction error changes the model
+Suppose:
 
 ```text
-Incorrect probability distribution
-        ↓
-Cross-entropy loss
-        ↓
-Backpropagation computes gradients
-        ↓
-Optimizer uses gradients
-        ↓
-Weights change
-        ↓
-Future predictions change
+Effective batch = 128
+GPU capacity = 32
 ```
+
+Then:
+
+```text
+Microbatch 1 → 32
+Microbatch 2 → 32
+Microbatch 3 → 32
+Microbatch 4 → 32
+              ↓
+     Gradient accumulation
+              ↓
+      One optimizer update
+```
+
+So:
+
+> **32 × 4 = effective batch size 128**
 
 ---
 
-## 5.3.12 Batches, Steps, Epochs & Checkpoints
+### 5.3.12 Batches, Steps, Epochs & Checkpoints
 
-### Batch
+Think of training an LLM like **teaching a student using a huge book**.
 
-A batch is a set of training examples processed before an optimization update.
+## 1. Batch
 
-### Epoch
-
-An epoch is one pass through a defined training dataset. Large pretraining regimes may be described in tokens/steps rather than simple epochs.
-
-### Gradient Accumulation
-
-Useful when the desired effective batch is larger than can fit in memory at once.
+A **batch** is a group of training examples processed together.
 
 ```text
-Micro-batch 1 → gradients
-Micro-batch 2 → accumulate
-Micro-batch 3 → accumulate
+1000 training examples
         ↓
-Optimizer step
+Split into batches
+        ↓
+Batch 1 → 32 examples
+Batch 2 → 32 examples
+Batch 3 → 32 examples
+...
 ```
 
-### Checkpoints
+After processing a batch, the model usually **updates its weights**.
 
-A checkpoint stores training state so work can be resumed or evaluated.
-
-May include:
-
-* model weights
-* optimizer state
-* scheduler state
-* training step
-* configuration
+👉 **Batch = How many examples are processed together before an update.**
 
 ---
 
-## 5.3.13 Mixed Precision Training
+## 2. Step
 
-Modern training often uses lower-precision numerical formats where appropriate.
+A **step** is one **optimizer update**.
 
-Examples to recognize:
+```text
+Batch
+  ↓
+Forward Pass
+  ↓
+Calculate Loss
+  ↓
+Backpropagation
+  ↓
+Optimizer updates weights
+  ↓
+1 Step
+```
 
-* FP32
-* FP16
-* BF16
+If you process 10 batches and update after every batch:
 
-Benefits can include:
+**10 batches = 10 steps**
 
-* lower memory use
-* faster accelerator computation
-* larger effective batches
-
-This is related to, but not identical to, **post-training quantization** used for inference.
+👉 **Step = One weight update.**
 
 ---
 
-# 5.3.B.4 Scaling
+## 3. Epoch
+
+An **epoch** means going through the **entire training dataset once**.
+
+Suppose you have:
+
+```text
+1,000 training examples
+Batch size = 100
+```
+
+Then:
+
+```text
+1,000 examples
+÷ 100 examples/batch
+= 10 batches
+= 10 steps
+```
+
+After those 10 batches have processed all 1,000 examples:
+
+**1 epoch is complete.**
+
+👉 **Epoch = One complete pass through the dataset.**
+
+---
+
+## 4. Gradient Accumulation
+
+Sometimes your GPU cannot fit a large batch.
+
+Suppose you want an effective batch of **128**, but your GPU can only process **32 at a time**.
+
+```text
+Micro-batch 1 (32)
+       ↓
+   gradients
+
+Micro-batch 2 (32)
+       ↓
+   accumulate
+
+Micro-batch 3 (32)
+       ↓
+   accumulate
+
+Micro-batch 4 (32)
+       ↓
+   accumulate
+
+       ↓
+Optimizer Update
+```
+
+So:
+
+**32 × 4 = effective batch size 128**
+
+👉 **Gradient accumulation = simulate a larger batch without needing all of it in GPU memory at once.**
+
+---
+
+## 5. Checkpoint
+
+Training a large LLM can take **days or weeks**.
+
+So the model periodically saves a **checkpoint**.
+
+```text
+Training
+   ↓
+Step 10,000
+   ↓
+💾 Checkpoint
+   ↓
+Step 20,000
+   ↓
+💾 Checkpoint
+   ↓
+Step 30,000
+   ↓
+💾 Checkpoint
+```
+
+A checkpoint can contain:
+
+* Model weights
+* Optimizer state
+* Learning-rate scheduler state
+* Current training step
+* Configuration
+
+If training stops:
+
+```text
+Checkpoint
+     ↓
+Resume training
+     ↓
+Step 30,001
+```
+
+👉 **Checkpoint = Saved training state that lets you resume or evaluate training.** 
+
+---
+
+### 5.3.13 Mixed Precision Training
+
+Normally, neural-network calculations can use **FP32** (32-bit floating point).
+
+But many operations don't need that much numerical precision.
+
+Common formats:
+
+| Format | Bits | Simple idea                              |
+| ------ | ---: | ---------------------------------------- |
+| FP32   |   32 | Higher precision, more memory            |
+| FP16   |   16 | Lower memory, often faster               |
+| BF16   |   16 | Lower memory, commonly used for training |
+
+## Why use it?
+
+Instead of:
+
+```text
+FP32
+↓
+More memory
+↓
+Smaller batches
+↓
+Slower training
+```
+
+we can often use:
+
+```text
+FP16 / BF16
+↓
+Less memory
+↓
+Larger batches
+↓
+Faster accelerator computation
+```
+
+## Important distinction
+
+**Mixed precision training ≠ quantization**
+
+* **Mixed precision training** → mainly used while **training** the model.
+* **Quantization** → often used to make a trained model **smaller/faster for inference**.
+
+👉 **Mixed precision = use smaller numerical formats to make training more efficient.** 
+
+---
 
 ## 5.3.14 Scaling Laws & Compute–Data–Parameter Trade-offs
 
-Scaling laws study how model loss/performance tends to change as resources such as **model parameters, training data, and compute** increase.
+Think of **training an LLM like building and teaching a very smart student**.
 
-### Model size
+There are 3 major things you can increase:
 
-More parameters increase representational capacity but also memory, communication, and compute requirements.
+```text
+        LLM Training
+             │
+    ┌────────┼────────┐
+    ↓        ↓        ↓
+ Parameters  Data    Compute
+ (Model)    (Tokens) (Resources)
+```
 
-### Training tokens
+## 1. Model Size / Parameters
 
-A larger model still needs sufficient high-quality data. Under-training a very large model can waste parameter capacity.
+**Parameters = what the model learns.**
 
-### Training compute
+A model with more parameters can potentially learn more complex patterns.
 
-Compute is constrained by accelerator count, training duration, numerical precision, utilization, and communication overhead.
+```text
+Small model → fewer parameters → less compute/memory
+Large model → more parameters → more compute/memory
+```
 
-### Data vs parameters
+But simply making the model bigger doesn't guarantee better results.
 
-The engineering problem is not simply "make the model larger." Model size and training-token budget should be balanced.
+👉 **More parameters = more capacity, but also more cost.**
 
-### Compute-optimal training
+---
 
-For a fixed training-compute budget, there is a trade-off between spending compute on a larger model and spending it on more training tokens. The exact optimum depends on assumptions and model/data regime.
+## 2. Training Tokens
 
-### Diminishing returns
+**Tokens = the amount of data the model learns from.**
 
-Scaling can improve capability, but gains are not free or unlimited. Data quality, architecture, post-training, inference-time techniques, and system design also matter.
+A large model needs **enough high-quality training data**.
 
-### Production implication
+```text
+Huge model
++
+Too little data
+=
+Under-trained model
+```
 
-A smaller, better-trained or better-routed model can be preferable to a larger model when latency, throughput, cost, privacy, or deployment constraints dominate.
+👉 **Big model + insufficient data = wasted potential.**
+
+---
+
+## 3. Training Compute
+
+**Compute = the computing resources used to train the model.**
+
+It depends on things like:
+
+* Number of GPUs/accelerators
+* Training time
+* Model size
+* Number of training tokens
+* Numerical precision
+* Hardware utilization
+* Communication between GPUs
+
+More compute allows more training, but compute is expensive.
+
+---
+
+## 4. Data vs Parameters
+
+The main idea is:
+
+> **Don't just make the model bigger. Balance model size with the amount of training data and available compute.**
+
+```text
+More Parameters
+      ↕
+More Training Data
+      ↕
+More Compute
+```
+
+---
+
+## 5. Compute-Optimal Training
+
+Suppose you have a **fixed amount of compute**.
+
+You can spend it on:
+
+```text
+Option A
+Spend more compute → Bigger model
+
+Option B
+Spend more compute → More training tokens
+```
+
+The goal is to find a good balance.
+
+👉 **Compute-optimal training = find a good balance between model size, data, and compute.**
+
+---
+
+## 6. Diminishing Returns
+
+Making a model bigger doesn't give unlimited improvement.
+
+```text
+More scaling
+     ↓
+More performance
+     ↓
+But eventually
+smaller gains for additional cost
+```
+
+Other things also matter:
+
+* Data quality
+* Architecture
+* Post-training
+* Inference-time techniques
+* System design
+
+👉 **Bigger ≠ automatically better.**
+
+---
+
+## Production Example
+
+A smaller model can be more practical when you need:
+
+* Lower latency
+* Lower cost
+* Higher throughput
+* Privacy
+* Less GPU memory
+
+👉 **The biggest model is not always the most practical model.** 
 
 ---
 
@@ -4002,30 +4578,45 @@ A smaller, better-trained or better-routed model can be preferable to a larger m
 
 ## 5.3.C.1 Supervised Fine-Tuning
 
-## 5.3.15 Supervised Fine-Tuning — SFT
+### 5.3.15 Supervised Fine-Tuning — SFT
 
-🧠 **Simple Understanding:** Instruction tuning trains a pretrained model to respond more usefully to explicit instructions.
-
-### Example
-
-Before instruction tuning:
+Think of **pretraining as teaching a student general knowledge**, and **SFT as teaching that student how to answer questions properly**.
 
 ```text
-Prompt:
-"Translate 'hello' to French."
-
-The base model may continue text in a statistically plausible way.
+Pretrained Model
+      ↓
+Instruction + Desired Response
+      ↓
+SFT
+      ↓
+Better instruction following
 ```
 
-After instruction tuning:
+## What is SFT?
+
+**Supervised Fine-Tuning** means taking an already pretrained model and training it further using examples where we know the **desired answer**.
+
+Example:
 
 ```text
-"Bonjour."
+Instruction:
+Translate "Hello" to French.
+
+Desired Answer:
+Bonjour.
 ```
 
-### Training Data
+The model learns:
 
-Instruction datasets commonly contain structures such as:
+```text
+Instruction → Appropriate Response
+```
+
+---
+
+## Training Data
+
+Usually:
 
 ```text
 Instruction
@@ -4035,252 +4626,563 @@ Input
 Desired Response
 ```
 
-### Why It Matters
-
-It improves:
-
-* instruction following
-* task formatting
-* conversational usefulness
-* adherence to desired output patterns
-
-### Base Model vs Instruction-Tuned Model
-
-| **Base Model**                                | **Instruction-Tuned Model**                   |
-| --------------------------------------------- | --------------------------------------------- |
-| Optimized primarily for pretraining objective | Further trained to follow instructions        |
-| More raw continuation behavior                | More assistant-like behavior                  |
-| Often useful as foundation                    | Usually preferred for direct user interaction |
-
-**SFT = Supervised Fine-Tuning.**
-
-Instruction tuning is commonly implemented through supervised fine-tuning on instruction/response examples.
-
-### Mental model
+Example:
 
 ```text
-Pretrained base model
-        ↓
-Instruction + desired response examples
-        ↓
-Supervised fine-tuning
-        ↓
-More useful instruction-following behavior
+Instruction: Summarize this paragraph.
+Input: [Long paragraph]
+Desired Response: [Good summary]
 ```
 
-### Relationship
+---
 
-```text
-Instruction tuning
-≈
-A common application of SFT
-```
-
-SFT can also be used for other supervised behavior adaptation, so the terms are closely related but not perfectly synonymous in every context.
-
-### Why it matters
+## Why SFT?
 
 SFT can improve:
 
-* instruction following
-* response format
-* task behavior
-* domain conventions
-* conversational behavior
+* Instruction following
+* Response formatting
+* Task-specific behavior
+* Domain conventions
+* Conversational behavior
+
+---
+
+## Base Model vs Instruction-Tuned Model
+
+```text
+Base Model
+"I know how language works."
+
+       ↓ SFT
+
+Instruction-Tuned Model
+"I know how to respond to your instructions."
+```
+
+### Base Model
+
+* Mainly trained on next-token prediction
+* More raw continuation behavior
+* Foundation model
+
+### Instruction-Tuned Model
+
+* Further trained on instruction/response examples
+* Better at following instructions
+* More assistant-like
+
+---
+
+## Instruction Tuning vs SFT
+
+```text
+SFT
+│
+├── Instruction tuning
+├── Domain adaptation
+└── Other supervised behavior adaptation
+```
+
+👉 **Instruction tuning is a common application of SFT.**
+
+👉 **SFT = take a pretrained model and train it on examples of desired behavior.** 
 
 ---
 
 ## 5.3.C.2 Preference Optimization & Alignment
 
-## 5.3.16 Preference Optimization
+### 5.3.16 Preference Optimization
 
-🧠 **Simple Understanding:** Preference optimization trains the system toward outputs humans or evaluators prefer rather than merely outputs that resemble training text.
+### 🧠 Simple idea
 
-### Typical Goal
+After **SFT**, the model knows how to follow instructions.
 
-Given two possible responses:
+But there can still be **many possible good answers**.
+
+Preference optimization teaches:
+
+> **“Among these answers, which one do people prefer?”**
+
+Example:
 
 ```text
-Response A
-Response B
+Question
+   ↓
+Response A ✅ Preferred
+Response B ❌ Rejected
 ```
 
-A preference signal may indicate:
-
-```text
-A is preferred over B
-```
-
-Training then encourages the model to produce more outputs resembling preferred behavior.
-
-### Why It Exists
-
-Instruction tuning alone does not fully specify:
-
-* helpfulness
-* harmlessness
-* style
-* truthfulness
-* response quality
-* prioritization of competing objectives
-
-Preference-based methods address part of that gap.
+The training process encourages the model to produce answers more like the preferred response.
 
 ---
 
-## 5.3.17 RLHF
+## Why do we need it?
 
-**RLHF = Reinforcement Learning from Human Feedback.**
+SFT doesn't completely tell the model:
 
-🧠 **Simple Understanding:** RLHF uses human preference signals to optimize model behavior through a reinforcement-learning framework.
+* Which answer is more helpful?
+* Which answer is safer?
+* Which style is better?
+* Which answer is clearer?
+* Which response should be preferred when objectives conflict?
 
-### Simplified Pipeline
+So:
+
+```text
+SFT
+ ↓
+Learn to follow instructions
+
+Preference Optimization
+ ↓
+Learn which responses are preferred
+```
+
+👉 **Preference optimization = train the model to prefer better responses, not just correct-looking responses.**
+
+---
+
+### 5.3.17 RLHF
+
+**RLHF = Reinforcement Learning from Human Feedback**
+
+### 🧠 Simple idea
+
+RLHF is one way of using **human preferences to improve an LLM's behavior**.
+
+Think of it like a teacher giving the model feedback:
+
+```text
+Model gives answer
+       ↓
+Humans compare answers
+       ↓
+"Answer A is better"
+       ↓
+Reward model learns this preference
+       ↓
+RL training encourages better behavior
+```
+
+---
+
+## Simple RLHF Pipeline
 
 ```text
 Pretrained Model
-      ↓
+       ↓
 Instruction Tuning
-      ↓
-Generate Candidate Responses
-      ↓
-Human Preference Labels
-      ↓
+       ↓
+Generate Answers
+       ↓
+Humans Rank / Compare Answers
+       ↓
 Reward Model
-      ↓
+       ↓
 Reinforcement Learning
-      ↓
-Aligned Model
+       ↓
+Improved Model
 ```
-
-### Reward Model
-
-The reward model learns to estimate:
-
-> "How preferred is this response?"
-
-Then reinforcement learning attempts to increase expected reward while constraining undesirable behavior.
-
-### Strengths
-
-* Directly optimizes preferred behavior
-* Can encode complex behavioral objectives
-
-### Challenges
-
-* Expensive human labeling
-* Reward hacking
-* Training instability
-* Preference inconsistency
-* Alignment to imperfect evaluators
 
 ---
 
-## 5.3.18 DPO
+## Example
+
+```text
+Question:
+Explain what an API is.
+
+Answer A → Clear and simple
+Answer B → Confusing and overly complicated
+```
+
+Humans choose:
+
+```text
+A ✅
+B ❌
+```
+
+The reward model learns:
+
+> **A-like answers should receive higher reward.**
+
+RL then trains the model to produce more highly rewarded behavior.
+
+---
+
+## What is a Reward Model?
+
+A **reward model** is a separate model that tries to predict:
+
+> **“How much would this response be preferred?”**
+
+Example:
+
+```text
+Response A → Reward: 0.9 ⭐
+Response B → Reward: 0.3
+```
+
+The RL training process tries to increase the expected reward.
+
+---
+
+## Strengths
+
+RLHF can help the model:
+
+* Follow human preferences
+* Produce more helpful responses
+* Improve response style
+* Handle multiple behavioral objectives
+
+---
+
+## Challenges
+
+### 1. Expensive labeling
+
+Humans need to compare many responses.
+
+### 2. Reward hacking
+
+The model may discover ways to get a high reward **without actually behaving as intended**.
+
+### 3. Training instability
+
+RL training can be more difficult to tune.
+
+### 4. Human preferences differ
+
+Different people may prefer different answers.
+
+```text
+Person A → prefers short answer
+Person B → prefers detailed answer
+```
+
+### 5. Human feedback isn't perfect
+
+The reward model learns from human judgments, so mistakes or biases in those judgments can influence the trained behavior.
+
+👉 **RLHF = use human preferences + reward modeling + reinforcement learning to improve model behavior.** 
+
+---
+
+### 5.3.18 DPO — Direct Preference Optimization
 
 **DPO = Direct Preference Optimization.**
 
-🧠 **Simple Understanding:** DPO trains using preference pairs directly, avoiding the need for a separately trained reward-model-plus-RL optimization pipeline in its standard formulation.
+### 🧠 Simple idea
 
-### Preference Data
+DPO teaches a model **which answer is preferred** without using the traditional **reward model + separate RL loop** used in classic RLHF.
+
+Example:
+
+```text
+Question
+   ↓
+ ┌───────────────┐
+ │ Response A ✅ │ ← Preferred
+ │ Response B ❌ │ ← Rejected
+ └───────────────┘
+```
+
+DPO directly trains the model to make **A more likely than B**.
+
+---
+
+## Simple Flow
 
 ```text
 Prompt
- ├── Preferred response
- └── Rejected response
+  ↓
+Preferred answer + Rejected answer
+  ↓
+DPO training
+  ↓
+Model learns preferred behavior
 ```
 
-The objective encourages the model to increase the relative likelihood of preferred responses compared with rejected ones.
+---
 
-### RLHF vs DPO
+## RLHF vs DPO
 
-| **RLHF**                          | **DPO**                                  |
-| --------------------------------- | ---------------------------------------- |
-| Usually uses reward modeling + RL | Directly optimizes from preference pairs |
-| More pipeline components          | Simpler training pipeline                |
-| Can be operationally complex      | Often easier to implement                |
-| Requires careful RL configuration | Avoids separate RL loop in standard DPO  |
+```text
+RLHF
+ ↓
+Reward Model
+ ↓
+RL
 
-### 💡 Key Insight
+DPO
+ ↓
+Preference Pair
+ ↓
+Direct Optimization
+```
 
-DPO is not "RLHF but faster."
+### RLHF
 
-It is a **different optimization formulation** for learning from preferences.
+* Uses reward model + RL
+* More components
+* More RL configuration
+* Can be operationally complex
+
+### DPO
+
+* Uses preference pairs directly
+* Simpler pipeline
+* No separate RL loop in standard DPO
+* Often easier to implement
+
+---
+
+### 🧠 Remember
+
+> **DPO = Give the model a good answer and a bad answer, then train it to prefer the good one.**
+
+**Important:** DPO is **not simply “RLHF but faster.”**
+
+It is a **different optimization formulation** for learning from preferences. 
 
 ---
 
 ## 5.3.C.3 Reasoning Post-Training
 
-## 5.3.19 GRPO & Reasoning Post-Training
+### 5.3.19 GRPO & Reasoning Post-Training
 
-A useful conceptual map is:
+**GRPO = Group Relative Policy Optimization.**
+
+### 🧠 Simple idea
+
+It is a post-training approach associated with **reasoning models** where the model can generate **multiple possible solutions**, compare them using a reward/verifier, and learn from the relative results.
+
+Think of a math problem:
 
 ```text
-                      Post-Training
-                          │
-           ┌───────────────┼────────────────┐
-           ↓               ↓                ↓
-          SFT       Preference Learning   AI Feedback
-                          │
-               ┌──────────┴───────────┐
-               ↓                       ↓
-             RLHF                     DPO
-               │
-          Reward model + RL
-               │
-          PPO-like methods
-
-Reasoning-focused optimization may also use:
-GRPO-like objectives / verifiers / generated solution groups
+Question
+   ↓
+Generate several solutions
+   ↓
+Solution A → ✅
+Solution B → ❌
+Solution C → ✅
+Solution D → ❌
+   ↓
+Reward / Verifier
+   ↓
+Learn from the better solutions
 ```
 
-### RLHF
+---
 
-Typical conceptual path:
+## RLHF
+
+Classic conceptual flow:
 
 ```text
-Candidate responses
+Generate answers
       ↓
 Human preferences
       ↓
-Reward model
+Reward Model
       ↓
-RL optimization
+Reinforcement Learning
       ↓
-Preferred behavior
+Better behavior
 ```
 
-### DPO
-
-DPO directly learns from preferred/rejected response pairs without requiring the standard separate reward-model-plus-RL loop.
-
-### AI feedback
-
-Preference or critique signals can also be generated partly by AI systems rather than exclusively by humans. The quality of the evaluator still matters.
-
-### PPO awareness
-
-PPO is an RL optimization method commonly associated with classic RLHF pipelines. For an agent engineer, conceptual awareness is more important than deriving PPO.
-
-### GRPO awareness
-
-Group Relative Policy Optimization (GRPO) is a reasoning/post-training concept in which multiple generated candidates can be compared relative to a group and optimized using reward signals.
-
-### Reasoning post-training mental model
-
-```text
-SFT / base behavior
-        ↓
-Generate multiple candidate solutions
-        ↓
-Verifier / reward signal
-        ↓
-Preference or RL-style optimization
-        ↓
-Improved target behavior
-```
-
+The **reward model** estimates which responses are better.
 
 ---
+
+## DPO
+
+DPO is simpler conceptually:
+
+```text
+Prompt
+  ↓
+Preferred response
++
+Rejected response
+  ↓
+DPO
+  ↓
+Better preference behavior
+```
+
+No separate reward-model-plus-RL loop is required in standard DPO.
+
+---
+
+## AI Feedback
+
+Humans aren't always the only source of feedback.
+
+An **AI evaluator** can also judge responses.
+
+```text
+Model generates answer
+        ↓
+AI evaluator
+        ↓
+"Good" / "Bad"
+        ↓
+Training signal
+```
+
+Important:
+
+> **If the evaluator gives bad feedback, the trained model can learn from that bad feedback.**
+
+So evaluator quality matters.
+
+---
+
+## PPO
+
+**PPO = Proximal Policy Optimization.**
+
+You don't need to understand the mathematics deeply at this stage.
+
+Just remember:
+
+> **PPO is an RL optimization algorithm commonly associated with classic RLHF.**
+
+```text
+RLHF
+ ↓
+Reward Model
+ ↓
+RL
+ ↓
+PPO-like optimization
+```
+
+For an AI/agent engineer, understanding **what role PPO plays** is usually more important than deriving PPO equations initially.
+
+---
+
+## GRPO
+
+The key idea is **group comparison**.
+
+Instead of looking at only one generated answer:
+
+```text
+Question
+   ↓
+Generate multiple answers
+   ↓
+A → reward 0.9
+B → reward 0.2
+C → reward 0.8
+D → reward 0.3
+   ↓
+Compare answers within the group
+   ↓
+Optimize toward better behavior
+```
+
+This makes GRPO particularly relevant to **reasoning post-training**, where multiple candidate solutions can be generated and evaluated.
+
+---
+
+## Reasoning Post-Training
+
+```text
+Base Model / SFT
+       ↓
+Generate multiple solutions
+       ↓
+Verifier / Reward
+       ↓
+Identify better solutions
+       ↓
+Preference / RL-style optimization
+       ↓
+Better reasoning behavior
+```
+
+For example:
+
+```text
+Math problem
+    ↓
+5 generated solutions
+    ↓
+Verifier checks answers
+    ↓
+Correct solutions receive better reward
+    ↓
+Model learns patterns associated
+with successful reasoning
+```
+
+### 🧠 Remember
+
+> **GRPO = generate multiple solutions, compare their rewards, and train toward better-performing solutions.** 
+
+---
+
+# Final Arranged Structure
+
+```text
+5.3 LLM Training & Post-Training
+│
+├── 5.3.A Data Foundations
+│   │
+│   ├── 5.3.A.1 Training Data
+│   │   └── 5.3.1 Training Data
+│   │
+│   ├── 5.3.A.2 Data Quality & Contamination
+│   │   └── 5.3.2 Data Quality, Deduplication & Contamination
+│   │
+│   └── 5.3.A.3 Synthetic Data
+│       └── 5.3.20 Synthetic Data
+│
+├── 5.3.B Pretraining
+│   │
+│   ├── 5.3.B.1 Pretraining Objective & Setup
+│   │   ├── 5.3.3 Pretraining
+│   │   ├── 5.3.4 Next-Token Prediction
+│   │   └── 5.3.5 Teacher Forcing
+│   │
+│   ├── 5.3.B.2 Forward Pass & Loss
+│   │   ├── 5.3.6 Forward Pass
+│   │   ├── 5.3.7 Cross-Entropy Loss
+│   │   └── 5.3.8 Perplexity
+│   │
+│   ├── 5.3.B.3 Optimization & Training Mechanics
+│   │   ├── 5.3.9 Backpropagation
+│   │   ├── 5.3.10 Optimizers
+│   │   ├── 5.3.11 Learning Rate & Optimization Controls
+│   │   ├── 5.3.12 Batches, Steps, Epochs & Checkpoints
+│   │   └── 5.3.13 Mixed Precision Training
+│   │
+│   └── 5.3.B.4 Scaling
+│       └── 5.3.14 Scaling Laws & Compute–Data–Parameter Trade-offs
+│
+└── 5.3.C Post-Training
+    │
+    ├── 5.3.C.1 Supervised Fine-Tuning
+    │   └── 5.3.15 Supervised Fine-Tuning — SFT
+    │
+    ├── 5.3.C.2 Preference Optimization & Alignment
+    │   ├── 5.3.16 Preference Optimization
+    │   ├── 5.3.17 RLHF
+    │   └── 5.3.18 DPO
+    │
+    └── 5.3.C.3 Reasoning Post-Training
+        └── 5.3.19 GRPO & Reasoning Post-Training
+```
+
+This is now **structurally rearranged only**: the original `5.3.1–5.3.20` numbering is retained, with `5.3.20 Synthetic Data` moved into **Data Foundations** as requested.
+
 
 
 ---
