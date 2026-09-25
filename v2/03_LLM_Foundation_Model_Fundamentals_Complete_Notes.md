@@ -53,48 +53,43 @@
 - 5.2.17 FlashAttention
 - 5.2.18 Complete Transformer Mental Model
 
-### 5.3 LLM Training & Post-Training
-│
-├── 5.3.A Data Foundations
-│   ├── 5.3.A.1 Training Data
-│   │   └── 5.3.1 Training Data
-│   ├── 5.3.A.2 Data Quality & Contamination
-│   │   └── 5.3.2 Data Quality, Deduplication & Contamination
-│   └── 5.3.A.3 Synthetic Data
-│       └── 5.3.20 Synthetic Data
-│
-├── 5.3.B Pretraining
-│   ├── 5.3.B.1 Pretraining Objective & Setup
-│   │   ├── 5.3.3 Pretraining
-│   │   ├── 5.3.4 Next-Token Prediction
-│   │   └── 5.3.5 Teacher Forcing
-│   │
-│   ├── 5.3.B.2 Forward Pass & Loss
-│   │   ├── 5.3.6 Forward Pass
-│   │   ├── 5.3.7 Cross-Entropy Loss
-│   │   └── 5.3.8 Perplexity
-│   │
-│   ├── 5.3.B.3 Optimization & Training Mechanics
-│   │   ├── 5.3.9 Backpropagation
-│   │   ├── 5.3.10 Optimizers
-│   │   ├── 5.3.11 Learning Rate & Optimization Controls
-│   │   ├── 5.3.12 Batches, Steps, Epochs & Checkpoints
-│   │   └── 5.3.13 Mixed Precision Training
-│   │
-│   └── 5.3.B.4 Scaling
-│       └── 5.3.14 Scaling Laws & Compute–Data–Parameter Trade-offs
-│
-└── 5.3.C Post-Training
-    ├── 5.3.C.1 Supervised Fine-Tuning
-    │   └── 5.3.15 Supervised Fine-Tuning — SFT
-    │
-    ├── 5.3.C.2 Preference Optimization & Alignment
-    │   ├── 5.3.16 Preference Optimization
-    │   ├── 5.3.17 RLHF
-    │   └── 5.3.18 DPO
-    │
-    └── 5.3.C.3 Reasoning Post-Training
-        └── 5.3.19 GRPO & Reasoning Post-Training
+# 5.3 LLM Training & Post-Training
+
+* **5.3.A Data Foundations**
+  * **5.3.A.1 Training Data**
+    * 5.3.1 Training Data
+  * **5.3.A.2 Data Quality & Contamination**
+    * 5.3.2 Data Quality, Deduplication & Contamination
+  * **5.3.A.3 Synthetic Data**
+    * 5.3.20 Synthetic Data
+
+* **5.3.B Pretraining**
+  * **5.3.B.1 Pretraining Objective & Setup**
+    * 5.3.3 Pretraining
+    * 5.3.4 Next-Token Prediction
+    * 5.3.5 Teacher Forcing
+  * **5.3.B.2 Forward Pass & Loss**
+    * 5.3.6 Forward Pass
+    * 5.3.7 Cross-Entropy Loss
+    * 5.3.8 Perplexity
+  * **5.3.B.3 Optimization & Training Mechanics**
+    * 5.3.9 Backpropagation
+    * 5.3.10 Optimizers
+    * 5.3.11 Learning Rate & Optimization Controls
+    * 5.3.12 Batches, Steps, Epochs & Checkpoints
+    * 5.3.13 Mixed Precision Training
+  * **5.3.B.4 Scaling**
+    * 5.3.14 Scaling Laws & Compute–Data–Parameter Trade-offs
+
+* **5.3.C Post-Training**
+  * **5.3.C.1 Supervised Fine-Tuning**
+    * 5.3.15 Supervised Fine-Tuning — SFT
+  * **5.3.C.2 Preference Optimization & Alignment**
+    * 5.3.16 Preference Optimization
+    * 5.3.17 RLHF
+    * 5.3.18 DPO
+  * **5.3.C.3 Reasoning Post-Training**
+    * 5.3.19 GRPO & Reasoning Post-Training
 
 ### 5.4 Model Adaptation, Compression & Optimization
 - 5.4.1 Fine-Tuning
