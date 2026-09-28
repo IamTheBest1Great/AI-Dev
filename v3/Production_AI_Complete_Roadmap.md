@@ -1225,7 +1225,7 @@ Learn this at **strong conceptual depth**. You should understand model behavior 
 - BPE / subword-tokenization intuition
 - Token counts and cost implications
 
-##### M04.1.1.2 Transformer Architecture
+M04.1.1.2 Transformer Architecture
 │
 ├── A. Input Representation
 │   ├── A.1 Token Embeddings
