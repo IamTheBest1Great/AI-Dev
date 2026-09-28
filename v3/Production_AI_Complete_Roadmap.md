@@ -1225,6 +1225,9 @@ Learn this at **strong conceptual depth**. You should understand model behavior 
 - BPE / subword-tokenization intuition
 - Token counts and cost implications
 
+##### M04.1.1.2 Transformer Architecture
+
+```text
 M04.1.1.2 Transformer Architecture
 │
 ├── A. Input Representation
@@ -1257,7 +1260,7 @@ M04.1.1.2 Transformer Architecture
     ├── F.1 Decoder-Only Transformer
     ├── F.2 Autoregressive Generation
     └── F.3 Causal Attention
-
+```
 ##### M04.1.1.3 Inference behavior
 
 - Context windows
