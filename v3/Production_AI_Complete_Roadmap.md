@@ -1225,19 +1225,38 @@ Learn this at **strong conceptual depth**. You should understand model behavior 
 - BPE / subword-tokenization intuition
 - Token counts and cost implications
 
-##### M04.1.1.2 Transformer architecture
-
-- Token embeddings
-- Transformer blocks
-- Self-attention
-- Multi-head attention
-- Causal masking
-- Feed-forward networks
-- Residual connections
-- Layer normalization / RMSNorm awareness
-- Positional mechanisms
-- RoPE awareness
-- Decoder-only transformer architecture
+##### M04.1.1.2 Transformer Architecture
+│
+├── A. Input Representation
+│   ├── A.1 Token Embeddings
+│   └── A.2 Positional Mechanisms
+│       └── A.2.1 RoPE Awareness
+│
+├── B. Attention Mechanisms
+│   ├── B.1 Self-Attention
+│   ├── B.2 Multi-Head Attention
+│   └── B.3 Causal Masking
+│
+├── C. Transformer Block Components
+│   ├── C.1 Feed-Forward Networks
+│   ├── C.2 Residual Connections
+│   └── C.3 Layer Normalization / RMSNorm Awareness
+│
+├── D. Transformer Blocks
+│   ├── D.1 Encoder Block
+│   ├── D.2 Decoder Block
+│   └── D.3 Repeated Transformer Blocks
+│
+├── E. Transformer Architecture Types
+│   ├── E.1 Encoder-Only
+│   ├── E.2 Decoder-Only
+│   └── E.3 Encoder-Decoder
+│       └── E.3.1 Mixed / Seq2Seq Architecture
+│
+└── F. LLM-Focused Architecture
+    ├── F.1 Decoder-Only Transformer
+    ├── F.2 Autoregressive Generation
+    └── F.3 Causal Attention
 
 ##### M04.1.1.3 Inference behavior
 
