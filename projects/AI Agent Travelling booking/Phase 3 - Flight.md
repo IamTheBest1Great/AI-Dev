@@ -1,41 +1,64 @@
-# Phase 4 — Flight Search
+# Phase 4 — Flight Search with `randomapi.dev`
 
-Phase 3 is complete, so now we add the **flight-search capability**.
+Yes. Let's rebuild **Phase 4 from scratch, completely and consistently**, using the real mock API at `randomapi.dev` rather than hard-coded flight data.
 
-For this phase, we will deliberately use a **mock flight provider** rather than connecting to a real airline/GDS API. That lets us finish the architecture and agent-facing tool without introducing API keys, provider-specific authentication, quotas, or booking contracts yet.
+I checked the current documentation: `GET https://randomapi.dev/api/flights` requires 3-letter IATA hub codes for `origin` and `destination`, supports `status`, `from`, `to`, `cabin`, `count`, and `seed`, requires no API key, and returns synthetic flight fixtures in a `data` envelope. The flight records contain airline, airports, status, departure/arrival, duration, aircraft, cabin, gate, and terminal. They do **not** represent real schedules, fares, availability, or live status. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
 
-The Phase 4 flow is:
-
-```text
-Best Travel Dates
-       │
-       ▼
-Flight Search
-       │
-       ├── Origin
-       ├── Destination
-       ├── Departure Date
-       ├── Return Date
-       └── Passengers
-       │
-       ▼
-Flight Service
-       │
-       ▼
-Mock Flight Provider
-       │
-       ▼
-Normalize Flight Data
-       │
-       ▼
-Flight Response
-```
+We'll therefore build a clean adapter around that API.
 
 ---
 
-# 1. Final files for Phase 4
+# 1. Phase 4 goal
 
-Add these:
+We want this:
+
+```text
+                    Flight Request
+                         │
+                         ▼
+                  FastAPI Route
+                         │
+                         ▼
+              FlightSearchRequest
+                         │
+                         ▼
+                 Flight Service
+                         │
+                         ▼
+              randomapi.dev API
+                         │
+                         ▼
+              Provider JSON response
+                         │
+                         ▼
+                Normalize / Map
+                         │
+                         ▼
+             FlightSearchResponse
+                         │
+                         ▼
+                       User
+```
+
+Later:
+
+```text
+Agent
+  ↓
+flight_search_tool
+  ↓
+flight_service
+  ↓
+real flight provider
+```
+
+So we're building the correct abstraction now.
+
+---
+
+# 2. Files for Phase 4
+
+## New files
 
 ```text
 app/
@@ -56,117 +79,136 @@ tests/
 └── test_flight.py
 ```
 
-And modify:
+## Modified file
 
 ```text
 app/main.py
 ```
 
-Your relevant structure becomes:
+We do **not** need a database migration for this phase.
+
+---
+
+# 3. Final project structure
+
+After Phase 4:
 
 ```text
 BACKEND/
 │
 ├── app/
+│   ├── __init__.py
 │   ├── main.py
 │   │
 │   ├── api/
+│   │   ├── __init__.py
 │   │   └── routes/
+│   │       ├── __init__.py
 │   │       ├── health.py
 │   │       ├── travel.py
 │   │       ├── weather.py
 │   │       ├── travel_dates.py
-│   │       └── flights.py          ← NEW
+│   │       └── flights.py
+│   │
+│   ├── core/
+│   │   ├── __init__.py
+│   │   └── config.py
+│   │
+│   ├── database/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   └── session.py
+│   │
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── trip.py
 │   │
 │   ├── schemas/
+│   │   ├── __init__.py
 │   │   ├── trip.py
 │   │   ├── weather.py
 │   │   ├── weather_decision.py
-│   │   └── flight.py               ← NEW
+│   │   └── flight.py
 │   │
 │   ├── services/
+│   │   ├── __init__.py
 │   │   ├── trip_service.py
 │   │   ├── geocoding_service.py
 │   │   ├── weather_service.py
 │   │   ├── weather_decision_service.py
-│   │   └── flight_service.py       ← NEW
+│   │   └── flight_service.py
 │   │
 │   └── tools/
+│       ├── __init__.py
 │       ├── weather_tools.py
-│       └── flight_tools.py          ← NEW
+│       └── flight_tools.py
 │
-└── tests/
-    ├── test_health.py
-    ├── test_trip.py
-    ├── test_weather.py
-    ├── test_weather_decision.py
-    └── test_flight.py               ← NEW
-```
-
-No new Python package is required for the mock implementation.
-
----
-
-# 2. What exactly are we building?
-
-Suppose the weather engine gives us:
-
-```text
-Goa
-October 5 → October 8
-4 days
-```
-
-Now the flight layer receives:
-
-```json
-{
-  "origin": "Mumbai",
-  "destination": "Goa",
-  "departure_date": "2026-10-05",
-  "return_date": "2026-10-08",
-  "passengers": 2
-}
-```
-
-And returns:
-
-```text
-Outbound flights
-    ↓
-Mumbai → Goa
-    ↓
-October 5
-
-Return flights
-    ↓
-Goa → Mumbai
-    ↓
-October 8
+├── migrations/
+│
+├── tests/
+│   ├── test_health.py
+│   ├── test_trip.py
+│   ├── test_weather.py
+│   ├── test_weather_decision.py
+│   └── test_flight.py
+│
+├── .env
+├── .env.example
+├── .gitignore
+├── docker-compose.yml
+├── requirements.txt
+└── venv/
 ```
 
 ---
 
-# 3. Create `app/schemas/flight.py`
+# 4. Dependency
 
-This defines the application's internal flight structure.
+You already installed `httpx` for the weather phase.
+
+Verify:
+
+```powershell
+pip install httpx
+```
+
+Then:
+
+```powershell
+pip freeze > requirements.txt
+```
+
+---
+
+# 5. `app/schemas/flight.py`
+
+Create:
+
+```text
+app/schemas/flight.py
+```
+
+Full code:
 
 ```python
 from datetime import date, datetime
-from decimal import Decimal
 
 from pydantic import BaseModel, Field, model_validator
 
 
 class FlightSearchRequest(BaseModel):
     origin: str = Field(
-        min_length=2,
-        max_length=100
+        min_length=3,
+        max_length=3,
+        pattern=r"^[A-Za-z]{3}$",
+        description="Origin IATA airport code",
     )
 
     destination: str = Field(
-        min_length=2,
-        max_length=100
+        min_length=3,
+        max_length=3,
+        pattern=r"^[A-Za-z]{3}$",
+        description="Destination IATA airport code",
     )
 
     departure_date: date
@@ -176,22 +218,31 @@ class FlightSearchRequest(BaseModel):
     passengers: int = Field(
         default=1,
         ge=1,
-        le=9
+        le=9,
     )
 
-    max_stops: int = Field(
-        default=2,
-        ge=0,
-        le=2
+    cabin: str = Field(
+        default="economy",
     )
 
-    max_price: Decimal | None = Field(
-        default=None,
-        gt=0
+    count: int = Field(
+        default=5,
+        ge=1,
+        le=100,
+    )
+
+    seed: int = Field(
+        default=42,
     )
 
     @model_validator(mode="after")
-    def validate_dates(self):
+    def validate_request(self):
+
+        if self.origin.upper() == self.destination.upper():
+            raise ValueError(
+                "Origin and destination must be different"
+            )
+
         if (
             self.return_date is not None
             and self.return_date < self.departure_date
@@ -200,26 +251,58 @@ class FlightSearchRequest(BaseModel):
                 "return_date must be on or after departure_date"
             )
 
+        allowed_cabins = {
+            "economy",
+            "premiumEconomy",
+            "business",
+            "first",
+        }
+
+        if self.cabin not in allowed_cabins:
+            raise ValueError(
+                "Invalid cabin. Choose one of: "
+                "economy, premiumEconomy, business, first"
+            )
+
         return self
 
 
-class FlightOption(BaseModel):
-    flight_id: str
+class AirportInfo(BaseModel):
+    iata: str
+    name: str
+    city: str
+    country: str
+    country_code: str
+    timezone: str | None = None
 
-    airline: str
+
+class AirlineInfo(BaseModel):
+    name: str
+    code: str
+
+
+class FlightOption(BaseModel):
+    id: str
     flight_number: str
 
-    origin: str
-    destination: str
+    airline: AirlineInfo
 
-    departure_time: datetime
-    arrival_time: datetime
+    origin: AirportInfo
+    destination: AirportInfo
+
+    status: str
+    status_as_of: datetime
+
+    departure: datetime
+    arrival: datetime
 
     duration_minutes: int
-    stops: int
 
-    price: Decimal
-    currency: str
+    aircraft: str
+    cabin: str
+
+    gate: str | None = None
+    terminal: str | None = None
 
 
 class FlightSearchResponse(BaseModel):
@@ -234,264 +317,242 @@ class FlightSearchResponse(BaseModel):
     provider: str
 
     outbound_flights: list[FlightOption]
-
     return_flights: list[FlightOption]
 ```
 
 ---
 
-# 4. Why do we have these schemas?
+# 6. What this schema does
 
-## `FlightSearchRequest`
+The input:
 
-This is the input:
+```json
+{
+  "origin": "CPH",
+  "destination": "JFK",
+  "departure_date": "2026-10-05"
+}
+```
+
+gets converted into:
 
 ```text
-Mumbai
-Goa
-5 Oct
-8 Oct
-2 passengers
+FlightSearchRequest
+```
+
+The provider response gets converted into:
+
+```text
+FlightOption
+```
+
+and finally:
+
+```text
+FlightSearchResponse
 ```
 
 ---
 
-## `FlightOption`
+# 7. Why there is no price
 
-This represents **one flight**.
+This is important.
 
-Example:
+`randomapi.dev` currently documents its flight endpoint as **fictional fixture data**, not a fare/availability API. Its documented response schema does not provide a flight fare. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
 
-```text
-MockJet
-MJ201
-
-Mumbai → Goa
-
-Departure: 06:30
-Arrival: 07:40
-
-Duration: 70 min
-Stops: 0
-
-Price: ₹11,000
-```
-
-The `price` in this implementation is the **total price for the requested number of passengers**.
-
----
-
-## `FlightSearchResponse`
-
-This separates:
-
-```text
-outbound_flights
-```
-
-from:
-
-```text
-return_flights
-```
-
-which will be useful when we eventually book the trip.
-
----
-
-# 5. Create `app/services/flight_service.py`
-
-This is the actual flight-search service.
-
-For now, the provider is mocked.
+Therefore we should **not** create:
 
 ```python
-from datetime import date, datetime, time, timedelta
-from decimal import Decimal
+price: float
+```
+
+and pretend the value came from the provider.
+
+Later, when we integrate a provider that actually supplies fares, we'll add price and availability.
+
+---
+
+# 8. `app/services/flight_service.py`
+
+This is the most important file in Phase 4.
+
+Create:
+
+```text
+app/services/flight_service.py
+```
+
+Use this complete code:
+
+```python
+import httpx
 
 from app.schemas.flight import (
+    AirlineInfo,
+    AirportInfo,
     FlightOption,
     FlightSearchRequest,
     FlightSearchResponse,
 )
 
 
-MOCK_PROVIDER_NAME = "mock-flight-provider"
+FLIGHT_API_URL = (
+    "https://randomapi.dev/api/flights"
+)
+
+PROVIDER_NAME = "randomapi.dev"
 
 
-def _generate_mock_flights(
+def _map_airline(
+    data: dict,
+) -> AirlineInfo:
+
+    return AirlineInfo(
+        name=data["name"],
+        code=data["code"],
+    )
+
+
+def _map_airport(
+    data: dict,
+) -> AirportInfo:
+
+    return AirportInfo(
+        iata=data["iata"],
+        name=data["name"],
+        city=data["city"],
+        country=data["country"],
+        country_code=data["countryCode"],
+        timezone=data.get("timezone"),
+    )
+
+
+def _map_flight(
+    data: dict,
+) -> FlightOption:
+
+    return FlightOption(
+        id=data["id"],
+        flight_number=data["flightNumber"],
+        airline=_map_airline(
+            data["airline"]
+        ),
+        origin=_map_airport(
+            data["origin"]
+        ),
+        destination=_map_airport(
+            data["destination"]
+        ),
+        status=data["status"],
+        status_as_of=data["statusAsOf"],
+        departure=data["departure"],
+        arrival=data["arrival"],
+        duration_minutes=data[
+            "durationMinutes"
+        ],
+        aircraft=data["aircraft"],
+        cabin=data["cabin"],
+        gate=data.get("gate"),
+        terminal=data.get("terminal"),
+    )
+
+
+async def _request_flights(
     origin: str,
     destination: str,
-    flight_date: date,
-    passengers: int,
+    departure_date: str,
+    count: int,
+    seed: int,
+    cabin: str,
 ) -> list[FlightOption]:
 
-    templates = [
-        {
-            "airline": "DemoAir",
-            "flight_number": "DA101",
-            "departure_hour": 6,
-            "departure_minute": 30,
-            "duration_minutes": 75,
-            "stops": 0,
-            "price": Decimal("4500"),
-        },
-        {
-            "airline": "MockJet",
-            "flight_number": "MJ202",
-            "departure_hour": 9,
-            "departure_minute": 15,
-            "duration_minutes": 90,
-            "stops": 0,
-            "price": Decimal("5200"),
-        },
-        {
-            "airline": "Sample Airways",
-            "flight_number": "SA303",
-            "departure_hour": 12,
-            "departure_minute": 45,
-            "duration_minutes": 115,
-            "stops": 1,
-            "price": Decimal("3900"),
-        },
-        {
-            "airline": "TestWings",
-            "flight_number": "TW404",
-            "departure_hour": 16,
-            "departure_minute": 20,
-            "duration_minutes": 95,
-            "stops": 0,
-            "price": Decimal("6100"),
-        },
-        {
-            "airline": "DemoJet",
-            "flight_number": "DJ505",
-            "departure_hour": 20,
-            "departure_minute": 10,
-            "duration_minutes": 110,
-            "stops": 1,
-            "price": Decimal("4200"),
-        },
+    params = {
+        "origin": origin.upper(),
+        "destination": destination.upper(),
+        "status": "scheduled",
+        "from": departure_date,
+        "to": departure_date,
+        "count": count,
+        "seed": seed,
+        "cabin": cabin,
+    }
+
+    async with httpx.AsyncClient(
+        timeout=10.0
+    ) as client:
+
+        response = await client.get(
+            FLIGHT_API_URL,
+            params=params,
+        )
+
+        response.raise_for_status()
+
+        payload = response.json()
+
+    records = payload.get(
+        "data",
+        [],
+    )
+
+    return [
+        _map_flight(record)
+        for record in records
     ]
-
-    flights = []
-
-    for index, template in enumerate(templates, start=1):
-
-        departure = datetime.combine(
-            flight_date,
-            time(
-                template["departure_hour"],
-                template["departure_minute"],
-            ),
-        )
-
-        arrival = (
-            departure
-            + timedelta(
-                minutes=template["duration_minutes"]
-            )
-        )
-
-        total_price = (
-            template["price"] * passengers
-        )
-
-        flight = FlightOption(
-            flight_id=(
-                f"MOCK-{flight_date}-"
-                f"{index}"
-            ),
-            airline=template["airline"],
-            flight_number=template["flight_number"],
-            origin=origin,
-            destination=destination,
-            departure_time=departure,
-            arrival_time=arrival,
-            duration_minutes=template[
-                "duration_minutes"
-            ],
-            stops=template["stops"],
-            price=total_price,
-            currency="INR",
-        )
-
-        flights.append(flight)
-
-    return flights
 
 
 async def search_flights(
     request: FlightSearchRequest,
 ) -> FlightSearchResponse:
 
+    origin = request.origin.upper()
+    destination = request.destination.upper()
+
     # ----------------------------------------
-    # Generate outbound flights
+    # Outbound flights
     # ----------------------------------------
 
-    outbound_flights = _generate_mock_flights(
-        origin=request.origin,
-        destination=request.destination,
-        flight_date=request.departure_date,
-        passengers=request.passengers,
+    outbound_flights = await _request_flights(
+        origin=origin,
+        destination=destination,
+        departure_date=(
+            request.departure_date.isoformat()
+        ),
+        count=request.count,
+        seed=request.seed,
+        cabin=request.cabin,
     )
 
     # ----------------------------------------
-    # Apply max stops filter
-    # ----------------------------------------
-
-    outbound_flights = [
-        flight
-        for flight in outbound_flights
-        if flight.stops <= request.max_stops
-    ]
-
-    # ----------------------------------------
-    # Apply max price filter
-    # ----------------------------------------
-
-    if request.max_price is not None:
-        outbound_flights = [
-            flight
-            for flight in outbound_flights
-            if flight.price <= request.max_price
-        ]
-
-    # ----------------------------------------
-    # Generate return flights
+    # Return flights
     # ----------------------------------------
 
     return_flights = []
 
     if request.return_date is not None:
 
-        return_flights = _generate_mock_flights(
-            origin=request.destination,
-            destination=request.origin,
-            flight_date=request.return_date,
-            passengers=request.passengers,
+        return_flights = await _request_flights(
+            origin=destination,
+            destination=origin,
+            departure_date=(
+                request.return_date.isoformat()
+            ),
+            count=request.count,
+            seed=request.seed + 1,
+            cabin=request.cabin,
         )
 
-        return_flights = [
-            flight
-            for flight in return_flights
-            if flight.stops <= request.max_stops
-        ]
-
-        if request.max_price is not None:
-            return_flights = [
-                flight
-                for flight in return_flights
-                if flight.price <= request.max_price
-            ]
+    # ----------------------------------------
+    # Final response
+    # ----------------------------------------
 
     return FlightSearchResponse(
-        origin=request.origin,
-        destination=request.destination,
+        origin=origin,
+        destination=destination,
         departure_date=request.departure_date,
         return_date=request.return_date,
         passengers=request.passengers,
-        provider=MOCK_PROVIDER_NAME,
+        provider=PROVIDER_NAME,
         outbound_flights=outbound_flights,
         return_flights=return_flights,
     )
@@ -499,76 +560,158 @@ async def search_flights(
 
 ---
 
-# 6. Understand the flight service
+# 9. What this service does
 
-The service currently does:
+There are three main jobs.
+
+## Job 1 — Call provider
+
+It constructs:
 
 ```text
-FlightSearchRequest
-        │
-        ▼
-Generate mock outbound flights
-        │
-        ▼
-Apply filters
-        │
-        ▼
-Generate mock return flights
-        │
-        ▼
-Apply filters
-        │
-        ▼
-FlightSearchResponse
+GET https://randomapi.dev/api/flights
 ```
 
-There is **no LLM here**.
+with:
 
-There is **no recommendation logic here**.
+```text
+origin
+destination
+status
+from
+to
+count
+seed
+cabin
+```
 
-There is **no booking here**.
-
-That's intentional.
+These parameters are documented by the provider. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
 
 ---
 
-# 7. Why mock flights?
+## Job 2 — Receive provider JSON
 
-We want the architecture to be:
+The provider returns:
 
-```text
-Agent
-  ↓
-Flight Tool
-  ↓
-Flight Service
-  ↓
-Flight Provider
+```json
+{
+  "data": [
+    {
+      "id": "...",
+      "flightNumber": "...",
+      "airline": {},
+      "origin": {},
+      "destination": {},
+      "status": "scheduled",
+      "statusAsOf": "...",
+      "departure": "...",
+      "arrival": "...",
+      "durationMinutes": 474,
+      "aircraft": "...",
+      "cabin": "economy",
+      "gate": "...",
+      "terminal": "..."
+    }
+  ]
+}
 ```
 
-Today:
-
-```text
-Flight Service
-      ↓
-Mock Provider
-```
-
-Later:
-
-```text
-Flight Service
-      ↓
-Real Flight API
-```
-
-So when we introduce a real provider, the rest of the application does not need to fundamentally change.
+The current API documentation describes this envelope and those fields. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
 
 ---
 
-# 8. Create `app/tools/flight_tools.py`
+## Job 3 — Normalize
 
-This is the agent-facing interface.
+Provider:
+
+```text
+flightNumber
+durationMinutes
+statusAsOf
+countryCode
+```
+
+Our application:
+
+```text
+flight_number
+duration_minutes
+status_as_of
+country_code
+```
+
+This is called **normalization**.
+
+That means the rest of our application does not have to know randomapi.dev's field naming conventions.
+
+---
+
+# 10. Why `status=scheduled`
+
+We want future flights for travel planning.
+
+So we explicitly send:
+
+```python
+"status": "scheduled"
+```
+
+The provider supports `scheduled`, `boarding`, `departed`, `arrived`, and `cancelled`. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+For this phase, `scheduled` is the relevant fixture state.
+
+---
+
+# 11. Why `from` and `to` are the same date
+
+If the requested date is:
+
+```text
+2026-10-05
+```
+
+we send:
+
+```text
+from=2026-10-05
+to=2026-10-05
+```
+
+The API defines `from` as the earliest synthetic scheduled departure and `to` as the latest synthetic scheduled departure. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+---
+
+# 12. Why use `seed`
+
+We use:
+
+```python
+seed=request.seed
+```
+
+The provider documents the seed as deterministic: the same seed produces the same generated records. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+For example:
+
+```text
+Outbound
+seed = 42
+
+Return
+seed = 43
+```
+
+This lets us generate two independent fixture sets.
+
+---
+
+# 13. `app/tools/flight_tools.py`
+
+Create:
+
+```text
+app/tools/flight_tools.py
+```
 
 ```python
 from app.schemas.flight import (
@@ -590,27 +733,50 @@ async def flight_search_tool(
     )
 ```
 
-Later an agent can effectively do:
+---
+
+# 14. Why do we have a tool?
+
+Later the architecture will become:
 
 ```text
-I need flights from Mumbai to Goa
-for the dates I selected.
+LLM / Agent
+      │
+      ▼
+flight_search_tool
+      │
+      ▼
+flight_service
+      │
+      ▼
+flight provider
 ```
 
-and invoke:
+The agent does **not** need to know:
 
 ```text
-flight_search_tool()
+HTTP
+randomapi.dev
+query parameters
+JSON mapping
 ```
+
+That's the job of our application layer.
 
 ---
 
-# 9. Create `app/api/routes/flights.py`
+# 15. `app/api/routes/flights.py`
 
-This exposes flight search through FastAPI.
+Create:
+
+```text
+app/api/routes/flights.py
+```
 
 ```python
-from fastapi import APIRouter
+import httpx
+
+from fastapi import APIRouter, HTTPException
 
 from app.schemas.flight import (
     FlightSearchRequest,
@@ -636,30 +802,68 @@ async def search(
     request: FlightSearchRequest,
 ):
 
-    return await search_flights(
-        request=request
-    )
+    try:
+
+        return await search_flights(
+            request=request
+        )
+
+    except httpx.HTTPStatusError as error:
+
+        status_code = (
+            error.response.status_code
+        )
+
+        if status_code == 400:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Flight provider rejected "
+                    "the request. Check that the "
+                    "airport codes are supported."
+                ),
+            )
+
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "Flight provider returned "
+                f"HTTP {status_code}"
+            ),
+        )
+
+    except httpx.HTTPError:
+
+        raise HTTPException(
+            status_code=502,
+            detail=(
+                "Flight provider is "
+                "currently unavailable"
+            ),
+        )
 ```
 
 ---
 
-# 10. Update `app/main.py`
+# 16. Why handle provider errors?
 
-Add:
+The provider may reject unsupported airport codes.
 
-```python
-from app.api.routes.flights import (
-    router as flights_router,
-)
+For example:
+
+```text
+XYZ
 ```
 
-Then register it:
+may not belong to its supported hub network.
 
-```python
-app.include_router(
-    flights_router
-)
-```
+The provider documents that codes outside its supported hubs return `400`. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+Our API turns that into a useful application-level error.
+
+---
+
+# 17. Update `app/main.py`
 
 Your complete `main.py` should now be:
 
@@ -716,6 +920,7 @@ app.include_router(
 
 @app.get("/")
 def root():
+
     return {
         "message": "Travel Agent API is running"
     }
@@ -723,38 +928,67 @@ def root():
 
 ---
 
-# 11. Test the API manually
+# 18. Test the provider directly first
 
-Start the backend:
+Before testing our backend, verify that randomapi.dev itself works.
+
+Use the documented route style:
+
+```text
+https://randomapi.dev/api/flights?origin=CPH&destination=JFK&count=5&seed=42
+```
+
+The provider's documentation gives CPH → JFK as a working example. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+You can open this in the browser or use PowerShell:
+
+```powershell
+Invoke-RestMethod `
+  "https://randomapi.dev/api/flights?origin=CPH&destination=JFK&status=scheduled&from=2026-10-05&to=2026-10-05&count=5&seed=42&cabin=economy"
+```
+
+You should receive JSON with:
+
+```text
+data
+meta
+```
+
+and flight records inside `data`.
+
+---
+
+# 19. Start your backend
 
 ```powershell
 .\venv\Scripts\Activate.ps1
+```
+
+Then:
+
+```powershell
 uvicorn app.main:app --reload
 ```
 
-Go to:
+Open:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-You should now see:
+You should see:
 
 ```text
 GET  /health
-
 POST /travel/plan
-
 GET  /weather/{destination}
-
 POST /travel/best-dates
-
 POST /flights/search
 ```
 
 ---
 
-# 12. Test `/flights/search`
+# 20. Test `/flights/search`
 
 Use:
 
@@ -766,146 +1000,276 @@ Body:
 
 ```json
 {
-  "origin": "Mumbai",
-  "destination": "Goa",
-  "departure_date": "2026-10-05",
-  "return_date": "2026-10-08",
-  "passengers": 2
-}
-```
-
----
-
-# 13. Expected response
-
-You should get something structurally like:
-
-```json
-{
-  "origin": "Mumbai",
-  "destination": "Goa",
+  "origin": "CPH",
+  "destination": "JFK",
   "departure_date": "2026-10-05",
   "return_date": "2026-10-08",
   "passengers": 2,
-  "provider": "mock-flight-provider",
+  "cabin": "economy",
+  "count": 5,
+  "seed": 42
+}
+```
+
+Use a route supported by the mock provider; CPH → JFK is explicitly documented. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+---
+
+# 21. Expected response structure
+
+You should receive something like:
+
+```json
+{
+  "origin": "CPH",
+  "destination": "JFK",
+  "departure_date": "2026-10-05",
+  "return_date": "2026-10-08",
+  "passengers": 2,
+  "provider": "randomapi.dev",
   "outbound_flights": [
     {
-      "flight_id": "MOCK-2026-10-05-1",
-      "airline": "DemoAir",
-      "flight_number": "DA101",
-      "origin": "Mumbai",
-      "destination": "Goa",
-      "departure_time": "2026-10-05T06:30:00",
-      "arrival_time": "2026-10-05T07:45:00",
-      "duration_minutes": 75,
-      "stops": 0,
-      "price": 9000,
-      "currency": "INR"
+      "id": "flt_...",
+      "flight_number": "NX1-1000",
+      "airline": {
+        "name": "Example Airline",
+        "code": "NX1"
+      },
+      "origin": {
+        "iata": "CPH",
+        "name": "Copenhagen Kastrup Airport",
+        "city": "Copenhagen",
+        "country": "Denmark",
+        "country_code": "DK",
+        "timezone": "Europe/Copenhagen"
+      },
+      "destination": {
+        "iata": "JFK",
+        "name": "John F. Kennedy International Airport",
+        "city": "New York",
+        "country": "United States",
+        "country_code": "US",
+        "timezone": "America/New_York"
+      },
+      "status": "scheduled",
+      "status_as_of": "...",
+      "departure": "...",
+      "arrival": "...",
+      "duration_minutes": 474,
+      "aircraft": "wide-body twinjet",
+      "cabin": "economy",
+      "gate": "B17",
+      "terminal": "T2"
     }
   ],
-  "return_flights": [
-    {
-      "flight_id": "MOCK-2026-10-08-1",
-      "airline": "DemoAir",
-      "flight_number": "DA101",
-      "origin": "Goa",
-      "destination": "Mumbai",
-      "departure_time": "2026-10-08T06:30:00",
-      "arrival_time": "2026-10-08T07:45:00",
-      "duration_minutes": 75,
-      "stops": 0,
-      "price": 9000,
-      "currency": "INR"
-    }
-  ]
+  "return_flights": []
 }
 ```
 
-The exact list will contain multiple mock flights.
+The exact synthetic records depend on parameters and seed. The provider documents these response fields and explicitly marks them as fictional fixture values. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
 
 ---
 
-# 14. Test filters
+# 22. Why `return_flights` might be empty
 
-## Maximum stops
+Don't immediately assume this is a bug.
 
-Request:
-
-```json
-{
-  "origin": "Mumbai",
-  "destination": "Goa",
-  "departure_date": "2026-10-05",
-  "return_date": "2026-10-08",
-  "passengers": 2,
-  "max_stops": 0
-}
-```
-
-Only nonstop flights should remain.
-
----
-
-## Maximum price
-
-```json
-{
-  "origin": "Mumbai",
-  "destination": "Goa",
-  "departure_date": "2026-10-05",
-  "return_date": "2026-10-08",
-  "passengers": 2,
-  "max_price": 10000
-}
-```
-
-Flights whose total price exceeds ₹10,000 are removed.
-
----
-
-# 15. Test one-way flight search
-
-Because `return_date` is optional, this also works:
-
-```json
-{
-  "origin": "Mumbai",
-  "destination": "Goa",
-  "departure_date": "2026-10-05",
-  "passengers": 1
-}
-```
-
-Then:
+We are making two separate provider requests:
 
 ```text
-outbound_flights → flights returned
+CPH → JFK
+Oct 5
+seed 42
+```
+
+and:
+
+```text
+JFK → CPH
+Oct 8
+seed 43
+```
+
+The synthetic generator can produce different results for the two requests.
+
+---
+
+# 23. One-way search
+
+This should also work:
+
+```json
+{
+  "origin": "CPH",
+  "destination": "JFK",
+  "departure_date": "2026-10-05",
+  "passengers": 1,
+  "cabin": "economy",
+  "count": 5,
+  "seed": 42
+}
+```
+
+Result:
+
+```text
+outbound_flights → populated
 return_flights   → []
 ```
 
 ---
 
-# 16. Create `tests/test_flight.py`
+# 24. `passengers` clarification
+
+You may notice that:
 
 ```python
+passengers
+```
+
+isn't sent to randomapi.dev.
+
+That's deliberate.
+
+The current mock flight API does not document passenger count as one of its flight-generation parameters. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+We still keep it in our application schema because our **travel domain** needs it.
+
+Later, a real provider may use it for:
+
+```text
+availability
+fares
+passenger pricing
+fare rules
+```
+
+---
+
+# 25. Validation tests
+
+Create:
+
+```text
+tests/test_flight.py
+```
+
+Use this complete version:
+
+```python
+from datetime import date, datetime
+
+import pytest
+
 from fastapi.testclient import TestClient
 
 from app.main import app
+
+from app.schemas.flight import (
+    AirlineInfo,
+    AirportInfo,
+    FlightOption,
+    FlightSearchResponse,
+)
 
 
 client = TestClient(app)
 
 
-def test_flight_search():
+def create_mock_flight() -> FlightOption:
+
+    return FlightOption(
+        id="flt_test_001",
+        flight_number="NX1-1000",
+        airline=AirlineInfo(
+            name="Test Airline",
+            code="NX1",
+        ),
+        origin=AirportInfo(
+            iata="CPH",
+            name="Copenhagen Airport",
+            city="Copenhagen",
+            country="Denmark",
+            country_code="DK",
+            timezone="Europe/Copenhagen",
+        ),
+        destination=AirportInfo(
+            iata="JFK",
+            name="John F. Kennedy International Airport",
+            city="New York",
+            country="United States",
+            country_code="US",
+            timezone="America/New_York",
+        ),
+        status="scheduled",
+        status_as_of=datetime(
+            2026,
+            10,
+            2,
+            12,
+            0,
+        ),
+        departure=datetime(
+            2026,
+            10,
+            5,
+            10,
+            0,
+        ),
+        arrival=datetime(
+            2026,
+            10,
+            5,
+            18,
+            0,
+        ),
+        duration_minutes=480,
+        aircraft="wide-body twinjet",
+        cabin="economy",
+        gate="B17",
+        terminal="T2",
+    )
+
+
+def test_flight_search_endpoint(
+    monkeypatch,
+):
+
+    mock_flight = create_mock_flight()
+
+    async def mock_search_flights(request):
+
+        return FlightSearchResponse(
+            origin=request.origin.upper(),
+            destination=request.destination.upper(),
+            departure_date=request.departure_date,
+            return_date=request.return_date,
+            passengers=request.passengers,
+            provider="randomapi.dev",
+            outbound_flights=[
+                mock_flight
+            ],
+            return_flights=[
+                mock_flight
+            ],
+        )
+
+    monkeypatch.setattr(
+        "app.api.routes.flights.search_flights",
+        mock_search_flights,
+    )
 
     response = client.post(
         "/flights/search",
         json={
-            "origin": "Mumbai",
-            "destination": "Goa",
+            "origin": "CPH",
+            "destination": "JFK",
             "departure_date": "2026-10-05",
             "return_date": "2026-10-08",
             "passengers": 2,
+            "cabin": "economy",
+            "count": 5,
+            "seed": 42,
         },
     )
 
@@ -913,55 +1277,87 @@ def test_flight_search():
 
     data = response.json()
 
-    assert data["origin"] == "Mumbai"
-    assert data["destination"] == "Goa"
+    assert data["origin"] == "CPH"
+    assert data["destination"] == "JFK"
 
-    assert data["departure_date"] == "2026-10-05"
-    assert data["return_date"] == "2026-10-08"
+    assert (
+        data["departure_date"]
+        == "2026-10-05"
+    )
+
+    assert (
+        data["return_date"]
+        == "2026-10-08"
+    )
 
     assert data["passengers"] == 2
 
-    assert data["provider"] == "mock-flight-provider"
+    assert (
+        data["provider"]
+        == "randomapi.dev"
+    )
 
-    assert len(data["outbound_flights"]) > 0
-    assert len(data["return_flights"]) > 0
+    assert len(
+        data["outbound_flights"]
+    ) == 1
+
+    assert len(
+        data["return_flights"]
+    ) == 1
 
 
-def test_flight_search_max_stops():
+def test_same_airport_rejected():
 
     response = client.post(
         "/flights/search",
         json={
-            "origin": "Mumbai",
-            "destination": "Goa",
+            "origin": "CPH",
+            "destination": "CPH",
             "departure_date": "2026-10-05",
-            "return_date": "2026-10-08",
-            "passengers": 1,
-            "max_stops": 0,
         },
     )
 
-    assert response.status_code == 200
-
-    data = response.json()
-
-    for flight in data["outbound_flights"]:
-        assert flight["stops"] == 0
-
-    for flight in data["return_flights"]:
-        assert flight["stops"] == 0
+    assert response.status_code == 422
 
 
-def test_flight_search_invalid_dates():
+def test_invalid_return_date():
 
     response = client.post(
         "/flights/search",
         json={
-            "origin": "Mumbai",
-            "destination": "Goa",
+            "origin": "CPH",
+            "destination": "JFK",
             "departure_date": "2026-10-08",
             "return_date": "2026-10-05",
-            "passengers": 1,
+        },
+    )
+
+    assert response.status_code == 422
+
+
+def test_invalid_cabin():
+
+    response = client.post(
+        "/flights/search",
+        json={
+            "origin": "CPH",
+            "destination": "JFK",
+            "departure_date": "2026-10-05",
+            "cabin": "invalid",
+        },
+    )
+
+    assert response.status_code == 422
+
+
+def test_invalid_iata_code():
+
+    response = client.post(
+        "/flights/search",
+        json={
+            "origin": "MUMBAI",
+            "destination": "JFK",
+            "departure_date": "2026-10-05",
         },
     )
 
@@ -970,7 +1366,42 @@ def test_flight_search_invalid_dates():
 
 ---
 
-# 17. Run the tests
+# 26. Why the tests don't call randomapi.dev
+
+This is important.
+
+Your application calls:
+
+```text
+randomapi.dev
+```
+
+during real execution.
+
+But automated tests should not depend on:
+
+```text
+Internet
+External API uptime
+External API behavior
+Rate limits
+```
+
+So we mock:
+
+```python
+search_flights()
+```
+
+inside the route test.
+
+That makes our test deterministic.
+
+---
+
+# 27. Run tests
+
+Run:
 
 ```powershell
 pytest
@@ -979,205 +1410,334 @@ pytest
 You should now have:
 
 ```text
-tests/test_trip.py              ✅
-tests/test_weather.py           ✅
-tests/test_weather_decision.py  ✅
-tests/test_flight.py            ✅
+tests/test_trip.py
+tests/test_weather.py
+tests/test_weather_decision.py
+tests/test_flight.py
 ```
 
-So the expected result becomes approximately:
+and the flight tests should all pass.
+
+Because your previous suite had 4 tests, your total count will depend on how many tests you currently have in those existing files.
+
+The important result is:
 
 ```text
-7 passed
+FAILED 0
 ```
-
-because the existing four tests are joined by the three flight tests.
 
 ---
 
-# 18. Important architecture distinction
+# 28. Test schema validation manually
 
-At this point, you have:
+### Invalid origin
+
+```json
+{
+  "origin": "MUMBAI",
+  "destination": "JFK",
+  "departure_date": "2026-10-05"
+}
+```
+
+Your API should return:
 
 ```text
-WEATHER
+422
+```
 
-weather_service
-      ↓
-Weather Provider
-      ↓
-Forecast
+because the schema expects a three-letter IATA code.
 
+---
 
-WEATHER DECISION
+### Same origin/destination
 
-weather_decision_service
-      ↓
+```json
+{
+  "origin": "CPH",
+  "destination": "CPH",
+  "departure_date": "2026-10-05"
+}
+```
+
+Returns:
+
+```text
+422
+```
+
+---
+
+### Invalid return date
+
+```json
+{
+  "origin": "CPH",
+  "destination": "JFK",
+  "departure_date": "2026-10-08",
+  "return_date": "2026-10-05"
+}
+```
+
+Returns:
+
+```text
+422
+```
+
+---
+
+# 29. Test unsupported airport
+
+Try a code that isn't in randomapi.dev's supported hub network:
+
+```json
+{
+  "origin": "XYZ",
+  "destination": "JFK",
+  "departure_date": "2026-10-05"
+}
+```
+
+Our Pydantic validation accepts `XYZ` because it's syntactically a valid three-letter code.
+
+Then randomapi.dev may reject it with `400`, because the provider accepts only its supported hub network. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+Our route converts that provider rejection into:
+
+```text
+400
+Flight provider rejected the request.
+Check that the airport codes are supported.
+```
+
+That's exactly the distinction we want:
+
+```text
+Our validation
+     ↓
+Is this syntactically an IATA-style code?
+
+Provider validation
+     ↓
+Does the mock provider actually support this hub?
+```
+
+---
+
+# 30. Current Phase 4 architecture
+
+We now have:
+
+```text
+                         USER
+                           │
+                           ▼
+                  POST /flights/search
+                           │
+                           ▼
+                  FlightSearchRequest
+                           │
+                           ▼
+                   Flight API Route
+                           │
+                           ▼
+                   Flight Service
+                           │
+                           ▼
+                  HTTP GET request
+                           │
+                           ▼
+                    randomapi.dev
+                           │
+                           ▼
+                    JSON response
+                           │
+                           ▼
+                  Provider → App mapping
+                           │
+                           ▼
+                  FlightSearchResponse
+                           │
+                           ▼
+                          USER
+```
+
+And the future agent path is:
+
+```text
+                         AGENT
+                           │
+                           ▼
+                 flight_search_tool
+                           │
+                           ▼
+                   Flight Service
+                           │
+                           ▼
+                   Flight Provider
+```
+
+---
+
+# 31. How Phase 4 connects to Phase 3
+
+This is where our travel agent is starting to become interesting.
+
+Phase 3:
+
+```text
+Destination
+    ↓
 Weather Forecast
-      ↓
-Sliding Window
-      ↓
-Score
-      ↓
-Best Dates
+    ↓
+Weather Decision Engine
+    ↓
+Best Travel Window
 
-
-FLIGHTS
-
-flight_service
-      ↓
-Mock Flight Provider
-      ↓
-Available Flights
+Example:
+Oct 5 → Oct 8
 ```
 
-They are **three separate capabilities**.
+Phase 4:
+
+```text
+Origin
+Destination
+Travel Window
+    ↓
+Flight Search
+    ↓
+Available fixture flights
+```
+
+Together:
+
+```text
+                 USER
+                  │
+       "Find a 4-day trip"
+                  │
+                  ▼
+          Weather Engine
+                  │
+                  ▼
+           Oct 5 → Oct 8
+                  │
+                  ▼
+           Flight Search
+                  │
+          ┌───────┴────────┐
+          ▼                ▼
+      Outbound           Return
+       Oct 5              Oct 8
+```
+
+This is the exact foundation we need for the eventual agent.
 
 ---
 
-# 19. We are NOT doing this yet
+# 32. What we are NOT doing in Phase 4
 
-Do not add:
+Do **not** add these yet:
 
 ```text
-❌ Flight recommendation
 ❌ Cheapest flight selection
-❌ Best flight selection
+❌ Best flight recommendation
+❌ Flight ranking
 ❌ Booking
 ❌ Payment
+❌ User approval
 ❌ LLM
 ❌ LangGraph
 ❌ Memory
 ```
 
-Those belong to later phases.
+Right now the flight capability has one responsibility:
 
-Right now the flight layer should simply answer:
-
-> "Given these dates and route, what flights are available?"
+> Search and return flight fixtures for a requested route/date.
 
 ---
 
-# 20. Full Phase 4 flow
+# 33. Definition of Done
 
-The complete feature now looks like:
-
-```text
-                    USER
-                      │
-                      │
-               Travel dates
-                      │
-                      ▼
-              Flight API Route
-                      │
-                      ▼
-            FlightSearchRequest
-                      │
-                      ▼
-              Flight Service
-                      │
-                      ▼
-            Mock Flight Provider
-                      │
-              ┌───────┴────────┐
-              ▼                ▼
-        Outbound flights   Return flights
-              │                │
-              └───────┬────────┘
-                      ▼
-             FlightSearchResponse
-                      │
-                      ▼
-                    USER
-```
-
----
-
-# 21. How this connects to Phase 3
-
-Eventually, these two phases connect:
+Phase 4 is complete when:
 
 ```text
-User
- │
- ├── Destination: Goa
- ├── Duration: 4 days
- └── Origin: Mumbai
- │
- ▼
-Weather Decision Engine
- │
- ▼
-Oct 5 → Oct 8
- │
- ▼
-Flight Search
- │
- ├── Mumbai → Goa
- │     Oct 5
- │
- └── Goa → Mumbai
-       Oct 8
-```
+✅ FlightSearchRequest schema
+✅ IATA validation
+✅ Date validation
+✅ Cabin validation
+✅ Passenger validation
 
-That connection is exactly what we'll use later when we build the **overall travel-planning workflow**.
+✅ randomapi.dev integration
+✅ HTTP client
+✅ Scheduled-flight filtering
+✅ Date filtering
+✅ Cabin filtering
+✅ Count
+✅ Seed
+✅ Outbound search
+✅ Return search
 
-For now, we're keeping each capability independently testable.
+✅ Provider response normalization
+✅ FlightSearchResponse
 
----
-
-# 22. Phase 4 Definition of Done
-
-Phase 4 is complete when all of these work:
-
-```text
-✅ Flight schema created
-✅ Flight search request validation
-✅ Return-date validation
-✅ Mock flight provider
-✅ Outbound flight search
-✅ Return flight search
-✅ Passenger handling
-✅ Maximum stops filter
-✅ Maximum price filter
 ✅ Flight service
 ✅ Flight tool
 ✅ Flight API route
-✅ Router registered
-✅ One-way search works
-✅ Round-trip search works
-✅ Flight tests pass
+✅ Error handling
+✅ Tests
 ```
 
-Your architecture is now:
+And your API exposes:
 
 ```text
-PHASE 0 ✅
-Infrastructure
-      ↓
-PHASE 1 ✅
-Trip + PostgreSQL
-      ↓
-PHASE 2 ✅
-Weather Integration
-      ↓
-PHASE 3 ✅
-Weather Decision Engine
-      ↓
-PHASE 4
-Flight Search  ← YOU ARE HERE
-      ↓
-PHASE 5
-Hotel Search
-      ↓
-PHASE 6
-Cab Search
-      ↓
-PHASE 7+
-Combine capabilities
+GET  /health
+POST /travel/plan
+GET  /weather/{destination}
+POST /travel/best-dates
+POST /flights/search
 ```
 
-### One important rule for this phase
+---
 
-**Keep the mock provider exactly as a mock.** Don't start adding real flight API credentials or provider-specific code yet. We want the complete travel-agent architecture established first; then replacing the mock with a real provider becomes a controlled change instead of mixing API integration with the rest of the system.
+# 34. One limitation to remember
+
+`randomapi.dev` is a **mock-data provider**, not a real flight inventory system. It explicitly says its generated airlines, flight numbers, departure/arrival times, gates, terminals, and statuses are fictional, and that it does not provide real schedules, fares, availability, or live status. Its route generator also accepts only its curated hub network. [randomapi.dev](https://randomapi.dev/apis/flights?utm_source=chatgpt.com)
+
+That's exactly why it is appropriate **at this stage**.
+
+Our architecture will later allow:
+
+```text
+randomapi.dev
+      ↓
+      ↓ replace provider
+      ↓
+Real Flight API
+```
+
+without changing the agent/tool/API architecture.
+
+### Phase sequence now
+
+```text
+Phase 0 ✅ Infrastructure
+      ↓
+Phase 1 ✅ Trip + PostgreSQL
+      ↓
+Phase 2 ✅ Weather Integration
+      ↓
+Phase 3 ✅ Weather Decision Engine
+      ↓
+Phase 4 🔵 Flight Search
+      ↓
+Phase 5 → Hotel Search
+      ↓
+Phase 6 → Cab Search
+      ↓
+Phase 7 → Combine capabilities
+```
+
+For now, implement the files above and run `pytest`. **Don't start Phase 5 until the flight endpoint works with `CPH → JFK` and the full test suite is passing.**
