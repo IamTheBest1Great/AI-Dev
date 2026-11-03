@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width,initial-scale=1" name="viewport" />
+<meta content="#f3f1e9" name="theme-color" />
+<title>Chunking · Complete Interactive Study Guide</title>
+<style>
+  :root {
+    --bg: #f2f3f7; --paper: #fff; --ink: #202434; --muted: #687084;
+    --line: #e0e3ec; --purple: #6954a8; --purple2: #8c78c8;
+    --teal: #328b82; --gold: #c18d4a; --peach: #d48767;
+    --soft: #f0edf8; --shadow: 0 12px 30px rgba(37,36,60,.07);
+    --radius: 17px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 85px; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  .topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center;
+    gap: 13px; padding: 11px clamp(13px,2.5vw,30px); background: rgba(28,27,53,.96);
+    backdrop-filter: blur(16px); color: white; box-shadow: 0 5px 20px #1c1b3530; }
+  .logo { width: 36px; height: 36px; border-radius: 12px;
+    background: linear-gradient(145deg,#f0b56f,#8e77cc 58%,#4e9e9b); flex: none; }
+  .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+  .brand strong { font: 700 17px Georgia, serif; white-space: nowrap; }
+  .brand small { display: block; color: #c8c7d9; font-size: 10px; }
+  .brand-sep { height: 34px; width: 1px; background: #ffffff3b; }
+  .top-actions { margin-left: auto; display: flex; gap: 7px; }
+  .top-btn { background: #ffffff12; border: 1px solid #ffffff2a; color: white;
+    padding: 7px 10px; border-radius: 9px; font-size: 11px; }
+  .progress { height: 3px; background: linear-gradient(90deg,var(--purple2),var(--teal),var(--gold));
+    position: fixed; left: 0; top: 58px; width: 0; z-index: 60; }
+  .app { display: grid; grid-template-columns: 270px minmax(0,1fr);
+    max-width: 1680px; margin: auto; min-height: calc(100vh - 58px); }
+  .sidebar { position: sticky; top: 58px; align-self: start;
+    max-height: calc(100vh - 58px); overflow: auto;
+    background: #24223f; color: #eae9f3; padding: 17px 12px 28px; }
+  .side-label { font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+    font-weight: 800; color: #aaa8c2; padding: 8px 10px; }
+  .nav-link { display: block; color: #d8d6e5; text-decoration: none;
+    padding: 7px 10px; border-radius: 9px; margin: 2px 0;
+    font-size: 11.5px; line-height: 1.4; }
+  .nav-link:hover, .nav-link.active { background: #64549b; color: white; }
+  .sidebar-note { margin: 16px 7px; padding: 12px;
+    border: 1px solid #ffffff24; background: #ffffff09;
+    border-radius: 12px; font-size: 11px; color: #c9c6dc; }
+  main { padding: 20px clamp(12px,2.5vw,30px) 80px; min-width: 0; }
+  .hero { background: linear-gradient(120deg,#262343,#64549b 62%,#328b82);
+    border-radius: 22px; color: white; padding: clamp(24px,3.5vw,42px);
+    position: relative; overflow: hidden; box-shadow: var(--shadow); }
+  .hero:after { content: ""; position: absolute; width: 340px; height: 340px;
+    right: -70px; top: -170px; border: 1px solid #ffffff30;
+    border-radius: 50%; box-shadow: 0 0 0 30px #ffffff10, 0 0 0 66px #ffffff08; }
+  .kicker, .eyebrow { font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+    font-weight: 800; color: var(--purple); }
+  .hero .kicker { color: #f5d3ae; }
+  .hero h1 { font: 700 clamp(34px,4.5vw,54px)/1.05 Georgia, serif;
+    letter-spacing: -.04em; margin: 9px 0; }
+  .hero p { color: #eceaf5; max-width: 790px; margin: 8px 0; }
+  .hero-pills { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 17px; }
+  .hero-pills span { border: 1px solid #ffffff38; background: #ffffff12;
+    border-radius: 99px; padding: 5px 10px; font-size: 10px; }
+  .memory-aid { display: inline-flex; gap: 8px; align-items: center;
+    padding: 10px 14px; border-radius: 12px; background: #ffffff16;
+    border: 1px solid #ffffff3b; color: #f6e0c6; font-weight: 700;
+    margin-top: 15px; font-size: 13px; }
+  .searchbar { display: grid; grid-template-columns: minmax(0,1fr) auto auto;
+    gap: 8px; margin: 16px 0; }
+  .searchbar input { border: 1px solid var(--line); border-radius: 11px;
+    background: white; padding: 11px 14px; outline: none; min-width: 0; }
+  .searchbar input:focus { border-color: var(--purple2); box-shadow: 0 0 0 3px #8c78c822; }
+  .ui-btn, .revise-btn, .action-btn { border: 1px solid var(--line);
+    background: white; color: var(--ink); border-radius: 10px;
+    padding: 8px 11px; font-size: 11px; }
+  .ui-btn.primary, .action-btn { background: var(--purple); color: white; border-color: var(--purple); }
+  .panel { background: var(--paper); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 19px; margin: 16px 0;
+    box-shadow: 0 4px 20px #20243408; }
+  .panel h2, .major-head h2 { font: 700 clamp(23px,2.8vw,32px)/1.15 Georgia, serif;
+    letter-spacing: -.025em; margin: 5px 0 7px; }
+  .muted { color: var(--muted); }
+  .lede { font-size: 13px; color: var(--muted); margin: 8px 0 16px; }
+  .three-units { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px; }
+  .unit-box { padding: 15px; border: 1px solid var(--line);
+    border-radius: 13px; background: #fff; }
+  .unit-box:nth-child(1) { border-top: 3px solid var(--peach); }
+  .unit-box:nth-child(2) { border-top: 3px solid var(--teal); }
+  .unit-box:nth-child(3) { border-top: 3px solid var(--gold); }
+  .unit-box strong { display: block; font: 700 16px Georgia, serif; }
+  .unit-box p { margin: 5px 0; color: var(--muted); font-size: 12px; }
+  .takeaway { background: #f6f1ff; border-left: 3px solid var(--purple2);
+    padding: 12px 14px; border-radius: 0 11px 11px 0;
+    color: #51466d; margin: 13px 0; font-size: 13px; }
+  .major-section { margin: 36px 0 54px; scroll-margin-top: 78px; }
+  .major-head { display: flex; align-items: end; justify-content: space-between;
+    gap: 12px; border-bottom: 1px solid var(--line);
+    padding-bottom: 12px; margin-bottom: 15px; }
+  .major-head h2 { max-width: 820px; }
+  .major-head .eyebrow { color: var(--teal); }
+  .lesson-stack { display: grid; gap: 11px; }
+  .lesson-card { background: #fff; border: 1px solid var(--line);
+    border-radius: 15px; padding: 15px 17px;
+    box-shadow: 0 3px 14px #26234306; }
+  .lesson-head { display: flex; align-items: start; justify-content: space-between;
+    gap: 10px; margin-bottom: 9px; }
+  .lesson-head h3 { font: 700 17px/1.25 Georgia, serif; margin: 0; color: #302849; }
+  .source-pill { display: inline-block; white-space: nowrap; background: #f1eff8;
+    color: #6d5a9f; border: 1px solid #e4def3; border-radius: 99px;
+    padding: 2px 8px; font-size: 9px; line-height: 1.7; font-weight: 750; }
+  .lesson-body { font-size: 13px; color: #3c4352; }
+  .lesson-paragraph { margin: 8px 0; line-height: 1.7; }
+  .lesson-callout { margin: 10px 0; padding: 12px 14px;
+    background: #fff8ed; border: 1px solid #f0e1c5; border-left: 3px solid var(--gold);
+    border-radius: 0 11px 11px 0; font-size: 12.5px; }
+  .lesson-callout p { margin: 5px 0 0; }
+  .content-block { margin: 8px 0; }
+  .list-block ul { margin: 4px 0; padding-left: 21px; }
+  .list-block li { margin: 5px 0; }
+  .table-scroll { overflow-x: auto; margin: 8px 0 12px;
+    border: 1px solid var(--line); border-radius: 10px; max-width: 100%;
+    overscroll-behavior-inline: contain; }
+  .lesson-table, .designed-table { width: 100%; border-collapse: collapse;
+    font-size: 11.5px; min-width: 570px; table-layout: auto; }
+  .lesson-table th, .designed-table th { background: #eeeaf7; color: #4a3f75;
+    text-align: left; font-weight: 800; }
+  .lesson-table td, .lesson-table th, .designed-table td, .designed-table th {
+    padding: 8px 10px; vertical-align: top; border-bottom: 1px solid #e8e8ef;
+    border-right: 1px solid #eeeef3; white-space: normal;
+    overflow-wrap: break-word; word-break: normal; line-height: 1.5; }
+  .lesson-table tr:last-child td, .designed-table tr:last-child td { border-bottom: 0; }
+  .code-block { background: #25243a !important; color: #f0eefb !important;
+    border-radius: 13px !important; padding: 16px 18px !important;
+    margin: 12px 0; max-width: 100%; overflow: hidden; }
+  .code-block pre { color: #e8e5f4; white-space: pre !important;
+    font: 12px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace;
+    margin: 0; overflow-x: auto !important; overflow-y: hidden !important;
+    tab-size: 4 !important; display: block; max-width: 100%; }
+  .code-block code { display: block !important; white-space: pre !important;
+    line-height: 1.7 !important; font-size: 12px !important;
+    overflow-wrap: normal; word-break: normal; }
+  @media (max-width: 700px) {
+    .code-block pre, .code-block code { white-space: pre-wrap;
+      overflow-wrap: anywhere; word-break: normal; }
+  }
+  .reveal-card { border: 1px solid var(--line); border-radius: 12px;
+    margin: 9px 0; background: #fff; overflow: hidden; }
+  .reveal-card summary { cursor: pointer; display: flex; align-items: center;
+    gap: 8px; padding: 11px 12px; list-style: none; }
+  .reveal-card summary::-webkit-details-marker { display: none; }
+  .reveal-card summary:before { content: "＋"; color: var(--purple); font-weight: 800; }
+  .reveal-card[open] summary:before { content: "−"; }
+  .card-kind { color: var(--teal); font-size: 9px; text-transform: uppercase;
+    letter-spacing: .07em; font-weight: 800; }
+  .reveal-title { font-size: 12px; font-weight: 700; flex: 1; }
+  .reveal-body { padding: 0 14px 13px 31px; font-size: 12px;
+    color: var(--muted); line-height: 1.7; }
+  .reveal-body p { margin: 7px 0; }
+  .reveal-body .table-scroll { margin: 9px 0; }
+  .qa-card { border-left: 3px solid var(--teal); }
+  .scenario-card { border-left: 3px solid var(--peach); }
+  .doubt-card { border-left: 3px solid var(--gold); }
+  .visual-card, .diagram-card { background: linear-gradient(135deg,#fff,#f8f7fc);
+    border: 1px solid #e5e1f0; border-radius: 16px; padding: 17px;
+    margin: 12px 0 16px; overflow: hidden; }
+  .visual-title, .diagram-title { font: 700 17px Georgia, serif;
+    color: #352c51; margin-bottom: 12px; }
+  .visual-copy h3 { font: 700 22px Georgia, serif; margin: 5px 0; color: #352c51; }
+  .visual-copy p { font-size: 12px; color: var(--muted); max-width: 760px; }
+  .visual-kicker { font-size: 9px; letter-spacing: .13em;
+    color: var(--purple); font-weight: 800; }
+  .intro-visual { display: grid; grid-template-columns: .9fr 1.1fr;
+    align-items: center; gap: 15px; }
+  .intro-visual svg { width: 100%; height: auto; }
+  .budget-grid, .strategy-grid, .extension-grid { display: grid;
+    grid-template-columns: repeat(3,1fr); gap: 9px; }
+  .budget-grid > div, .strategy-grid > div, .extension-grid span {
+    background: #fff; border: 1px solid var(--line); border-radius: 11px;
+    padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .budget-grid b, .strategy-grid b { font-size: 12px; color: #493e76; }
+  .budget-grid span, .strategy-grid span { font-size: 11px; color: var(--muted); }
+  .budget-grid small { font-size: 10px; color: var(--teal); }
+  .strategy-grid { grid-template-columns: repeat(5,1fr); }
+  .strategy-grid > div { min-height: 90px; }
+  .note-line { border-radius: 10px; background: #eaf3ef; color: #316c5d;
+    padding: 10px 12px; margin-top: 10px; font-size: 11px; }
+  .metadata-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .metadata-split > div { padding: 15px; border-radius: 12px;
+    display: flex; flex-direction: column; gap: 7px; }
+  .meta-embed { background: #e7f3ee; border: 1px solid #c7e2d6; }
+  .meta-control { background: #fff0e9; border: 1px solid #f0d4c4; }
+  .metadata-split b { font: 700 15px Georgia, serif; }
+  .metadata-split span { font-size: 12px; }
+  .metadata-split small { color: var(--muted); font-size: 10px; }
+  .hierarchy { display: grid; grid-template-columns: 180px 1fr;
+    gap: 12px; align-items: center; }
+  .parent-node { background: #eeeafd; border: 1px solid #c9c0e9;
+    border-radius: 12px; padding: 17px; text-align: center; color: #534580; }
+  .parent-node b, .parent-node small { display: block; }
+  .parent-node small { font-size: 10px; margin-top: 4px; }
+  .children { display: grid; gap: 7px; }
+  .children span, .children strong { display: block; padding: 8px 12px;
+    background: #fff; border: 1px solid var(--line); border-radius: 9px; font-size: 11px; }
+  .children strong { border-color: #77b8aa; background: #eaf5f1; color: #286f67; }
+  .expand-caption { grid-column: 1/-1; color: var(--muted); font-size: 11px; }
+  .verify-flow { display: grid; grid-template-columns: 1fr 20px 1fr 20px 1fr;
+    gap: 8px; align-items: center; }
+  .verify-flow span { background: #fff; border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px; font-size: 12px;
+    font-weight: 800; color: #463b74; }
+  .verify-flow small { font-size: 10px; color: var(--muted); font-weight: 500; }
+  .verify-flow i { text-align: center; color: var(--teal); font-weight: 900; }
+  .diagnostic-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .diagnostic-pills span { padding: 8px 11px; border: 1px solid var(--line);
+    border-radius: 9px; background: #fff; font-size: 11px; color: #554b78; }
+  .extension-grid { grid-template-columns: repeat(3,1fr); }
+  .extension-grid span { font-size: 11px; color: #4a4270; font-weight: 700; }
+  .answer-formula { display: flex; align-items: center;
+    justify-content: space-between; gap: 7px; flex-wrap: wrap; }
+  .answer-formula span { background: #eeeafd; color: #4a4077;
+    padding: 9px 10px; border-radius: 9px; font-size: 11px; font-weight: 800; }
+  .answer-formula b { color: var(--teal); }
+  .diagram-card .mermaid { overflow: auto; text-align: center; }
+  .diagram-card pre { min-width: 570px; }
+  .interactive-hub { margin: 38px 0; }
+  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tool-card { background: #fff; border: 1px solid var(--line);
+    border-radius: 15px; padding: 17px; box-shadow: 0 4px 16px #20243406; }
+  .tool-card h3 { font: 700 18px Georgia, serif; margin: 0 0 5px; color: #392e59; }
+  .tool-card p { font-size: 11.5px; color: var(--muted); margin: 4px 0 12px; }
+  .tool-card.wide { grid-column: 1/-1; }
+  .calc-grid { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+  .calc-grid label { display: flex; flex-direction: column; gap: 4px;
+    font-size: 10px; color: var(--muted); }
+  .calc-grid input { width: 105px; padding: 7px 8px; border: 1px solid var(--line);
+    border-radius: 8px; background: #fafafe; color: var(--ink); font-size: 12px; }
+  .calc-result { background: #f3f0fb; color: #4a4075;
+    border: 1px solid #e4def3; border-radius: 10px; padding: 11px 13px;
+    font-size: 12px; margin-top: 10px; min-height: 40px; }
+  .tab-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab { border: 1px solid var(--line); background: #f7f6fb; color: #59516e;
+    border-radius: 99px; padding: 7px 10px; font-size: 10px; }
+  .tab.active { background: var(--purple); color: white; border-color: var(--purple); }
+  .quiz-question { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .quiz-question:last-child { border: 0; }
+  .quiz-question > b { font-size: 12px; }
+  .quiz-options { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .quiz-option { border: 1px solid var(--line); background: #faf9fd;
+    border-radius: 8px; padding: 7px 9px; font-size: 10.5px; color: var(--ink); }
+  .quiz-option.correct { background: #e5f3ed; border-color: #75b69b; }
+  .quiz-option.wrong { background: #fae9e5; border-color: #d89a87; }
+  .quiz-explain { font-size: 11px; color: var(--muted); padding: 8px 0; }
+  .quiz-score { font-size: 11px; font-weight: 800; color: var(--purple); margin-top: 8px; }
+  footer { text-align: center; color: var(--muted); font-size: 10px; padding: 32px 0; }
+  body.dark { --bg: #171723; --paper: #232337; --ink: #f1eff9;
+    --muted: #b4b1c8; --line: #3b3a55; --soft: #332f50; --shadow: 0 12px 30px #0003; }
+  body.dark .lesson-card, body.dark .panel, body.dark .tool-card,
+  body.dark .reveal-card, body.dark .unit-box { background: #232337; color: var(--ink); }
+  body.dark .lesson-head h3, body.dark .tool-card h3 { color: #e7ddff; }
+  body.dark .lesson-body { color: #d2d0df; }
+  body.dark .lesson-table td, body.dark .designed-table td { color: #dedbea; border-color: #3b3a55; }
+  body.dark .lesson-table th, body.dark .designed-table th { background: #36314f; color: #e8e0ff; }
+  body.dark .visual-card, body.dark .diagram-card { background: #27263b; border-color: #42405e; }
+  body.dark .visual-title, body.dark .diagram-title { color: #e5dcff; }
+  body.dark .visual-card p, body.dark .note-line, body.dark .takeaway { color: #d7d1eb; }
+  body.dark .meta-embed { background: #203a36; }
+  body.dark .meta-control { background: #48342e; }
+  body.dark .reveal-title { color: #f1eff9; }
+  @media (max-width: 1050px) {
+    .app { grid-template-columns: 225px minmax(0,1fr); }
+    .strategy-grid { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 780px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { position: relative; top: auto; max-height: none;
+      display: flex; flex-wrap: wrap; gap: 4px; padding: 10px; }
+    .side-label { width: 100%; }
+    .sidebar-note { display: none; }
+    .nav-link { padding: 6px 8px; }
+    .three-units { grid-template-columns: 1fr; }
+    .intro-visual { grid-template-columns: 1fr; }
+    .tool-grid { grid-template-columns: 1fr; }
+    .tool-card.wide { grid-column: auto; }
+    .searchbar { grid-template-columns: 1fr 1fr; }
+    .searchbar input { grid-column: 1/-1; }
+  }
+  @media (max-width: 520px) {
+    .topbar { padding: 8px; }
+    .brand small, .brand-sep { display: none; }
+    .brand strong { font-size: 14px; }
+    .top-actions .top-btn { padding: 6px; }
+    .app main { padding: 12px; }
+    .hero { border-radius: 15px; }
+    .major-head { align-items: start; flex-direction: column; }
+    .budget-grid, .extension-grid { grid-template-columns: 1fr; }
+    .strategy-grid { grid-template-columns: 1fr 1fr; }
+    .metadata-split { grid-template-columns: 1fr; }
+    .hierarchy { grid-template-columns: 1fr; }
+    .verify-flow { grid-template-columns: 1fr; }
+    .verify-flow i { transform: rotate(90deg); }
+    .answer-formula { align-items: stretch; flex-direction: column; }
+    .answer-formula b { display: none; }
+  }
+  @media print {
+    .topbar, .sidebar, .searchbar, .revise-btn, .interactive-hub { display: none !important; }
+    .app { display: block; }
+    .major-section { break-before: page; }
+    .lesson-card { break-inside: avoid; }
+    .panel { box-shadow: none; }
+  }
+  .revise-btn.done { background: #e7f4ec; border-color: #9acdb2;
+    color: #287654; font-weight: 800; }
+  .search-count { font-size: 11px; color: var(--muted); margin: 0 2px 8px; }
+  .mcq-options-answer { padding: 8px 10px; margin-top: 8px;
+    background: #f6f5fa; border-radius: 9px; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<header class="topbar">
+  <div class="logo"></div>
+  <div class="brand"><strong>Chunking</strong><span class="brand-sep"></span>
+    <div><b>Complete Study &amp; Interview Guide</b>
+      <small>Source unit → Retrieval unit → Answer-context unit · Build &amp; Query Stages</small>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="top-btn" onclick="toggleTheme()">◐ Theme</button>
+    <button class="top-btn" onclick="window.print()">Print</button>
+  </div>
+</header>
+<div class="app">
+  <aside class="sidebar">
+    <div class="side-label">Study navigation · 11 parts + appendices</div>
+    <a class="nav-link" href="#mindmaps">Interactive mind maps</a>
+    <a class="nav-link" href="#front">Start here · introduction &amp; study roadmap</a>
+    <a class="nav-link" href="#budget">Budget Planning (was Stage A) — token &amp; multi-model budgets</a>
+    <a class="nav-link" href="#boundary">Boundary Selection &amp; Slicing (was Stage B)</a>
+    <a class="nav-link" href="#enrich">Enrichment &amp; Security (was Stage C)</a>
+    <a class="nav-link" href="#query">Query-Time Retrieval (was Stage D)</a>
+    <a class="nav-link" href="#verify">Verify &amp; Maintain (was Stage E)</a>
+    <a class="nav-link" href="#part8">Part 8 · handoffs, decision flows &amp; diagnostics</a>
+    <a class="nav-link" href="#part9">Part 9 · advanced extensions &amp; previously missing gaps</a>
+    <a class="nav-link" href="#part10">Part 10 · glossary, revision sheet &amp; repository structure</a>
+    <a class="nav-link" href="#part11">Part 11 · complete practice &amp; interview question bank</a>
+    <a class="nav-link" href="#appa">Appendix A · preserved additional material</a>
+    <a class="nav-link" href="#appb">Appendix B · alphabetical glossary</a>
+    <a class="nav-link" href="#appc">Appendix C · source review notes</a>
+    <div class="sidebar-note"><b>Core memory aid</b><br />Find precisely → Expand deliberately → Cite the source span.<br /><br />Mark each section revised as you progress.</div>
+  </aside>
+  <main>
+
+    <section class="hero" id="overview">
+      <div class="kicker">RAG Engineering · Module M06.1.2</div>
+      <h1>Chunking</h1>
+      <p>An interactive learning environment built from the supplied master guide. Foundations, the build/query lifecycle, worked examples, diagnostics, advanced extensions, and the complete interview bank — all preserved in full with fully spelled-out stage names.</p>
+      <div class="memory-aid">Find precisely <span>→</span> Expand deliberately <span>→</span> Cite the source span.</div>
+      <div class="hero-pills">
+        <span>11 Parts</span>
+        <span>5 Lifecycle Stages</span>
+        <span>6 Query-Time Steps</span>
+        <span>3 Verify &amp; Maintain Sub-Stages</span>
+        <span>23 Syllabus Qs</span>
+        <span>40 Interview Qs</span>
+        <span>12 Scenarios</span>
+      </div>
+    </section>
+
+    <div class="searchbar">
+      <input id="search" oninput="filterLessons(this.value)" placeholder="Search a concept, term, formula, question or scenario…" type="search" />
+      <button class="ui-btn" onclick="expandAll()">Expand all</button>
+      <button class="ui-btn" onclick="clearSearch()">Clear search</button>
+    </div>
+
+    <!-- MIND MAPS SECTION -->
+    <section class="major-section" id="mindmaps">
+      <div class="major-head">
+        <div><span class="eyebrow">VISUAL OVERVIEWS · INTERACTIVE FLOWCHARTS</span>
+          <h2>Interactive Architecture Mind Maps</h2>
+        </div>
+      </div>
+      <p class="lede">Explore the end-to-end RAG chunking lifecycle, concept mappings, and strategy decision flows. All stage names are fully spelled out.</p>
+
+      <!-- Flowchart 1: Unified Lifecycle -->
+      <div class="diagram-card">
+        <div class="diagram-title">Unified Build-Time and Query-Time Pipeline</div>
+        <pre class="mermaid">
+graph TD
+  E3["Unlearning & Purge"]
+  E2["Fair Evaluation"]
+  
+  subgraph BUILD["Build Time (Offline)"]
+    S["Prepared Source"] --> A["Budget Planning"]
+    A -->|Tokenizer limits| B["Boundary Selection & Slicing"]
+    B -->|Strategies + Overlap| C["Enrichment & Security"]
+    C -->|IDs, Spans, Links, ACL| IDX[("Unified Chunk Index")]
+  end
+  
+  subgraph QUERY["Query Time (Online)"]
+    Q["User Query"] --> D1["Hard Pre-Filter"]
+    D1 -->|Tenant, ACL, Version| D2["Search Small Units"]
+    D2 --> D3{"Diagnose Context Need"}
+    D3 -- Same Doc/Local --> D4["Structural Expansion"]
+    D3 -- Cross-Ref --> D5["Secondary Search"]
+    D4 -->|Check parent ACL| D6["Budgeted Assembly"]
+    D5 --> D6
+    D6 --> E1["Source-Span Deduplication"]
+    E1 --> LLM["LLM Grounded Answer"]
+  end
+  
+  IDX --> D1
+  E3 -.->|Purge on Update| IDX
+  E2 -.->|Fix Boundaries| B
+</pre>
+      </div>
+
+      <!-- Flowchart 2: Concept Map -->
+      <div class="diagram-card">
+        <div class="diagram-title">Overall Concept Map</div>
+        <pre class="mermaid">
+flowchart LR
+  A["1. Prepared Source<br/>(Docs, Tables, Code, OCR)"] --> B["2. Structure & Permission Boundaries<br/>Validate format · preserve structure · attach ACLs"]
+  B --> C["3. Retrieval Units<br/>Fixed · Recursive · Sentence · Semantic · Token/Structure-Aware"]
+  C --> D["4a. Lexical & Vector Indexes"]
+  C --> E["4b. Source Relationships<br/>Parent-Child · Hierarchy · Windows"]
+  D --> F["5. Selected Child Evidence<br/>Filtered by tenant, ACL, version"]
+  E --> G["6. Authorized Expansion<br/>Parent-child · Sentence window · Small-to-big"]
+  F --> G
+  X["Cross-Cutting: Version, ACL & Deletion Checks"] --> F
+  X --> G
+  X --> H
+  G --> H["7. Budgeted Answer Context<br/>Deduplicated · cited to source spans"]
+</pre>
+      </div>
+
+      <!-- Flowchart 3: Strategy Decision -->
+      <div class="diagram-card">
+        <div class="diagram-title">Strategy Selection Decision Flowchart</div>
+        <pre class="mermaid">
+flowchart TD
+  START["Start: Structure-Aware Recursive Baseline<br/>+ Model Tokenizer Cap"] --> TEST["Build Boundary Test Suite<br/>Procedures · Tables · Exceptions · Cross-Page · ACL"]
+  TEST --> FAIL{"Dominant failure in trace inspection?"}
+  FAIL -- "Small chunks lose scope" --> FIX1["Add Parent-Child or Sentence-Window Expansion"]
+  FAIL -- "Unrelated topics share a chunk" --> FIX2["Reduce child size OR sharpen structural header boundaries"]
+  FAIL -- "Facts split at arbitrary window edges" --> FIX3["Add modest overlap + Source-Span Deduplication"]
+  FAIL -- "Tables lose headers / code breaks" --> FIX4["Add format-specific Structure-Aware parsers"]
+  FAIL -- "Subtle topic shifts remain" --> FIX5["Test Semantic Chunking<br/>Benchmark cost vs. accuracy gain"]
+  FIX1 --> END["Change ONE variable · Re-evaluate on Stable Source Spans · Loop"]
+  FIX2 --> END
+  FIX3 --> END
+  FIX4 --> END
+  FIX5 --> END
+</pre>
+      </div>
+
+      <!-- Mind Map -->
+      <div class="diagram-card">
+        <div class="diagram-title">Chunking · concept mind map</div>
+        <pre class="mermaid">
+mindmap
+ root((CHUNKING))
+  Foundations
+   Source unit
+   Retrieval unit
+   Answer-context unit
+   Specificity vs completeness
+  Build time
+   Stage A · budgets
+   Stage B · boundaries
+    Fixed
+    Recursive
+    Sentence
+    Semantic
+    Structure-aware
+    Overlap
+   Stage C · enrichment
+    Metadata
+    ACL and tenant
+    Version and source span
+    Parent-child links
+  Query time
+   Stage D · retrieval
+    D1 filter
+    D2 search small
+    D3 diagnose
+    D4 expand
+    D5 secondary search
+    D6 assemble
+   Stage E · maintain
+    E1 deduplicate
+    E2 evaluate
+    E3 unlearn
+  Mastery
+   Manual M-104
+   Metrics
+   23 syllabus questions
+   40 interview questions
+   12 scenarios
+   Glossary
+</pre>
+      </div>
+    </section>
+
+    <!-- ORIENTATION -->
+    <section class="panel">
+      <span class="kicker">Orientation</span>
+      <h2>Start with the three units</h2>
+      <div class="three-units">
+        <div class="unit-box"><strong>① Source unit</strong>
+          <p>Preserves original document structure and authoritative lineage. Typical examples: a complete section, table or code function/class.</p>
+        </div>
+        <div class="unit-box"><strong>② Retrieval unit</strong>
+          <p>What vector or lexical search scores: a focused paragraph, sentence or table row.</p>
+        </div>
+        <div class="unit-box"><strong>③ Answer-context unit</strong>
+          <p>What the answering LLM reads: the retrieved fragment deliberately expanded with heading, scope, conditions and exceptions.</p>
+        </div>
+      </div>
+      <div class="takeaway"><b>The core design question:</b> What unit makes the required evidence easy to find without losing the conditions needed to interpret it? The guide rejects a universal "500 tokens + 20% overlap" rule.</div>
+    </section>
+
+    <!-- FRONT -->
+    <section class="major-section" id="front">
+      <div class="major-head">
+        <div><span class="eyebrow">ORIENTATION · INTRODUCTION &amp; STUDY ROUTINE</span>
+          <h2>Start here · introduction</h2>
+        </div><button class="revise-btn" onclick="markRevised('front',this)">Mark revised</button>
+      </div>
+      <div class="visual-card intro-visual">
+        <div class="visual-copy"><span class="visual-kicker">THE CORE DESIGN QUESTION</span>
+          <h3>Chunk for meaning, not a magic number.</h3>
+          <p>A large source is divided into retrievable pieces—but headings, equipment names, units, exceptions and lineage must travel with the evidence.</p>
+        </div>
+        <svg aria-label="A manual being split into focused chunks while preserving context" role="img" viewbox="0 0 640 210">
+          <rect fill="#f4ead9" height="174" rx="15" stroke="#c6a06a" stroke-width="2" width="154" x="12" y="18"></rect>
+          <path d="M35 48h105M35 67h88M35 86h97M35 105h75M35 124h105M35 143h83" stroke="#8f7b62" stroke-linecap="round" stroke-width="5"></path>
+          <text fill="#66543e" font-size="12" text-anchor="middle" x="89" y="177">SOURCE MANUAL</text>
+          <path d="M180 104h46m-10 -9 10 9-10 9" fill="none" stroke="#477765" stroke-linecap="round" stroke-width="3"></path>
+          <rect fill="#dbe9e1" height="62" rx="10" stroke="#477765" stroke-width="2" width="104" x="245" y="28"></rect>
+          <rect fill="#f5e8d6" height="62" rx="10" stroke="#bd873d" stroke-width="2" width="104" x="245" y="119"></rect>
+          <path d="M262 48h68M262 62h50M262 139h68M262 153h53" stroke="#527265" stroke-linecap="round" stroke-width="4"></path>
+          <text fill="#315b4c" font-size="10" text-anchor="middle" x="297" y="82">FOCUSED UNIT</text>
+          <text fill="#8a642d" font-size="10" text-anchor="middle" x="297" y="173">CONTEXT UNIT</text>
+          <path d="M365 104h43m-10 -9 10 9-10 9" fill="none" stroke="#477765" stroke-linecap="round" stroke-width="3"></path>
+          <rect fill="#e6ece5" height="100" rx="14" stroke="#477765" stroke-width="2" width="188" x="425" y="55"></rect>
+          <ellipse cx="519" cy="77" fill="#c8d9ce" rx="60" ry="15" stroke="#477765" stroke-width="2"></ellipse>
+          <path d="M459 77v53c0 9 27 16 60 16s60-7 60-16V77" fill="#dce9df" stroke="#477765" stroke-width="2"></path>
+          <path d="M459 103c0 9 27 16 60 16s60-7 60-16" fill="none" stroke="#477765" stroke-width="1.5"></path>
+          <text fill="#315b4c" font-size="11" text-anchor="middle" x="519" y="181">INDEX + LINEAGE</text>
+        </svg>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>Additional explanation · source pages 3–4, 10</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Topic overview:</strong> Chunking is the step that turns prepared source content (manuals, policies, tables, code, OCR output) into units that can be indexed, retrieved and handed to a language model as evidence.</li>
+                <li>It keeps three things attached to each unit: interpretable meaning, source lineage, and access-control information.</li>
+                <li><strong>The core design question:</strong> "What unit makes the required evidence easy to find without losing the conditions needed to interpret it?" — not "How many tokens per piece?"</li>
+                <li><strong>Three distinct units:</strong> Source unit (authoritative structure), Retrieval unit (what search scores), and Answer-context unit (what the LLM reads).</li>
+                <li><strong>Two lifecycles meet at the index:</strong> Build time (Budget Planning → Boundary Selection → Enrichment) and Query time (Query-Time Retrieval → Verify &amp; Maintain).</li>
+                <li><strong>Why it matters:</strong> Prevents context loss, enforces security through boundaries, ensures correctness over time (purging updates), and provides trustworthy non-duplicated evidence.</li>
+                <li><strong>Real-world applications:</strong> Technical manuals, legal clauses, product catalogs, code references, maintenance tables, multi-tenant document stores.</li>
+                <li><strong>Study routine:</strong> Build the mental model → Learn one lifecycle stage at a time → Trace the whole system (Manual M-104) → Revise and test.</li>
+                <li><strong>Completion test for every stage:</strong> Define the stage, explain its mechanism, identify inputs/outputs, diagnose one failure, and justify one engineering trade-off.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>Study guide learning objectives</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Define chunking and explain the source, retrieval and answer-context units.</li>
+                <li>Budget tokens separately for the embedder, reranker and answering LLM, and detect silent truncation.</li>
+                <li>Choose and combine fixed-size, recursive, sentence, semantic and structure-aware strategies.</li>
+                <li>Compute stride, window count and duplication.</li>
+                <li>Design chunk metadata (embedding text versus control fields).</li>
+                <li>Run the query pipeline: filter first, search small, diagnose, expand, and assemble within budget.</li>
+                <li>Deduplicate and evaluate by source span.</li>
+                <li>Diagnose production failures and justify engineering trade-offs.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 8. Why do embedding, reranking, and answer generation need separate token budgets?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Embedder:</strong> Chunk + Heading Prefix + Formatting (e.g., ≤512 tokens).</li>
+                <li><strong>Reranker:</strong> User Query + Candidate Passage + Formatting evaluated jointly.</li>
+                <li><strong>Answering LLM:</strong> System Prompt + History + Query + All Expanded Chunks + Reserved Output Tokens.</li>
+                <li>Each stage processes a different composite input with a different model ceiling.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- BUDGET PLANNING -->
+    <section class="major-section" id="budget">
+      <div class="major-head">
+        <div><span class="eyebrow">BUDGET PLANNING · SOURCE PAGES 22–25</span>
+          <h2>Part 3 · Budget Planning (formerly Stage A)</h2>
+        </div><button class="revise-btn" onclick="markRevised('budget',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Three consumers · three independent ceilings</div>
+        <div class="budget-grid">
+          <div><b>01 · Embedder</b><span>Chunk + heading/prefix + formatting</span><small>Hard input ceiling</small></div>
+          <div><b>02 · Reranker</b><span>Query + candidate passage + formatting</span><small>Joint query–passage limit</small></div>
+          <div><b>03 · Answering LLM</b><span>System + history + query + evidence + output reserve</span><small>Context-window budget</small></div>
+        </div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>3.1 Budget Planning Card</h3></div>
+          <div class="lesson-body">
+            <aside class="lesson-callout"><b>Purpose:</b> Know the exact token size ceilings across every downstream model before cutting a single word.</aside>
+            <aside class="lesson-callout"><b>Key Decisions:</b> Which model-specific tokenizer to use, what overhead counts against each stage's budget, and how many tokens to reserve for output.</aside>
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Core Techniques:</strong> Model-specific subword tokenization, explicit prefix/heading accounting, and separate budget enforcement.</li>
+                <li><strong>Failure Mode 1:</strong> Counting words/characters instead of tokens.</li>
+                <li><strong>Failure Mode 2 (Silent truncation):</strong> If chunk+prefix exceeds embedder limits, the API silently truncates the tail, breaking retrieval matching.</li>
+                <li><strong>Failure Mode 3 (Reranker overflow):</strong> A chunk fits the embedder but overflows the reranker when processed jointly with a long query.</li>
+                <li><strong>Failure Mode 4 (LLM overflow):</strong> Chunks individually fit, but collectively overflow the LLM's context window.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>3.2 Balancing the Three Consumer Budgets</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead><tr><th>Consumer</th><th>What Counts Against Its Budget</th><th>Constraint</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>1. Embedding Model</strong></td><td>Chunk body text + Injected Heading/Prefix + formatting tokens.</td><td>Often has a strict hard ceiling (e.g., 512 tokens). Exceeding it causes hard errors or silent tail truncation.</td></tr>
+                  <tr><td><strong>2. Reranker Model</strong></td><td>User Query + Candidate Passage + Cross-encoder formatting tokens.</td><td>Processes query and chunk jointly. Candidate chunks must leave room for long user queries.</td></tr>
+                  <tr><td><strong>3. Answering LLM</strong></td><td>System Instructions + History + Query + All Assembled Evidence + Reserved Output.</td><td>Must leave enough headroom for reasoning and generated response, avoiding context bloat.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>3.3 Worked Embedding Budget Calculation</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Example A (Maximum Body Budget):</strong> Embedding limit 512 tokens. 30-token heading + 10-token formatting. Maximum Body Budget = 512 − 30 − 10 = 472 tokens.</li>
+                <li><strong>Example B (Checking Chunk Fit):</strong> 30 + 470 + 20 = 520 tokens &gt; 512, exceeds limit by 8 tokens. Must split or trim — never silently truncate.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q18. Why is token-aware chunking important instead of using only word or character counts?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Language models operate within token-based input limits rather than word or character limits.</li>
+                <li>A word does not necessarily correspond to one token; punctuation, numbers, and special characters may split into multiple tokens.</li>
+                <li>Two chunks with the same word count can have different token counts.</li>
+                <li>Use the tokenizer associated with the target model to estimate chunk size accurately.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q19. Why must we consider separate token budgets for embedding, reranking, and answer generation?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Embedding model:</strong> Chunk + prefixes/metadata must fit the embedder's input limit.</li>
+                <li><strong>Reranking model:</strong> Query and candidate passage are processed together, so their combined token count must fit.</li>
+                <li><strong>Answer-generation model:</strong> System prompt, history, query, retrieved context, and reserved output must fit the context window.</li>
+                <li>A chunk that fits the embedding model may still be too large for reranking, and valid chunks may collectively exceed the answer-generation budget.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q20. A chunk contains 30 tokens of heading, 470 tokens of content, and 20 tokens of formatting. The embedding limit is 512 tokens. Does the chunk fit?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Total = 30 + 470 + 20 = 520 tokens. Limit = 512.</li>
+                <li>Exceeds limit by 520 − 512 = 8 tokens. The chunk does not fit.</li>
+                <li>Must reduce the chunk or adjust its content while preserving important context.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q39. Your chunks exceed the target size even after recursive splitting. What could be happening?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Wrong length function unit: splitter measures characters/words, not model tokens.</li>
+                <li>Missing separator fallback: run-on OCR/log line lacks expected separators; no token-level fallback configured.</li>
+                <li>Unaccounted metadata injection: headings/prefixes prepended after splitting, pushing a 490-token body over 512.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 5: The chunk fits the embedding model but fails during reranking</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> A 450-token chunk fits the embedder limit but fails in the reranker because the combined query+passage limit is exceeded.</li>
+                <li><strong>Solution:</strong> Treat embedding and reranking stages as separate constraints. Calculate the combined token count, leaving headroom for the query.</li>
+                <li>Reduce or prepare the candidate passage appropriately before reranking, ensuring reduction does not remove critical relevance signals.</li>
+                <li>Reserve enough capacity for the query and any model-specific formatting.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 7. Why can't we rely on word count?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Because words and tokens are not equivalent.</li>
+                <li>A tokenizer may split one word into multiple tokens; punctuation and formatting also contribute to token count.</li>
+                <li>The same number of words can produce different token counts.</li>
+                <li>Use the tokenizer associated with the target model when enforcing token limits.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- BOUNDARY SELECTION -->
+    <section class="major-section" id="boundary">
+      <div class="major-head">
+        <div><span class="eyebrow">BOUNDARY SELECTION &amp; SLICING · SOURCE PAGES 26–39</span>
+          <h2>Part 4 · Boundary Selection &amp; Slicing (formerly Stage B)</h2>
+        </div><button class="revise-btn" onclick="markRevised('boundary',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Five core chunking strategies</div>
+        <div class="strategy-grid">
+          <div><b>Fixed-size</b><span>Predictable windows</span></div>
+          <div><b>Recursive</b><span>Large natural separators → finer fallback</span></div>
+          <div><b>Sentence-based</b><span>Grammar boundaries</span></div>
+          <div><b>Semantic</b><span>Meaning shifts between adjacent units</span></div>
+          <div><b>Structure-aware</b><span>Headings, tables, code, FAQs and layout</span></div>
+        </div>
+        <div class="note-line">Recommended combination: permission boundary → section / record → semantic unit → recursive size fallback → exact tokenizer check.</div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>4.1 Boundary Selection Card</h3></div>
+          <div class="lesson-body">
+            <aside class="lesson-callout"><b>Purpose:</b> Decide where to draw the cutting lines so each retrieval unit preserves coherent meaning and structure.</aside>
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Failure Modes:</strong> Heading separated from body.</li>
+                <li>Condition/exception separated from instruction.</li>
+                <li>Table header separated from row (e.g., '150' isolated without a unit or column label).</li>
+                <li>Code signature separated from function body.</li>
+                <li>Semantic splitter severing a rule from its differently worded exception.</li>
+                <li>False sentence splits on abbreviations (Rev. 4, 3.5 bar). Unlogged hard splits.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>4.2 Comparison of the 5 Core Chunking Strategies</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="designed-table">
+                <thead><tr><th>Strategy</th><th>Mechanism</th><th>Strength / best fit</th><th>Main risk / limitation</th></tr></thead>
+                <tbody>
+                  <tr><th>Fixed-size</th><td>Cut by fixed character, word or token windows; stride = size − overlap.</td><td>Simple, predictable and reproducible.</td><td>Can split a sentence, heading, procedure step or table row; measurement unit must be explicit.</td></tr>
+                  <tr><th>Recursive</th><td>Try larger separators first (section → paragraph → sentence → word / hard limit).</td><td>Preserves natural boundaries while respecting a maximum size.</td><td>Needs separator order and fallback rules; long unbroken spans can still exceed the cap.</td></tr>
+                  <tr><th>Sentence-based</th><td>Detect sentences and group one or more into a chunk.</td><td>Preserves grammatical boundaries and enables sentence-window retrieval.</td><td>Grammar is not meaning; a sentence can depend on its heading or neighboring scope.</td></tr>
+                  <tr><th>Semantic</th><td>Embed adjacent provisional units and split where similarity drops.</td><td>Adapts to topic changes in unstructured prose without headings.</td><td>Embedding cost, model dependency and risk of separating rules from exceptions with different vocabulary.</td></tr>
+                  <tr><th>Structure-aware</th><td>Parse headings, tables, code, FAQs, slides and other explicit formats.</td><td>Strong baseline for manuals: heading + body, row + headers, signature + code body, question + answer.</td><td>Requires format-specific parsers and recursive fallback for oversized structural blocks.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>4.3 Deep-Dive Worked Examples (A–F)</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>A. Fixed-Size Half-Open Intervals:</strong> 24 tokens, size=10, overlap=2 → windows [0,10), [8,18), [16,24).</li>
+                <li><strong>B. Recursive Worked Budget:</strong> Paragraphs 180 + 170 = 350 ≤ 400 tokens (Chunk 1). Paragraph 3 (420 tokens) exceeds 400; falls back to sentence boundaries. Oversized sentence → explicit logged hard split.</li>
+                <li><strong>C. Sentence-Based Scope Trap:</strong> "This procedure applies only to Unit A." / "Inspect the indicator every 30 days." / "For Unit B, use the separate schedule in section 5." Isolating Sentence 2 makes it look universal.</li>
+                <li><strong>D. Semantic Boundary Decision:</strong> Succeeds detecting a sharp drop between inspection exceptions and invoice terms. Fails when a procedure and its differently-worded exception have low cosine similarity — structural rules must constrain semantic signals.</li>
+                <li><strong>E. Structure-Aware Rules:</strong> Procedures keep prerequisites + steps + warnings together; tables retain title/headers/units/footnotes on every row; code uses AST; FAQs keep question+answer together; PDFs stitch across pages.</li>
+                <li><strong>F. Recommended 5-Step Order:</strong> Separate sources/permissions → group by structure → preserve semantic units → split oversized groups recursively → measure final representation with exact tokenizer.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>4.4 Overlap Math, Token Bloat &amp; Boundary Quality</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Stride (S):</strong> Chunk size (C) minus Overlap (O). S = C − O.</li>
+                <li><strong>Window count n:</strong> 0 if N=0; 1 if 0&lt;N≤C; 1 + ⌈(N−C)/(C−O)⌉ if N&gt;C.</li>
+                <li><strong>Asymptotic Duplication:</strong> Approximated by C / (C − O).</li>
+                <li><strong>Worked Example:</strong> N=10,000, C=500, O=100 → S=400, n=25, total stored = 12,400 tokens (2,400 duplicated).</li>
+                <li><strong>Why Overlap is a Weak Band-Aid:</strong> Cannot fix distant structural dependencies (a header 2,000 tokens away). Creates "false independent evidence." Artificially inflates chunk-level Recall@K.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ3. What does recursive chunking mean?</span></summary>
+          <div class="reveal-body"><p>It tries preferred larger natural boundaries first (e.g., sections, paragraphs) and uses finer boundaries (sentences, words, hard limit) when content exceeds the chosen size limit. It requires explicit separators and fallback rules.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ4. How does semantic chunking differ from sentence splitting?</span></summary>
+          <div class="reveal-body"><p>Sentence splitting identifies grammatical boundaries. Semantic chunking estimates changes in topic or meaning, often using vector representations of neighboring text units.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ8. What problem does overlap address?</span></summary>
+          <div class="reveal-body"><p>It makes some boundary-adjacent content available in neighboring chunks. It does not automatically preserve long conditions or prevent permission errors.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ11. Which statement is correct?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block">
+                <ul>
+                  <li>A. Five hundred characters always equal five hundred tokens.</li>
+                  <li>B. Every sentence is a complete evidence unit.</li>
+                  <li>C. Chunk-size units must be stated explicitly.</li>
+                  <li>D. Larger chunks always improve retrieval.</li>
+                </ul>
+              </div>
+              <p><b>Answer: C.</b> Characters, words and model tokens are different units.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ12. Which strategy uses document headings and tables as boundaries?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block">
+                <ul><li>A. Structure-aware chunking.</li><li>B. Random chunking.</li><li>C. Unrestricted parent expansion.</li><li>D. Score normalization.</li></ul>
+              </div>
+              <p><b>Answer: A.</b> It uses explicit source organization to keep related material together.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ13. A chunk says "Repeat this every 30 days" but omits the preceding definition. What is the likely problem?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block">
+                <ul><li>A. Too much independent evidence.</li><li>B. Missing contextual dependence at the boundary.</li><li>C. Perfect chunk design.</li><li>D. Incorrect vector dimensionality by definition.</li></ul>
+              </div>
+              <p><b>Answer: B.</b> The missing antecedent prevents the reader from knowing what action the interval describes.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ14. What is the stride for fixed windows of size 400 with overlap 80?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block"><ul><li>A. 80</li><li>B. 320</li><li>C. 400</li><li>D. 480</li></ul></div>
+              <p><b>Answer: B.</b> Stride = size − overlap = 400 − 80 = 320.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q2. What can go wrong when we split a document without considering meaning?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Mechanical splitting can separate dependent information.</li>
+                <li>Example: Equipment: Emergency Generator / Instruction: Inspect every 30 days / Exception: during maintenance shutdowns — a mechanical split could separate the instruction from the equipment name or its exception.</li>
+                <li>This creates context loss and can lead to incorrect or unsupported answers.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q6. How should tables and safety exceptions be handled during chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Tables: retain table title, column headers, row labels, units, and relevant footnotes. Repeat headers if split.</li>
+                <li>Safety conditions/exceptions: remain connected to the rules they modify.</li>
+                <li>Avoid putting an entire large table or manual into one chunk — reduces retrieval precision.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q10. How would you chunk a maintenance table safely?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Row-oriented strategy preserving table structure.</li>
+                <li>Each chunk retains table title, relevant column headers, row labels, units, and applicable footnotes.</li>
+                <li>If split across chunks, repeat necessary headers so each chunk is independently interpretable.</li>
+                <li>Safety conditions and exceptions retained with the rows they modify.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q13. What is the difference between fixed-size chunking and recursive chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Fixed-size divides text according to a predetermined character, word, or token limit; may use overlap.</li>
+                <li>Recursive attempts to split using a hierarchy of natural separators (section → paragraph → sentence).</li>
+                <li>Fixed-size relies on predetermined boundaries; recursive attempts to preserve natural document structure.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q14. What does implementation complexity mean in recursive chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Configuring the separator hierarchy, defining the length measurement, handling paragraphs/sentences that exceed the limit.</li>
+                <li>Preserving document structure and retaining metadata such as headings, source offsets, and document hierarchy.</li>
+                <li>Designing and configuring the splitting procedure correctly.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q15. What is the difference between sentence-based chunking and semantic chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Sentence-based uses grammatical and punctuation boundaries.</li>
+                <li>Semantic chunking attempts to identify changes in meaning or topic, using embeddings of neighboring sentences/windows.</li>
+                <li>Sentence-based focuses on linguistic structure; semantic focuses on meaning.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q16. What is one major limitation of semantic chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Semantic boundaries are not always straightforward.</li>
+                <li>A safety exception may use different terminology from the instruction it modifies; semantic chunking can accidentally separate them.</li>
+                <li>Also requires embedding computations and threshold configuration.</li>
+                <li>Do not rely on semantic similarity alone — consider document hierarchy and structural relationships.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q22. What is the difference between a chunk size and an overlap size?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Chunk size determines the maximum amount of content in an individual chunk (e.g., 500 tokens).</li>
+                <li>Overlap determines how much content is repeated between neighboring chunks (e.g., 50 tokens).</li>
+                <li>Excessive overlap creates duplicate content and increases storage and retrieval costs.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q23. How would you decide the appropriate overlap percentage?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Do not select an overlap percentage without evaluating document structure and retrieval behavior.</li>
+                <li>For documents where important info crosses boundaries, small overlap may help.</li>
+                <li>For well-structured documents, less overlap may be sufficient.</li>
+                <li>Test different overlap values against representative queries; measure relevance, duplication, context completeness, token usage.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q24. Why is preserving document hierarchy important during chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Document hierarchy provides context about relationships between pieces of information.</li>
+                <li>A heading may identify the equipment, procedure, or department to which paragraphs apply.</li>
+                <li>If separated, the resulting chunk may become ambiguous.</li>
+                <li>Preserve relationships such as document, chapter, section, subsection, paragraph; include parent heading in child chunk's metadata or text.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q27. What should happen when a paragraph is larger than the configured chunk size?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>First attempt to split using smaller natural boundaries, such as sentences.</li>
+                <li>If a sentence is still too large, use a lower-level fallback strategy while preserving meaning.</li>
+                <li>Avoid blindly cutting at an arbitrary character position.</li>
+                <li>Retain the parent heading and relevant metadata so smaller pieces remain understandable.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q28. Can the same document require different chunking strategies for different sections?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Yes. A document can contain different content structures.</li>
+                <li>Paragraphs → recursive chunking; tables → row-aware chunking; procedures → step sequences; headings → connected to content; code → logical blocks.</li>
+                <li>Identify the content type and apply an appropriate chunking method to each section.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q37. Your semantic chunking strategy performs worse than recursive chunking. Why might that happen?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Semantic chunking is not automatically better.</li>
+                <li>Semantic similarity may incorrectly separate sentences that are logically connected but use different terminology (especially instructions, conditions, exceptions).</li>
+                <li>It introduces embedding computations and configuration decisions that may not improve retrieval for every document type.</li>
+                <li>For structured technical documents, recursive or structure-aware chunking may perform better.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q40. How would you decide whether to split a document at a paragraph boundary or a sentence boundary?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Consider whether the paragraph expresses one complete idea or multiple independent topics.</li>
+                <li>If coherent and fits token limit → preserve as one unit.</li>
+                <li>If too large or contains multiple distinct ideas → consider splitting at sentence boundaries.</li>
+                <li>Check whether sentences depend on each other; conditions, exceptions, definitions should remain connected.</li>
+                <li>Preserve meaning rather than producing equal-sized chunks.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 1: Heading and content are separated</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> Chunk 1: "Emergency Generator"; Chunk 2: "Inspect the generator every 30 days. Check the fuel level every 7 days."</li>
+                <li><strong>Solution:</strong> Use structure-aware or heading-aware chunking to preserve the relationship between heading and content.</li>
+                <li>Include the heading in the chunk text or retain it as inherited metadata.</li>
+                <li>Resulting chunk clearly identifies that both instructions relate to the Emergency Generator.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 2: Safety exception is retrieved separately</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> General inspection: Inspect every 30 days. Exception: During maintenance shutdown, inspect every 7 days. Placed in different chunks.</li>
+                <li><strong>Solution:</strong> Preserve the relationship between the general instruction and its exception.</li>
+                <li>Keep rule and exception together in one chunk if they fit, or link via parent-section metadata / parent-child retrieval.</li>
+                <li>Verify the 7-day schedule applies specifically to maintenance shutdowns.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 7: A table has been split, but the retrieved row has no headers</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> Chunk contains only "Generator B | 15 days" — lost column context.</li>
+                <li><strong>Solution:</strong> Preserve table title and relevant column headers.</li>
+                <li>Example chunk: "Table: Equipment Inspection Schedule | Equipment: Generator B | Inspection interval: 15 days".</li>
+                <li>Makes retrieved information easier to interpret independently.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 8: A long procedure gets split in the middle of a step</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> Step 4 split; chunk 1 gets action, chunk 2 gets condition and warning.</li>
+                <li><strong>Solution:</strong> Preserve complete steps (action + condition + warning) together.</li>
+                <li>If a step exceeds limit, split at meaningful internal boundaries while preserving relationship.</li>
+                <li>Retain step number and parent procedure heading so sequence and scope remain clear.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 10: A PDF contains important page-level context</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> 200-page PDF; procedure starts at bottom of page 20, continues on page 21; extraction splits at page boundaries.</li>
+                <li><strong>Solution:</strong> Preserve page-level metadata but don't assume page boundaries are meaningful semantic boundaries.</li>
+                <li>Extract content retaining page numbers and section info; use document structure to determine chunk boundaries.</li>
+                <li>Maintain continuity across pages and retain source-page references.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 4. Does recursive chunking always create the largest possible chunks?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>No. It follows a separator hierarchy and attempts to preserve natural boundaries while respecting a configured size limit.</li>
+                <li>If a section is 336 tokens and the max is 400, it stays one chunk.</li>
+                <li>If the max is 100, it splits at paragraph/sentence boundaries — producing natural-sized pieces, not mechanical cuts.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 5. What does complexity in recursive chunking actually mean?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Mainly implementation and configuration decisions.</li>
+                <li>Selecting the separator hierarchy; defining the length measurement; handling content that exceeds the limit.</li>
+                <li>Preserving heading and section relationships; retaining metadata and source offsets.</li>
+                <li>Does not necessarily mean computationally expensive.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 6. What is the limitation of semantic chunking?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Meaning boundaries are not always obvious.</li>
+                <li>A safety exception can use different wording from the rule it modifies; semantic comparison might separate them.</li>
+                <li>Introduces embedding computation and threshold configuration.</li>
+                <li>Semantic similarity must be considered alongside document structure and logical dependencies.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ENRICHMENT -->
+    <section class="major-section" id="enrich">
+      <div class="major-head">
+        <div><span class="eyebrow">ENRICHMENT &amp; SECURITY · SOURCE PAGES 40–44</span>
+          <h2>Part 5 · Enrichment &amp; Security (formerly Stage C)</h2>
+        </div><button class="revise-btn" onclick="markRevised('enrich',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Metadata has two different jobs</div>
+        <div class="metadata-split">
+          <div class="meta-embed"><b>Embed in retrieval text</b><span>Title · heading · section name · content labels · language</span><small>Helps the model and search understand the content</small></div>
+          <div class="meta-control"><b>Keep as control fields</b><span>tenant_id · ACL · version · deletion state · internal IDs</span><small>Enforced by hard filters—not by embeddings</small></div>
+        </div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>5.1 Enrichment Card</h3></div>
+          <div class="lesson-body">
+            <aside class="lesson-callout"><b>Purpose:</b> Stamp every generated chunk with deterministic identity, strict access-control/version metadata, exact original source coordinates, and structural node relationships.</aside>
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Failure Mode 1:</strong> Putting "TOP SECRET" or "Restricted to Ship A" inside the embedded text and expecting vector search to enforce permissions.</li>
+                <li><strong>Failure Mode 2:</strong> Using purely position-based chunk IDs (chunk_01) which shift meaning when a paragraph is inserted at the top. Use content-hash or stable IDs.</li>
+                <li><strong>Failure Mode 3:</strong> Unversioned parent links causing a v4 child to expand into a stale v3 parent.</li>
+                <li><strong>Failure Mode 4:</strong> Relying on a stale local worker's current:true flag instead of authoritative source state.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>5.2 Canonical Chunk Metadata JSON Schema</h3></div>
+          <div class="lesson-body">
+            <div class="content-block code-block">
+              <pre><code>{
+  "chunk_id": "tenant-A:M-104:v4:sec-3.2:02",
+  "document_id": "tenant-A:M-104",
+  "version_id": "v4",
+  "chunking_config": "structure-token-v2",
+  "section_path": ["Maintenance", "Unit A inspection"],
+  "source_blocks": ["p8-b4", "p8-b5"],
+  "source_span": {"page": 8, "paragraph": 3, "line_start": 50, "line_end": 65},
+  "parent_id": "tenant-A:M-104:v4:sec-3.2",
+  "previous_id": "tenant-A:M-104:v4:sec-3.2:01",
+  "next_id": "tenant-A:M-104:v4:sec-3.2:03",
+  "acl_ref": "acl-M-104",
+  "acl_version": 12,
+  "current": true,
+  "deleted": false
+}</code></pre>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>5.3 Semantic vs. Control Metadata — "Security Guard Outside the Building"</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>KEY IDEA:</strong> Embeddings only understand linguistic similarity and grammar — they do not enforce security or permissions.</li>
+                <li>Writing "TOP SECRET" or "Restricted to Tenant A" inside the chunk text will not prevent semantic search from returning it to an unauthorized employee.</li>
+                <li><strong>Include in embedding text:</strong> Document title, section/subsection headings, equipment family/unit identifier, key content labels/table headers, document language.</li>
+                <li><strong>Keep as control fields:</strong> tenant_id, acl_ref/acl_version/user-group lists, version_id/chunking_config, lifecycle flags (current/deleted), internal system IDs (chunk_id, parent_id, source_blocks).</li>
+                <li>Sensitive control metadata should never be casually dumped into LLM prompts or application logs.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>5.4 Deterministic Identities, Source Spans &amp; Re-Chunking</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Position-based vs. content-hash IDs:</strong> A position-based ID (chunk_05) shifts meaning on insert. A content-hash ID stays stable for unchanged text if the hash includes sufficient lineage context.</li>
+                <li><strong>Source Span vs. Chunk ID:</strong> A chunk_id is an ephemeral artifact of a specific chunking configuration. A source span points to the immutable physical location. It survives re-chunking and serves as the single source of truth for dedup, citation verification, and cross-strategy evaluation.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>5.5 Building Parent-Child &amp; Hierarchical Graphs at Build Time</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Child Nodes (Embedded &amp; Indexed for Search):</strong> Small, granular retrieval units (e.g., C31: Inspection interval paragraph; C32: Indicator check paragraph; C33: Exception paragraph).</li>
+                <li><strong>Parent Node (Stored in Document Store for Expansion):</strong> Larger surrounding section P3 (Section 3.2 — Unit A inspection, containing scope, steps, and all exceptions). Every child stores parent_id.</li>
+                <li><strong>Full Hierarchical Representation:</strong> Represents a document at multiple connected granularities: Document → Chapter → Section → Paragraph → Sentence.</li>
+                <li><strong>Why a hierarchy is NOT automatically a summary tree:</strong> LLM-generated summaries must be labelled as derived representations and tracked by source-span dependencies. Never interchangeable with original source evidence.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ9. Why should chunk metadata include source version?</span></summary>
+          <div class="reveal-body"><p>The system must distinguish old and current evidence, reproduce citations, prevent mixed-version expansion and remove the right derivatives after changes.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ22. A chunking update makes citations point to the wrong revision. What design issue might explain it?</span></summary>
+          <div class="reveal-body"><p>Chunk identities or parent relationships may have been reused without including source revision and chunking version. Inspect the lineage and active index generation, remove stale mappings, and rebuild consistent source-to-chunk relationships. Test current and historical queries separately and ensure publication never mixes incomplete revisions.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q25. What metadata would you associate with each chunk?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Document ID and name; Chunk ID and parent section ID.</li>
+                <li>Page number and section heading; Document version.</li>
+                <li>Tenant/company ID; Access-control information.</li>
+                <li>Source offsets or original content location.</li>
+                <li>Metadata used for authorization is validated by the backend and not trusted merely because it appears in retrieved text.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q26. Why is source traceability important in a RAG application?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Allows the system to identify exactly where retrieved information originated.</li>
+                <li>Enables connecting supporting evidence to the original document, section, or page.</li>
+                <li>Without traceability, verifying whether an answer is supported by the source is difficult.</li>
+                <li>Preserve document identifiers, version information, page numbers, and source locations during ingestion and chunking.</li>
+                <li>Helps with debugging, auditing, and maintaining trust.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 12: Two companies have documents with identical content</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> Multi-tenant app; Company A user gets a chunk from Company B's similar manual.</li>
+                <li><strong>Solution:</strong> Treat as an authorization and tenant-isolation issue.</li>
+                <li>Associate every document/chunk with trusted ownership metadata (company/tenant ID) during ingestion.</li>
+                <li>Enforce the user's authorized tenant scope before returning candidate chunks during retrieval.</li>
+                <li>Do not rely on matching document titles or content to determine ownership.</li>
+                <li>Verify parent expansion, secondary retrieval, and source citations preserve the same boundaries.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- QUERY-TIME RETRIEVAL -->
+    <section class="major-section" id="query">
+      <div class="major-head">
+        <div><span class="eyebrow">QUERY-TIME RETRIEVAL · SOURCE PAGES 45–52</span>
+          <h2>Part 6 · Query-Time Retrieval (formerly Stage D) — small-to-big expansion &amp; assembly</h2>
+        </div><button class="revise-btn" onclick="markRevised('query',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Small-to-big retrieval: find the child, expand carefully</div>
+        <div class="hierarchy">
+          <div class="parent-node"><b>Parent P3</b><small>Unit A inspection section</small></div>
+          <div class="children"><span>C31 · interval</span><strong>C32 · indicator check ★ query hit</strong><span>C33 · storage exception</span></div>
+          <div class="expand-caption">Resolve parent or sentence window only after re-checking authorization and source version.</div>
+        </div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>6.1 The Six Query-Time Steps (formerly D1–D6)</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Step 1 — Hard Pre-Filter:</strong> Filter index by tenant_id, acl, version_id (current=True), and deleted=False before vector/lexical scoring. "Station the security guard outside the building."</li>
+                <li><strong>Step 2 — Search Small Units:</strong> Run hybrid (vector + lexical/BM25) search over granular child chunks or focus sentences.</li>
+                <li><strong>Step 3 — Diagnose Context Need:</strong> Check if missing context is structural (same document/section) or cross-referenced (another section/document).</li>
+                <li><strong>Step 4 — Structural Expansion:</strong> Fetch parent section, sentence window, table headers, or code class signature. Must re-verify ACL and version on every expanded span.</li>
+                <li><strong>Step 5 — Secondary Search:</strong> If a chunk says "Follow Policy B" or "See Section 8", trigger a fresh authorized query for that target.</li>
+                <li><strong>Step 6 — Budgeted Assembly:</strong> Assemble expanded units within the LLM context budget; insert a shared parent only once even if five of its children matched.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>6.2 Small-to-Big Retrieval Patterns</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Parent-Child Expansion:</strong> Search hits a child sentence, expands to parent section adding scope and prerequisites. Shared parent deduplication: insert P3 once even if C31, C32, C33 all match.</li>
+                <li><strong>Sentence-Window Retrieval (radius w):</strong> Index each sentence; expand to s_(i−w)…s_(i+w). Window ≤ 2w+1 sentences. Clip at section, revision, and permission boundaries. Store central focus sentence ID separately.</li>
+                <li><strong>Table Small-to-Big:</strong> Expand a row to include table title, column headers, units, footnotes.</li>
+                <li><strong>Code Small-to-Big:</strong> Expand specific function match to include signature, docstring, type definitions, and containing class/module context.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>6.3 Structural Expansion vs. Secondary Search</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Structural Expansion ("Zoom out"):</strong> Traverses deterministic, pre-computed links (parent_id, prev/next, table schema) created at Build Time. Use when missing context is immediately adjacent or structurally enclosing.</li>
+                <li><strong>Secondary Search ("Look up another file"):</strong> Executes a new query against the search index using extracted entity/section references. Use when text contains an explicit cross-reference to another section/document.</li>
+                <li>Why the other fails: A second search is unnecessary overhead when the parent ID is known; zooming out to the parent of Section 2 never fetches Section 8.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>6.4 "Lost in the Middle" — Why More Context Is Not Always Better</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Research by Liu et al. demonstrated LLMs exhibit a strong U-shaped performance curve over long contexts: they attend well to information at the very beginning (primacy) and very end (recency), but performance drops sharply for facts buried in the middle.</li>
+                <li><strong>Practical rule:</strong> Never blindly expand to an entire 4,000-token chapter when your budget is 2,000. Expand to the smallest sufficient structural level. Order the highest-confidence evidence near the prompt boundaries.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>6.5 Worked End-to-End Query Trace</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>User context:</strong> tenant_id="tenant-A", groups=["maintenance-tech"], clearance="standard". Budget = 1,500 tokens.</li>
+                <li><strong>Step 1 (Hard Pre-Filter):</strong> tenant_id=="tenant-A" AND acl IN ["public","maintenance-tech"] AND current==True AND deleted==False. Blocks tenant-B, v3, manager-only content.</li>
+                <li><strong>Step 2 (Search Small Units):</strong> Hybrid search returns hits including C32 ("Inspect indicator X every 30 days.", parent P3, span p8:53-54), C33 (storage rule, parent P3, p8:55-58), and an overlapping window p8:52-56.</li>
+                <li><strong>Step 3 (Diagnose Context Need):</strong> C32 alone lacks scope; C33 has storage rule; both point to P3. Cross-reference "See Checklist CL-9" would trigger Step 5.</li>
+                <li><strong>Step 4 (Structural Expansion):</strong> Expand to P3 (120 tokens, p8:50-65). Verify user.can_read(P3) and P3.version_id=="v4". C33's parent is also P3 — skip duplicate.</li>
+                <li><strong>Step 5 (Secondary Search):</strong> If needed, authorized query for "Checklist CL-9" filtered by tenant-A/current → M-200:v2:sec-1.1 (200 tokens).</li>
+                <li><strong>Step 6 + Source-Span Deduplication:</strong> P3 (120 tokens) added (used=120/1500). Hit 3 span [52,56] covered by P3 span [50,65] → deduplicated and dropped. M-200 section added (used=320/1500).</li>
+                <li><strong>Final output:</strong> Clean 320-token context with all 3 required facts, cited to [Manual M-104 v4, Sec 3.2, p.8 lines 50–65]. Unit B's 14-day schedule excluded.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>6.6 Reference Python Implementation: Query-Time Context Assembly</h3></div>
+          <div class="lesson-body">
+            <div class="content-block code-block">
+              <pre><code>def assemble(query, user, index, budget_tokens):
+    """Query-time assembly:
+    1. Hard Pre-Filter + Search Small Units: filter first, then search.
+    2. Structural Expansion: expand parent once per parent_id, verify ACL/version.
+    3. Source-Span Deduplication: dedup by stable source_span.
+    4. Budgeted Assembly: enforce LLM token budget."""
+    hits = index.search(query, filters={
+        "tenant_id": user.tenant_id,
+        "acl": user.groups,
+        "current": True,
+        "deleted": False,
+    })  # Hard Pre-Filter + Search Small Units
+
+    seen_spans, parents, context, used = set(), set(), [], 0
+    for h in hits:
+        unit = h.parent if h.parent_id and h.parent_id not in parents else h
+        if h.parent_id:
+            parents.add(h.parent_id)  # Insert each shared parent at most once
+        if not user.can_read(unit) or unit.version_id != h.version_id:
+            continue  # Authorize and version-check expanded unit
+        if unit.source_span in seen_spans:
+            continue  # Source-Span Deduplication (not chunk_id)
+        if used + unit.tokens > budget_tokens:
+            break  # Budgeted Assembly: enforce LLM answer-context budget
+        seen_spans.add(unit.source_span)
+        context.append(unit)
+        used += unit.tokens
+    return context</code></pre>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ6. What is parent-child retrieval?</span></summary>
+          <div class="reveal-body"><p>It retrieves focused child units and resolves associated larger source units to provide interpretation context. Parent access and revision must be checked separately.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ7. What is a sentence window of radius two?</span></summary>
+          <div class="reveal-body"><p>The central sentence plus up to two sentences before and two after it (at most 5 sentences total), bounded by relevant source, section, revision and permission limits.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ16. A user can access one paragraph in a mixed-permission section. What should parent expansion do?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block">
+                <ul>
+                  <li>A. Return the whole section automatically.</li>
+                  <li>B. Ask the model to hide restricted parts after reading them.</li>
+                  <li>C. Expand only to spans authorized for the user.</li>
+                  <li>D. Remove all source metadata.</li>
+                </ul>
+              </div>
+              <p><b>Answer: C.</b> Authorization applies to expanded evidence before it reaches the reranker or generator. Access to one child is not access to all siblings.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q5. What would you do if a retrieved child chunk did not contain enough context to answer a question?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Never ask the LLM to guess missing information.</li>
+                <li>If missing context is structural, expand using the known parent section or sentence window.</li>
+                <li>If missing context is in another document, perform a separate authorized retrieval operation.</li>
+                <li>Verify expanded content belongs to the same document revision and respects access permissions.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q8. Suppose the retrieval system returns information from Unit A and Unit B together. How would you handle it?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Inspect metadata and structural context for each passage.</li>
+                <li>Identify document, section, equipment, unit, revision for each instruction.</li>
+                <li>Separate evidence by actual scope rather than combining instructions.</li>
+                <li>If query concerns Unit B, prioritize evidence explicitly applying to Unit B.</li>
+                <li>Check surrounding parent sections to confirm scope.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q11. What is the risk of isolating a 30-day inspection interval from its equipment name?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>The interval becomes an ungrounded, ambiguous fragment.</li>
+                <li>Semantic search might retrieve it for a Unit B query because the wording matches "inspection interval."</li>
+                <li>The LLM may falsely apply Unit A's 30-day schedule to Unit B — a serious safety hazard.</li>
+                <li>Prepend the equipment heading and preserve parent links to eliminate ambiguity.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q12. If Unit B has a 14-day inspection schedule, what should a properly chunked retrieval system return?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>The 14-day inspection schedule together with explicit structural context (Section 3.3 — Unit B inspection).</li>
+                <li>Any applicable conditions/exceptions for Unit B.</li>
+                <li>A verifiable source_span citation (Manual M-104, v4, Sec 3.3).</li>
+                <li>Must exclude or clearly distinguish Unit A's 30-day schedule.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q29. What is the difference between retrieval context and answer-generation context?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Retrieval context:</strong> The compact text representation scored by the vector and lexical indexes to find a precise match (e.g., a 100-token child paragraph or single focus sentence).</li>
+                <li><strong>Answer-generation context:</strong> The expanded, deduplicated, and token-budgeted passage actually passed to the LLM prompt (e.g., the 600-token parent section or 5-sentence window).</li>
+                <li>Both stages respect their respective token limits.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 6: A large parent section consumes too many answer tokens</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> Child match expands to a 4,000-token parent; answer budget is 2,000 tokens.</li>
+                <li><strong>Solution:</strong> Never automatically include the entire parent.</li>
+                <li>Retrieve a smaller surrounding sentence window or expand to the relevant subsection.</li>
+                <li>Prioritize content establishing subject, conditions, exceptions, supporting explanation.</li>
+                <li>Remove duplicate passages and enforce the answer-generation token budget.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 9: The retrieval system returns the correct topic but the wrong unit</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> User asks about Unit B; manual has Unit A: 30 days and Unit B: 14 days. Retriever returns Unit A due to similar inspection vocabulary.</li>
+                <li><strong>Solution:</strong> Inspect chunking structure and retrieval filtering.</li>
+                <li>Preserve unit identifiers in chunk content and metadata.</li>
+                <li>Use metadata filtering to narrow retrieval to Unit B.</li>
+                <li>Verify retrieved evidence explicitly identifies Unit B before generating the answer.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 11: One instruction refers to another section</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> Section 2 says "Follow the standard inspection procedure described in Section 8." Section 8 says "Inspect every 15 days."</li>
+                <li><strong>Question:</strong> Would parent-child expansion alone solve this?</li>
+                <li><strong>Solution:</strong> No. Parent-child expansion follows known structural relationships only.</li>
+                <li>Section 2 and Section 8 are separate sections connected by a cross-reference; need a secondary retrieval operation targeting Section 8.</li>
+                <li>Verify the retrieved procedure is the one referenced.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 3. What exactly does parent expansion recover?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Recovers:</strong> The heading identifying the subject; the equipment/unit; conditions and exceptions; definitions and surrounding explanations; relationships between a child instruction and its parent section.</li>
+                <li><strong>Cannot recover:</strong> Unrelated information in another document or distant cross-referenced section — requires a separate authorized retrieval operation (Secondary Search).</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- VERIFY & MAINTAIN -->
+    <section class="major-section" id="verify">
+      <div class="major-head">
+        <div><span class="eyebrow">VERIFY &amp; MAINTAIN · SOURCE PAGES 53–60</span>
+          <h2>Part 7 · Verify &amp; Maintain (formerly Stage E)</h2>
+        </div><button class="revise-btn" onclick="markRevised('verify',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Verify &amp; Maintain · evidence lifecycle</div>
+        <div class="verify-flow">
+          <span>Source-Span Deduplication<br /><small>source_span, not chunk_id</small></span><i>→</i>
+          <span>Fair Evaluation<br /><small>stable spans + manual traces</small></span><i>→</i>
+          <span>Unlearning &amp; Purge<br /><small>children · parents · windows · vectors · caches</small></span>
+        </div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>7.1 Verify &amp; Maintain Card</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Source-Span Deduplication:</strong> Collapse overlapping or child-parent redundant spans by source_span (doc_id + version_id + char/line range), never by chunk_id.</li>
+                <li><strong>Fair Evaluation:</strong> Compare chunking configurations on a fixed question set and fixed embedding/retrieval settings using ground-truth source facts/spans, supplemented by manual inspection of failure traces.</li>
+                <li><strong>Unlearning &amp; Purge:</strong> Treat source updates, deletions, and re-chunking as coordinated index migrations that invalidate children, parents, windows, summaries, vectors, and caches simultaneously.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>7.2 Worked Case Study: Manual M-104</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Fictional source:</strong> Manual M-104 v4, Section 3.2 (Unit A inspection), Section 3.3 (Unit B, 14-day schedule).</li>
+                <li><strong>Test question:</strong> "How often should Unit A's indicator be inspected after storage?"</li>
+                <li><strong>Required ground-truth evidence (3 facts):</strong> (1) 30-day interval; (2) applies only to Unit A in normal service; (3) "If the unit has been stored, complete the return-to-service checklist first."</li>
+                <li><strong>Comparing four designs:</strong> Arbitrary small windows (high context-loss risk); One sentence per chunk (needs window/parent expansion); Entire manual per chunk (impractical, floods context); Section-aware child + parent (strongest architectural balance).</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>7.3 Fair Evaluation &amp; Project Exercise Methodology</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Why stable source spans:</strong> Different chunking methods generate different chunk boundaries and IDs. A method with 10× larger chunks may show higher chunk-level Recall@10 simply because each chunk swallows a chapter.</li>
+                <li><strong>The Fair Comparison Rule:</strong> Define ground truth as stable source spans or required atomic facts. Credit a method only when retrieved and assembled context delivers all required source facts within the token budget.</li>
+                <li><strong>7 Quantitative Metrics + Manual Trace Inspection:</strong> Retrieval Coverage; Relevance of Assembled Context; Answer Correctness &amp; Faithfulness; Citation Accuracy; Total Evidence Tokens; Duplicate Content Rate; End-to-End Latency &amp; Ingestion Cost; plus Manual Failure Trace Inspection (mandatory).</li>
+                <li><strong>Required Question Types (8 categories):</strong> Single isolated fact; Condition + fact; Table row lookup requiring header + unit; Multi-step ordered procedure; Exact alphanumeric identifier; Evidence spanning nearby sentences; Query adjacent to a restricted section; Query targeting a replaced revision.</li>
+                <li><strong>L3 Engineering Depth Requirements:</strong> Submit reproducible config, representative chunks with source offsets, quantitative comparison, concrete boundary-error traces, permission/deletion test results. Document the index migration playbook ensuring zero mixed revisions during serving.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>7.4 Deletion, Re-Chunking &amp; "Unlearning"</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Chunks as "Frozen Slices of Time":</strong> Once sliced and embedded, chunks sit in vector memory as frozen snapshots. A vector DB will keep serving obsolete chunks forever unless explicitly purged.</li>
+                <li><strong>What Must Be Purged on Update/Delete:</strong> (1) Child chunks and vector/BM25 entries; (2) Parent section nodes; (3) Pre-computed sentence windows; (4) Derived LLM summaries; (5) Query and expansion caches.</li>
+                <li><strong>Why Partial Deletion Fails:</strong> If a restricted/deleted child is removed but its cached Parent Node (P3) remains, another child (C31) can trigger parent expansion to P3 and re-expose the deleted/restricted content.</li>
+                <li><strong>Serving-Time Recheck:</strong> Verify every expanded span is currently authorized and belongs to the active source version, and recheck before emitting the final answer/citation.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ10. How can chunking schemes be compared fairly?</span></summary>
+          <div class="reveal-body"><p>Use the same questions, corpus, and retrieval settings, and map evidence to stable source spans or facts rather than one scheme's chunk IDs. Measure context cost and answer quality as well as retrieval.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ15. Three retrieved chunks contain the same source sentence because of overlap. How much independent support do they provide?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block">
+                <ul><li>A. Three independent sources.</li><li>B. One source statement repeated in three units.</li><li>C. No support at all.</li><li>D. Proof that the statement is universally true.</li></ul>
+              </div>
+              <p><b>Answer: B.</b> Chunk duplication does not create new independent evidence.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Multiple-choice question</span><span class="reveal-title">Syl-MCQ17. Chunking method B has higher chunk Recall@10 than method A, but its chunks are ten times larger. What is the best interpretation?</span></summary>
+          <div class="reveal-body">
+            <div class="mcq-options-answer">
+              <div class="content-block list-block">
+                <ul><li>A. B is definitively better.</li><li>B. A is definitively better.</li><li>C. Compare stable source coverage, irrelevant context, and token cost before deciding.</li><li>D. Stop evaluating citations.</li></ul>
+              </div>
+              <p><b>Answer: C.</b> Chunk-level recall can be affected by granularity.</p>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">SQ23. A team wants semantic chunking because it sounds more advanced. How would you assess the proposal?</span></summary>
+          <div class="reveal-body"><p>Ask which measured baseline failure it addresses. Compare against fixed and structure-aware recursive designs on the same questions and stable source-fact labels. Include ingestion cost, boundary stability, reprocessing burden, retrieval quality, and answer support. Adoption requires a useful improvement that justifies the additional complexity.</p></div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q9. What are the disadvantages of using too much overlap?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Excessive overlap creates repeated information across chunks.</li>
+                <li>Increases index size, storage, embedding costs, and retrieval redundancy.</li>
+                <li>Same fact may appear repeatedly in retrieved context.</li>
+                <li>LLM could mistakenly interpret repeated copies as multiple independent pieces of evidence.</li>
+                <li>Use overlap only where it helps; deduplicate using original source spans.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q17. How would you evaluate whether one chunking strategy is better than another?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Same source corpus, representative questions, fixed embedding/retrieval settings.</li>
+                <li>Measure retrieval coverage, context relevance, answer correctness, faithfulness, citation accuracy, token usage, latency.</li>
+                <li>Manually inspect failure cases to understand why a strategy performed poorly.</li>
+                <li>Compare underlying source passages and facts, not just chunk IDs.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q30. Why should chunking be evaluated using actual queries rather than only inspecting chunk boundaries?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>A chunk can look well-structured but perform poorly during retrieval.</li>
+                <li>A chunk may preserve paragraphs and headings but fail to retrieve correct information for a particular question.</li>
+                <li>Evaluate using representative user queries: correct information retrieved? context sufficient? answer supported by source?</li>
+                <li>Also measure retrieval relevance, answer correctness, citation quality, token usage, latency.</li>
+                <li>Objective: improve information retrieval and generated answers — not visual chunk quality.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q34. What would you do when the source document contains repeated or duplicated content?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Distinguish legitimate repetition from accidental duplication.</li>
+                <li>Intentional safety instructions/policies repeated in multiple sections may have different scopes — don't automatically remove.</li>
+                <li>For accidental duplicates, identify identical/overlapping passages and avoid storing unnecessary chunks.</li>
+                <li>During retrieval, deduplicate repeated evidence while retaining references to original source locations.</li>
+                <li>Don't remove content merely because wording is similar — document context and scope matter.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q35. How should document updates be handled when the original document has already been chunked and embedded?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Track document versions; associate each chunk with source document and revision.</li>
+                <li>When an update occurs, reprocess affected content and update chunks/vectors.</li>
+                <li>Deleted/replaced content should no longer remain available as active evidence.</li>
+                <li>Ensure retrieval uses current authorized version — never mix revisions.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 3: The same fact appears in multiple retrieved chunks</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> 30% overlap; retrieval returns 5 chunks, 3 of which contain the same inspection instruction.</li>
+                <li><strong>Solution:</strong> Excessive overlap creates redundant context, increases token consumption, makes repeated copies look like independent evidence.</li>
+                <li>Inspect original source locations and deduplicate overlapping passages using source spans.</li>
+                <li>Evaluate whether the overlap percentage actually improves retrieval.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card scenario-card">
+          <summary><span class="card-kind">Engineering scenario</span><span class="reveal-title">Scenario 4: Two document versions contain different instructions</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Problem:</strong> v1 says "Inspect every 30 days"; v2 says "Inspect every 15 days." Retrieval returns both.</li>
+                <li><strong>Solution:</strong> Inspect document version metadata; identify which revision is currently valid.</li>
+                <li>Filter or prioritize current authorized version.</li>
+                <li>Update/deactivate/remove obsolete chunks when source is replaced.</li>
+                <li>Don't combine the two intervals or let the LLM choose without evidence. If current version cannot be established, report the conflict.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- PART 8: DIAGNOSTICS -->
+    <section class="major-section" id="part8">
+      <div class="major-head">
+        <div><span class="eyebrow">DIAGNOSTICS · SOURCE PAGES 61–67</span>
+          <h2>Part 8 · handoffs, decision flows &amp; diagnostics</h2>
+        </div><button class="revise-btn" onclick="markRevised('part8',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Production diagnosis: symptom → stage → first check</div>
+        <div class="diagnostic-pills">
+          <span>Wrong equipment/unit → Boundary Selection / Enrichment / Hard Pre-Filter</span>
+          <span>Missing exception → Boundary Selection / Structural Expansion</span>
+          <span>Repeated evidence → overlap / Source-Span Deduplication</span>
+          <span>Old policy resurfaces → Enrichment / Unlearning &amp; Purge</span>
+          <span>Correct chunk not returned → Search Small Units</span>
+          <span>Correct chunk, wrong answer → Budgeted Assembly</span>
+        </div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>8.1 Stage-to-Stage Handoffs Table — Where Pipelines Break</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead>
+                  <tr><th>From Stage</th><th>To Stage</th><th>What Is Handed Over</th><th>Typical Production Break / Bug</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Document Ingestion</strong></td>
+                    <td><strong>Budget Planning &amp; Boundary Selection</strong></td>
+                    <td>Clean canonical text with preserved structural markers and page offsets</td>
+                    <td>PDF/OCR extraction strips Markdown headers or splits tables across page breaks</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Budget Planning</strong></td>
+                    <td><strong>Boundary Selection &amp; Slicing</strong></td>
+                    <td>Tokenizer function and net body token cap (e.g., 512 − 30 − 10 = 472)</td>
+                    <td>Splitter counts characters or words instead of subword tokens</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Boundary Selection &amp; Slicing</strong></td>
+                    <td><strong>Enrichment &amp; Security</strong></td>
+                    <td>Raw chunk spans with preserved boundaries</td>
+                    <td>Context split across chunks (rule separated from exception; table row without header)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Enrichment &amp; Security</strong></td>
+                    <td><strong>Unified Chunk Index</strong></td>
+                    <td>Chunk text + vector + control metadata JSON + source_span + parent_id</td>
+                    <td>Missing or unvalidated tenant_id, acl, or version_id; position IDs shift on insert</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Unified Chunk Index</strong></td>
+                    <td><strong>Embeddings</strong></td>
+                    <td>Final formatted string (heading + body) sent to embedding model</td>
+                    <td>Silent tail truncation when heading + body + formatting &gt; model limit (e.g., 512)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Unified Chunk Index</strong></td>
+                    <td><strong>Hard Pre-Filter &amp; Search Small Units</strong></td>
+                    <td>Filtered, ranked child retrieval units</td>
+                    <td>Missing pre-filter leaks another tenant's document; wrong unit retrieved (Unit A vs. Unit B)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Search Small Units</strong></td>
+                    <td><strong>Structural Expansion / Secondary Search</strong></td>
+                    <td>Matched child chunk + its structural metadata links</td>
+                    <td>Cross-document reference ("Follow Policy B") treated as parent expansion instead of a secondary search</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Structural Expansion / Secondary Search</strong></td>
+                    <td><strong>Budgeted Assembly &amp; Source-Span Deduplication</strong></td>
+                    <td>Expanded candidate evidence spans</td>
+                    <td>Unchecked parent expansion leaks restricted sibling paragraph or pulls stale v3 parent</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Budgeted Assembly &amp; Source-Span Deduplication</strong></td>
+                    <td><strong>Answering LLM</strong></td>
+                    <td>Budgeted, source-span-deduplicated, authorized context window</td>
+                    <td>Context overflow, overlap duplicates inflate confidence, or "Lost in the Middle"</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Answering LLM</strong></td>
+                    <td><strong>User</strong></td>
+                    <td>Grounded answer + citations mapped to source_span</td>
+                    <td>Citation points to wrong revision or cites a derived summary instead of original source span</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>8.2 Cross-Cutting Concerns Matrix</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Identity &amp; Versioning:</strong> Include version prefix if embedded; keep revisions separate; stamp deterministic IDs; enforce current=True and parent.version_id==child.version_id; atomic index migration; purge obsolete v3.</li>
+                <li><strong>Permission &amp; Access Control:</strong> Never count ACL tags as semantic text; split strictly at permission/policy boundaries; store tenant_id, acl_ref, acl_version; hard-filter before search; authorize every expanded span; run permission-leak and deletion regression tests.</li>
+                <li><strong>Token Budgets:</strong> Define 3 separate ceilings (Embedder, Reranker, LLM); enforce cap via recursive fallback + model tokenizer; track token count of each child/parent node; fit query+passage for reranker; pack within LLM context budget; measure total evidence tokens and latency.</li>
+                <li><strong>Evaluation &amp; Quality:</strong> Detect silent embedding truncation; build boundary unit tests; verify 100% round-trip mapping from chunk_id to source_span; log central focus unit vs. expanded unit; deduplicate by source_span; evaluate against stable source spans and manual traces.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>8.3 Strategy Selection Decision Flowchart</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Start with a reproducible baseline:</strong> Structure-Aware Recursive Splitter + Model Tokenizer Cap.</li>
+                <li><strong>Build boundary test suite:</strong> Procedures, Tables, Exceptions, Cross-Page Spans, ACL Boundaries.</li>
+                <li><strong>Run representative queries and inspect failure traces.</strong></li>
+                <li><strong>Identify dominant failure:</strong> Small chunks lose scope → add Parent-Child or Sentence Window. Unrelated topics share a chunk → reduce child size or sharpen structural header boundaries. Facts split at arbitrary window edges → add/tune modest overlap + enforce Source-Span Deduplication. Tables lose headers or code functions break → add format-specific Structure-Aware parsers. Subtle topic shifts remain → test Semantic Chunking and benchmark cost vs. accuracy gain.</li>
+                <li><strong>Change ONE variable only;</strong> re-evaluate on Stable Source Spans; loop.</li>
+                <li><strong>Golden Rule:</strong> Change one variable at a time and re-evaluate against stable source spans.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>8.4 Failure-to-Stage Diagnostic Troubleshooting Table</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Symptom: Answer applies Unit A's 30-day rule to Unit B.</strong> Likely stages: Boundary Selection (scope split) or Query-Time Retrieval. Check if Unit A/B heading is preserved; add metadata filter or parent check.</li>
+                <li><strong>Symptom: Safety or storage exception is ignored.</strong> Likely stages: Boundary Selection or Structural Expansion. Check if the exception was split into a separate chunk; group together or link via parent section.</li>
+                <li><strong>Symptom: Retrieved chunk says 150 or 30 days with no unit or subject.</strong> Likely stage: Boundary Selection (Table/Sentence boundary). Serialize table title, headers, row label, units with every row chunk; include parent heading.</li>
+                <li><strong>Symptom: Correct chunk exists in DB, but is never retrieved.</strong> Likely stage: Search Small Units. Inspect query preprocessing, embedding alignment, overly restrictive filters, or add hybrid BM25 for exact identifiers.</li>
+                <li><strong>Symptom: Correct chunk is retrieved, but LLM still answers wrong.</strong> Likely stage: Budgeted Assembly / Answering LLM. Check for context overflow, Lost in the Middle, or conflicting sibling instructions during expansion.</li>
+                <li><strong>Symptom: Top-3 results are nearly identical copies of one sentence.</strong> Likely stages: Boundary Selection (excessive overlap) &amp; Source-Span Deduplication. Reduce overlap and deduplicate by source_span.</li>
+                <li><strong>Symptom: Restricted manager content appears in an employee's answer.</strong> Likely stages: Enrichment / Hard Pre-Filter / Structural Expansion. Move ACLs out of text into indexed control metadata; enforce hard pre-filter; authorize every expanded span.</li>
+                <li><strong>Symptom: Deleted/outdated (v3) policy resurfaces.</strong> Likely stage: Unlearning &amp; Purge. Purge all derived child chunks, cached parent sections, sentence windows, summaries, vectors; enforce current=True filter.</li>
+                <li><strong>Symptom: Citation points to the wrong document revision.</strong> Likely stages: Enrichment / Unlearning &amp; Purge. Ensure chunk_id and parent_id encode version_id and chunking_config; never mix index generations during re-chunking.</li>
+                <li><strong>Symptom: Chunk retrieval score seems unrelated to the displayed chunk text.</strong> Likely stage: Budget Planning (Token Budget). Check for silent embedding truncation (e.g., 520 tokens sent to a 512-token model).</li>
+                <li><strong>Symptom: Chunks still exceed target size after recursive splitting.</strong> Likely stages: Budget Planning / Boundary Selection. Verify the length function uses the target model's tokenizer; add a fallback splitter for long sentences without punctuation.</li>
+                <li><strong>Symptom: Procedure says "See Section 8", and parent expansion fails to find it.</strong> Likely stages: Diagnose Context Need / Secondary Search. Add a secondary authorized search for cross-references.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q36. Your chunks look correct, but the RAG system still produces inaccurate answers. What would you investigate?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Investigate the complete retrieval pipeline, not just chunking.</li>
+                <li>Verify correct chunks generated and stored; inspect embedding model, query processing, retrieval filters, ranking, context construction.</li>
+                <li>Check whether correct source information is retrieved, whether relevant context is missing, whether the generated answer is supported by retrieved evidence.</li>
+                <li>Inspect document versions, metadata, duplicate retrieval results, token truncation.</li>
+                <li>Identify whether the problem originates in ingestion, chunking, retrieval, or answer generation.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card qa-card">
+          <summary><span class="card-kind">Question / model answer</span><span class="reveal-title">Q38. How would you identify whether poor answer quality is caused by chunking or retrieval?</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>Inspect the pipeline at different stages.</li>
+                <li>Examine generated chunks — was relevant information and context preserved during ingestion?</li>
+                <li>Check whether the query retrieves the correct chunks.</li>
+                <li>If correct information is absent from generated chunks → likely extraction/chunking.</li>
+                <li>If correct chunks exist but are not retrieved → investigate query processing, embeddings, search, filtering, ranking.</li>
+                <li>If correct evidence reaches the LLM but the answer is still inaccurate → investigate context construction and answer generation.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+        <details class="reveal-card doubt-card">
+          <summary><span class="card-kind">Clarified concept</span><span class="reveal-title">Doubt 1. Four often-confused failure concepts: context loss vs. stale data vs. duplicate evidence vs. retrieval failure</span></summary>
+          <div class="reveal-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Context Loss:</strong> A valid current fact is separated from surrounding information needed to interpret it. Root cause: Boundary Selection (poor boundaries) or Structural Expansion (missing expansion). Fix: structure-aware chunking, prepended headings, parent-child/sentence-window expansion.</li>
+                <li><strong>Stale Data:</strong> Indexed information is outdated because the source document was updated/deleted but old chunks remain active. Root cause: Unlearning &amp; Purge (missing purge/version filter). Fix: version metadata, hard pre-filters, purge all derived chunks/parents/vectors on update.</li>
+                <li><strong>Duplicate Evidence:</strong> The exact same source statement appears multiple times in retrieved context (1 fact looks like 3 independent proofs). Root cause: overlap + dedup by chunk_id instead of source_span. Fix: deduplicate by Source Span; insert shared parents only once.</li>
+                <li><strong>Retrieval Failure:</strong> Well-formed, current chunks exist but the search engine fails to surface them. Root cause: Search Small Units (embedding mismatch, vocabulary gap, bad filters). Fix: hybrid search (Vector + BM25), query expansion, reranking, tuning child granularity.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- PART 9: ADVANCED -->
+    <section class="major-section" id="part9">
+      <div class="major-head">
+        <div><span class="eyebrow">ADVANCED · SOURCE PAGES 68–70</span>
+          <h2>Part 9 · advanced extensions &amp; previously missing gaps</h2>
+        </div><button class="revise-btn" onclick="markRevised('part9',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Advanced engineering extensions</div>
+        <div class="extension-grid">
+          <span>Hybrid BM25 + vector index</span>
+          <span>Parent size vs answer budget</span>
+          <span>Multimodal, OCR &amp; multi-page PDFs</span>
+          <span>Contextual retrieval</span>
+          <span>Late chunking</span>
+          <span>Zero-downtime index migration</span>
+        </div>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>9.1 Gap 1: Hybrid Indexing — BM25 + Vector</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Why vector search alone fails:</strong> Dense embeddings struggle with exact alphanumeric part numbers, error codes, or manual IDs (M-104, C32, Rev. 4, 3.5 bar).</li>
+                <li><strong>How chunk design serves both:</strong> Prepending the Section Path and Equipment Identifier boosts semantic context (embeddings) and exact term matching (BM25).</li>
+                <li>Keeping child chunks focused (100–300 tokens) prevents BM25 length-normalization penalties.</li>
+                <li>Both indexes must share the same chunk_id and control metadata so hard pre-filters apply identically before RRF or reranking.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>9.2 Gap 2: Parent Size vs. Answer Budget (Scenario 6 Rule)</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Formula:</strong> Max Safe Parent Size (P_max) ≤ Total LLM Evidence Budget (B_evidence) / k_distinct</li>
+                <li>B_evidence is the budget reserved for retrieved evidence (after system prompt, history, query, output reserve).</li>
+                <li>k_distinct is the minimum number of distinct sections/documents needed (typically 2–4).</li>
+                <li><strong>Rule of thumb:</strong> Child Retrieval Unit 100–300 tokens; Parent Expansion Unit 400–1,000 tokens; never an entire 4,000-token chapter.</li>
+                <li><strong>Fallback:</strong> 3-tier hierarchy (Chapter 4000 → Subsection 800 → Child 200); expand only to Subsection, or dynamically fall back to a Sentence Window (R=2 or 3).</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>9.3 Gap 3: Multimodal, OCR, and Multi-Page PDFs</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Page breaks are layout artifacts, not semantic boundaries:</strong> Strip running headers/footers/page numbers, stitch continuous text across pages, chunk by logical structure, store "pages": [20, 21] in source_span metadata.</li>
+                <li><strong>OCR noise &amp; table serialization:</strong> Convert tables to structured Markdown or explicit Key: Value row serializations. Keep a link to the cropped page bbox.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>9.4 Gap 4: Contextual Retrieval &amp; Late Chunking</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Contextual Retrieval (Anthropic pattern — Enrichment):</strong> At build time, an LLM or structural parser generates a 20–50 token situational prefix prepended to the chunk before embedding and BM25. Trade-off: increases ingestion compute. Deterministic header prepending gets ~80% of the benefit for free.</li>
+                <li><strong>Late Chunking (Jina AI pattern — between Boundary Selection and Enrichment):</strong> Pass a long document window through a long-context transformer's token-level layers first so tokens attend to surrounding pronouns/headings; pool token embeddings by chunk boundaries afterward. Caveat: never let late-chunking windows cross permission/ACL boundaries.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>9.5 Gap 5: Zero-Downtime Index Migration Playbook</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Never mix chunking configurations in active serving:</strong> Mixing v1 and v2 chunks in the same unfiltered query inflates duplicate evidence and corrupts citations.</li>
+                <li><strong>Shadow build:</strong> Ingest and chunk into a new index namespace (or stamp chunking_config on all new records while keeping them dark).</li>
+                <li><strong>Parity &amp; regression gate:</strong> Run automated boundary, source-span coverage, ACL-leak, and deletion tests against the shadow index.</li>
+                <li><strong>Atomic pointer flip:</strong> Switch the serving router atomically in a single transaction.</li>
+                <li><strong>Garbage collection &amp; cache purge:</strong> Purge all old v1 child chunks, parent nodes, vectors, and query caches once verified.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PART 10: GLOSSARY -->
+    <section class="major-section" id="part10">
+      <div class="major-head">
+        <div><span class="eyebrow">REVISION · SOURCE PAGES 71–74</span>
+          <h2>Part 10 · glossary, revision sheet &amp; repository structure</h2>
+        </div><button class="revise-btn" onclick="markRevised('part10',this)">Mark revised</button>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>10.1 Official Syllabus Glossary (14 Core Terms)</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Chunk:</strong> A retrievable unit derived from source content.</li>
+                <li><strong>Fixed-size:</strong> Splitting by a chosen character, word, or token count.</li>
+                <li><strong>Recursive:</strong> Falling back from larger natural boundaries to smaller ones when a unit exceeds the limit.</li>
+                <li><strong>Sentence-based:</strong> Using grammatical sentence boundaries to form units.</li>
+                <li><strong>Semantic chunking:</strong> Estimating boundaries from changes in topic or meaning.</li>
+                <li><strong>Token-aware:</strong> Measuring length with the relevant model's tokenizer and enforcing a token budget.</li>
+                <li><strong>Structure-aware:</strong> Respecting headings, records, tables, code blocks, or other explicit structure.</li>
+                <li><strong>Parent-child:</strong> Searching a small child unit and resolving its larger parent for context.</li>
+                <li><strong>Hierarchical:</strong> Representing content at several related levels of granularity.</li>
+                <li><strong>Sentence window:</strong> Indexing a central focus sentence plus a symmetric window of nearby sentence context.</li>
+                <li><strong>Small-to-big:</strong> Expanding deliberately from a precise retrieval unit to broader evidence.</li>
+                <li><strong>Overlap:</strong> Repeated content across neighboring chunks to reduce boundary misses (S = C − O).</li>
+                <li><strong>Boundary quality:</strong> How well chunk splits preserve self-contained, interpretable evidence without severing conditions.</li>
+                <li><strong>Source span:</strong> A stable, locatable region in the original source representation (survives re-chunking).</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>10.2 The 8 High-Value Revision Rules</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>1. Specify the chunk-size unit explicitly (characters, words, or model-specific tokens).</li>
+                <li>2. Measure the final representation, including headings and prefixes, against the consuming model's limit to prevent silent truncation.</li>
+                <li>3. Preserve conditions, units, identifiers, and source locations — never isolate a number or interval from its equipment name, table header, or safety exception.</li>
+                <li>4. Keep retrieval units and answer-context units conceptually separate.</li>
+                <li>5. Expand only within authorized, version-consistent boundaries (enforce ACLs and verify parent.version_id == child.version_id).</li>
+                <li>6. Count repeated source text as repeated text, not independent evidence.</li>
+                <li>7. Use stable source facts/spans to compare different chunking schemes.</li>
+                <li>8. Treat chunking changes as index migrations with deletion consequences — never serve mixed revisions.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>10.3 One-Line Interview Recall Table</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead><tr><th>Concept</th><th>Crisp Interview Recall Line</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Chunking</strong></td><td>Dividing documents into manageable pieces while preserving meaning, context, permissions, and source lineage.</td></tr>
+                  <tr><td><strong>Fixed-size chunking</strong></td><td>Splits text mechanically according to a predetermined character, word, or token limit using half-open intervals.</td></tr>
+                  <tr><td><strong>Recursive chunking</strong></td><td>Uses an ordered hierarchy of natural separators with fallback splitting when units exceed the cap.</td></tr>
+                  <tr><td><strong>Sentence-based chunking</strong></td><td>Splits using grammatical sentence boundaries while handling abbreviations/decimals, though grammar ≠ meaning.</td></tr>
+                  <tr><td><strong>Semantic chunking</strong></td><td>Uses embedding similarity between adjacent sentences/windows to detect topic shifts, constrained by structural rules.</td></tr>
+                  <tr><td><strong>Overlap</strong></td><td>Repeats boundary content between adjacent chunks to preserve edge continuity, at the cost of index bloat and duplicates.</td></tr>
+                  <tr><td><strong>Parent-child retrieval</strong></td><td>Retrieves a small child chunk for precision and expands to its associated parent section for full context.</td></tr>
+                  <tr><td><strong>Structure-aware chunking</strong></td><td>Preserves explicit document hierarchy — attaching headings to paragraphs, column headers to table rows, signatures to code.</td></tr>
+                  <tr><td><strong>Context loss</strong></td><td>Current information becomes separated from the heading, scope, unit, or exception needed to interpret it correctly.</td></tr>
+                  <tr><td><strong>Stale data</strong></td><td>Indexed chunks or vectors no longer match the current source revision because updates/deletions were not propagated.</td></tr>
+                  <tr><td><strong>Token-aware chunking</strong></td><td>Measures chunk size using the target model's tokenizer across Embedder, Reranker, and LLM budgets.</td></tr>
+                  <tr><td><strong>Deduplication</strong></td><td>Removes repeated evidence at query time by comparing original source_span coordinates rather than chunk_ids.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>10.4 Five Central Engineering Ideas</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>1. Chunking is about preserving meaning and lineage, not just controlling size.</li>
+                <li>2. Retrieval precision and answer context are separate concerns.</li>
+                <li>3. Document structure and security boundaries must survive chunking.</li>
+                <li>4. Every model stage has its own token budget.</li>
+                <li>5. Evaluate end-to-end RAG behavior on stable source spans.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>10.5 Recommended Repository File Structure</h3></div>
+          <div class="lesson-body">
+            <div class="content-block code-block">
+              <pre><code>M06.1.2_Chunking/
+├── 00_Unified_Master_Notes.md          <- Complete master document
+├── 01_Foundations.md                   <- 3 units, pizza analogy, trade-offs
+├── 02_Budget_Planning.md               <- 3 consumer budgets, tokenizers
+├── 03_Boundary_Selection.md            <- Fixed, recursive, sentence, semantic, structure-aware
+├── 04_Enrichment_Security.md           <- JSON metadata, semantic vs control fields
+├── 05_Query_Time_Retrieval.md          <- 6-step pipeline, parent-child, sentence window
+├── 06_Verify_Maintain.md               <- Source-span dedup, evaluation, purge
+├── 07_Worked_Example_M104.md           <- Manual M-104 v4 case study
+├── 08_Interview_QA_Bank.md             <- All 23 syllabus Qs + 40 interview Qs + 12 scenarios
+└── assets/                             <- Flowchart PDFs, concept map, audio deep-dive</code></pre>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>10.6 Verified Primary Sources &amp; Further Reading</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>LangChain Recursive Text Splitting:</strong> RecursiveCharacterTextSplitter — ordered separator hierarchies.</li>
+                <li><strong>LangChain Markdown Header Splitting:</strong> MarkdownHeaderTextSplitter — grouping content by explicit Markdown headings.</li>
+                <li><strong>LlamaIndex Node Parser Modules:</strong> HierarchicalNodeParser and SentenceWindowNodeParser.</li>
+                <li><strong>Hugging Face Tokenization Algorithms:</strong> Subword tokenization mechanics (BPE, WordPiece, Unigram).</li>
+                <li><strong>Long-Context Attention &amp; Assembly:</strong> Liu et al. (2023), "Lost in the Middle: How Language Models Use Long Contexts" (arXiv:2307.03172).</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PART 11: QUESTION BANK -->
+    <section class="major-section" id="part11">
+      <div class="major-head">
+        <div><span class="eyebrow">PRACTICE · SOURCE PAGES 75–89</span>
+          <h2>Part 11 · complete practice &amp; interview question bank</h2>
+        </div><button class="revise-btn" onclick="markRevised('part11',this)">Mark revised</button>
+      </div>
+      <div class="visual-card">
+        <div class="visual-title">Interview answer structure · five-part engineer formula</div>
+        <div class="answer-formula">
+          <span>1 · Definition</span><b>→</b><span>2 · Mechanism</span><b>→</b>
+          <span>3 · Why it matters</span><b>→</b><span>4 · Practical example</span><b>→</b><span>5 · Trade-off</span>
+        </div>
+      </div>
+      <div class="takeaway question-bank-coverage"><b>Question-bank coverage:</b> The guide includes 23 syllabus questions, 40 interview questions, and 12 real-world engineering scenarios — all placed in their respective stage sections above. This Part serves as the index and rapid-fire reference.</div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>11.1 Stage-by-Stage Index of All Questions</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead><tr><th>Lifecycle Stage</th><th>Syllabus Questions</th><th>Interview Q&amp;As</th><th>Scenarios</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Foundations</strong></td><td>Syl-Q1, Syl-Q2, Syl-MCQ11, Syl-Q19</td><td>Q1, Q3, Q4, Q7, Q21, Q31, Q32, Q33</td><td>—</td></tr>
+                  <tr><td><strong>Budget Planning</strong></td><td>Syl-Q5</td><td>Q18, Q19, Q20, Q39</td><td>Scenario 5</td></tr>
+                  <tr><td><strong>Boundary Selection &amp; Slicing</strong></td><td>Syl-Q3, Q4, Q8, MCQ12, MCQ13, MCQ14, Q18, Q20, Q21, Q23</td><td>Q2, Q6, Q10, Q13, Q14, Q15, Q16, Q22, Q23, Q24, Q27, Q28, Q37, Q40</td><td>Scenarios 1, 2, 7, 8, 10</td></tr>
+                  <tr><td><strong>Enrichment &amp; Security</strong></td><td>Syl-Q9, Syl-Q22</td><td>Q25, Q26</td><td>Scenario 12</td></tr>
+                  <tr><td><strong>Query-Time Retrieval</strong></td><td>Syl-Q6, Q7, MCQ16</td><td>Q5, Q8, Q11, Q12, Q29</td><td>Scenarios 6, 9, 11</td></tr>
+                  <tr><td><strong>Verify &amp; Maintain</strong></td><td>Syl-Q10, MCQ15, MCQ17</td><td>Q9, Q17, Q30, Q34, Q35</td><td>Scenarios 3, 4</td></tr>
+                  <tr><td><strong>Cross-Stage Troubleshooting</strong></td><td>—</td><td>Q36, Q38</td><td>All Scenarios</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>11.2 Rapid-Fire Interview Challenge (15 Questions)</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead><tr><th>#</th><th>Question</th><th>30-Second Crisp Answer</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Is smaller chunk size always better?</td><td>No. Smaller chunks improve vector match specificity, but isolating a fragment like "Inspect every 30 days" strips equipment name, scope, exceptions. Decouple retrieval size from context size using Small-to-Big expansion.</td></tr>
+                  <tr><td>2</td><td>Why can overlap hurt retrieval?</td><td>Excessive overlap bloats the index, wastes LLM tokens, makes 1 repeated sentence look like 3 independent proofs, inflates chunk-level Recall@K.</td></tr>
+                  <tr><td>3</td><td>Why is a heading important in a chunk?</td><td>Headings often hold the only mention of the subject, equipment variant, or operating scope governing all paragraphs beneath them.</td></tr>
+                  <tr><td>4</td><td>When would you prefer recursive chunking?</td><td>As the default general-text baseline when documents have natural paragraph/sentence structure and must obey a strict token cap via top-down fallback.</td></tr>
+                  <tr><td>5</td><td>When would you prefer semantic chunking?</td><td>Only on unstructured prose lacking explicit headings where topic shifts are subtle — and only after benchmarking proves its accuracy gain justifies the extra complexity.</td></tr>
+                  <tr><td>6</td><td>Why should table headers be repeated?</td><td>A raw table row like "Generator B | 15 days" loses column meaning and units once split. Repeat table title, headers, units on every row chunk.</td></tr>
+                  <tr><td>7</td><td>How do you handle a long paragraph?</td><td>Split recursively at sentence boundaries (and clause/word fallback with logged hard-split flag) while prepending inherited section heading and metadata to every piece.</td></tr>
+                  <tr><td>8</td><td>What does parent-child retrieval solve?</td><td>The specificity-vs-completeness trade-off: small child chunks provide razor-sharp search matching, expanding to parent section recovers heading, scope, exceptions.</td></tr>
+                  <tr><td>9</td><td>Why should chunk metadata include a version?</td><td>To filter out obsolete policies, prevent a v4 child from expanding to a stale v3 parent, reproduce exact citations, cleanly purge outdated derivatives.</td></tr>
+                  <tr><td>10</td><td>Why is source traceability necessary?</td><td>Recording document_id + version_id + source_span allows verifiable citations, accurate deduplication, fair cross-strategy evaluation, targeted deletion.</td></tr>
+                  <tr><td>11</td><td>Why are token limits different across models?</td><td>Embedders (Chunk + Prefix), Rerankers (Query + Passage), Answering LLMs (System + History + Query + All Chunks + Output) use different models and process different inputs.</td></tr>
+                  <tr><td>12</td><td>What if relevant information is in another section?</td><td>Parent-child expansion only zooms out within the current section hierarchy. If Section 2 says "See Section 8", trigger a Secondary Authorized Search for that target.</td></tr>
+                  <tr><td>13</td><td>How do you prevent duplicate evidence?</td><td>Deduplicate retrieved and expanded passages by canonical source_span, not chunk_id, and insert shared parent sections at most once.</td></tr>
+                  <tr><td>14</td><td>How do you investigate incorrect RAG answers?</td><td>Check stage by stage: Does the chunk preserve context without silent truncation? Did retrieval surface it? Did expansion introduce conflicts or blow the budget?</td></tr>
+                  <tr><td>15</td><td>How do you know a chunking strategy is better?</td><td>Hold queries, corpus, embeddings, retrieval constant; change one variable at a time; evaluate on stable source spans/facts; inspect failure traces manually.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- APPENDIX A -->
+    <section class="major-section" id="appa">
+      <div class="major-head">
+        <div><span class="eyebrow">APPENDIX A · SOURCE PAGES 90–94</span>
+          <h2>Appendix A · preserved additional material</h2>
+        </div><button class="revise-btn" onclick="markRevised('appa',this)">Mark revised</button>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>A1. Infographic-specific architecture map</h3></div>
+          <div class="lesson-body">
+            <p class="lesson-paragraph">The original infographic adds seven columns: Source content (PDF/DOCX/HTML, tables, code and OCR images), Ingestion and preparation, Chunking, Chunk index, Retrieval, Expansion, and Answer generation. It also uses four cross-cutting bands: Identity and versioning, Permissions and access control, Lifecycle state, and Evaluation and quality.</p>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>A2. Manual M-104: Full Lifecycle Walkthrough</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead><tr><th>Stage</th><th>What happens for the M-104 question</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Budget Planning</strong></td><td>Embedding limit 512; each child ~20–60 tokens, parent P3 ~120 tokens. All fit embedder, reranker, and answer budget.</td></tr>
+                  <tr><td><strong>Boundary Selection</strong></td><td>Structure-aware split at section headings 3.2 and 3.3. Section 3.2 body under cap → parent P3; four lines → children C31–C34. "Unit B uses a separate 14-day schedule" → different parent (P4).</td></tr>
+                  <tr><td><strong>Enrichment</strong></td><td>Each child gets tenant_id, document_id=M-104, version_id=v4, section_path, acl_ref, source_blocks, parent_id=P3. Parent links versioned to v4.</td></tr>
+                  <tr><td><strong>Hard Pre-Filter</strong></td><td>Filter: tenant OK, ACL OK, version=v4, current=true, deleted=false. v3 chunks excluded before search.</td></tr>
+                  <tr><td><strong>Search Small Units</strong></td><td>Vector (plus keyword for exact tokens) search returns child C32 "Inspect indicator X every 30 days."</td></tr>
+                  <tr><td><strong>Diagnose Context Need</strong></td><td>Missing context (scope, storage prerequisite) is structural (same section), so expansion, not second search.</td></tr>
+                  <tr><td><strong>Structural Expansion</strong></td><td>Expand to parent P3 (authorized, same version). P3 contains scope, interval, prerequisite, logging step.</td></tr>
+                  <tr><td><strong>Secondary Search</strong></td><td>Not needed. If the text had said "see Section 8", a second authorized search would run here.</td></tr>
+                  <tr><td><strong>Budgeted Assembly</strong></td><td>Insert P3 once; token count 120 within budget.</td></tr>
+                  <tr><td><strong>Source-Span Dedup</strong></td><td>Dedup by source span: if C31 and C33 were also retrieved, they point inside P3's span and are not counted as extra evidence.</td></tr>
+                  <tr><td><strong>LLM</strong></td><td>Answers "30 days, for Unit A in normal service; after storage, complete the return-to-service checklist first" and cites the source spans. Does not pull in Unit B's 14 days.</td></tr>
+                  <tr><td><strong>Fair Evaluation</strong></td><td>Required evidence spans 1, 2, 3 all reached the model (coverage 3/3); manual trace confirms Unit B was excluded.</td></tr>
+                  <tr><td><strong>Unlearning &amp; Purge</strong></td><td>If v5 is published, all v4 children, parent P3, vectors and caches are purged or marked non-current atomically; no mixed versions.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>A3. Additional Quick-Recall Interview Questions</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>1. Is smaller chunk size always better? (Precision vs. context)</li>
+                <li>2. Why can overlap hurt retrieval? (Redundancy and token usage)</li>
+                <li>3. Why is a heading important in a chunk? (Document hierarchy)</li>
+                <li>4. When would you prefer recursive chunking? (Structure preservation)</li>
+                <li>5. When would you prefer semantic chunking? (Meaning-based boundaries)</li>
+                <li>6. Why should table headers be repeated? (Independent interpretation)</li>
+                <li>7. How do you handle a long paragraph? (Recursive fallback)</li>
+                <li>8. What does parent-child retrieval solve? (Context recovery)</li>
+                <li>9. Why should chunk metadata include a version? (Source consistency)</li>
+                <li>10. Why is source traceability necessary? (Evidence verification)</li>
+                <li>11. Why are token limits different across models? (Pipeline budgets)</li>
+                <li>12. What if relevant information is in another section? (Cross-reference retrieval)</li>
+                <li>13. How do you prevent duplicate evidence? (Source-span deduplication)</li>
+                <li>14. How do you investigate incorrect RAG answers? (Pipeline troubleshooting)</li>
+                <li>15. How do you know a chunking strategy is better? (Evaluation methodology)</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>A4. One-Minute Chunking Interview Answer</h3></div>
+          <div class="lesson-body">
+            <p class="lesson-paragraph">"Chunking creates three units: a source unit, a small retrieval unit, and a larger answer-context unit. I start with a structure-aware recursive baseline measured with the right tokenizer for each stage's budget. I stamp each chunk with tenant, version, ACL and source spans, and link children to parents. At query time I filter by tenant and version first, search small units, expand to the parent or a sentence window only when the missing context is structural, and run a second search for cross-references. I deduplicate by source span, evaluate designs on stable source facts, and when a source changes I purge every derived chunk and vector so old policy cannot resurface."</p>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>A5. Historical Interview Feedback (preserved snapshot)</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>Score:</strong> 6.7 / 10 (average across 7 scored responses; assisted answers not counted as independent).</li>
+                <li><strong>Assessment areas:</strong> Knowledge 3.5/5; Explanation 3.5/5; Practical application 2.5/5; Problem-solving 2.5/5; Interview communication 3.0/5.</li>
+                <li><strong>What you did well:</strong> Good understanding of why semantic boundaries matter and why a universal chunk size is not appropriate. Identified that excessive overlap can make the same fact appear repeatedly and be mistaken for multiple pieces of evidence.</li>
+                <li><strong>What needs improvement:</strong> (1) Explain the underlying mechanism. (2) Use precise terminology. (3) Strengthen implementation reasoning. (4) Improve independent answers.</li>
+                <li><strong>Recommended structure:</strong> Definition → How it works → Why it matters → Practical example → Trade-off or limitation.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>A6. Original Editing Notes</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li>De-duplicated the lifecycle and syllabus into one stage chapter each; every fact and worked number was kept.</li>
+                <li>Question numbering fixed: syllabus questions are SQ1 to SQ23; interview-guide questions stay Q1 to Q40. Doubts renamed Doubt 1 to Doubt 8 to avoid clashing with query steps.</li>
+                <li>Moved Q39 from Budget Planning to Boundary Selection because the cause is separators and the length function.</li>
+                <li>Corrected claims: "Lost in the Middle proves..." was softened to the syllabus wording.</li>
+                <li>Cleaned formatting: broken LaTeX in Section 7 and Q20 rewritten; stray prompts removed.</li>
+                <li>Moved the interview score block into a tracker because it is session feedback, not chunking content.</li>
+                <li>Added the gap fills in Part 9. Infographic typo noted: "Citber-focused" should read "Citation-focused".</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- APPENDIX B -->
+    <section class="major-section" id="appb">
+      <div class="major-head">
+        <div><span class="eyebrow">APPENDIX B · SOURCE PAGES 95–98</span>
+          <h2>Appendix B · alphabetical glossary</h2>
+        </div><button class="revise-btn" onclick="markRevised('appb',this)">Mark revised</button>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>Alphabetical glossary of all terms and acronyms</h3></div>
+          <div class="lesson-body">
+            <div class="content-block list-block">
+              <ul>
+                <li><strong>ACL (Access Control List):</strong> Permission information deciding who may read a document or chunk; stored as control metadata and enforced by the hard pre-filter, never by embeddings.</li>
+                <li><strong>Answer-context unit:</strong> What the answering LLM reads: the retrieval unit deliberately expanded with heading, scope or exceptions.</li>
+                <li><strong>AST (Abstract Syntax Tree):</strong> Parsed structure of source code, used to split code so signatures, docstrings and class context stay with function bodies.</li>
+                <li><strong>BM25:</strong> Lexical ranking used alongside vectors; strong on exact identifiers.</li>
+                <li><strong>Boundary quality:</strong> How well chunk splits preserve self-contained, interpretable evidence.</li>
+                <li><strong>Child chunk:</strong> A small, indexed retrieval unit (e.g., C32) that stores a parent_id for expansion.</li>
+                <li><strong>Chunk:</strong> A retrievable unit derived from source content.</li>
+                <li><strong>chunk_id:</strong> Identifier under one specific chunking configuration; ephemeral.</li>
+                <li><strong>Chunking configuration:</strong> Reproducible settings that produced the chunks; stamped on every chunk.</li>
+                <li><strong>Context loss:</strong> A valid current fact separated from heading, scope, unit or exception needed to interpret it.</li>
+                <li><strong>Contextual retrieval:</strong> Prepending a short situational prefix to each chunk before embedding and BM25 indexing.</li>
+                <li><strong>Control metadata:</strong> Fields such as tenant, ACL, version and lifecycle flags kept outside the embedded text.</li>
+                <li><strong>Cross-encoder / reranker:</strong> A model that scores query and candidate passage jointly.</li>
+                <li><strong>Deduplication:</strong> Removing repeated evidence by comparing source_span, not chunk_id.</li>
+                <li><strong>Duplicate evidence:</strong> The same source statement appearing several times, making one fact look like several proofs.</li>
+                <li><strong>Embedder / embedding model:</strong> Model that converts a chunk into a vector; has a hard input ceiling.</li>
+                <li><strong>Fixed-size chunking:</strong> Splitting by a stated count of characters, words or tokens using half-open intervals.</li>
+                <li><strong>Half-open interval:</strong> Range [start, end) that includes start and excludes end.</li>
+                <li><strong>Hierarchical chunking:</strong> Representing content at several linked granularities.</li>
+                <li><strong>Hybrid search:</strong> Combining lexical (BM25) and vector retrieval, then fusing or reranking results.</li>
+                <li><strong>Late chunking:</strong> Embedding a long window first so tokens see surrounding context, then pooling by chunk boundaries.</li>
+                <li><strong>Lost in the Middle:</strong> LLMs use information at start/end of long prompt better than middle.</li>
+                <li><strong>OCR:</strong> Optical Character Recognition; extracts text from images/scans.</li>
+                <li><strong>Overlap (O):</strong> Content repeated across neighbouring chunks to reduce boundary misses.</li>
+                <li><strong>Parent node:</strong> Larger enclosing section stored for expansion; inserted once even if several children match.</li>
+                <li><strong>Parent-child retrieval:</strong> Search a small child for precision, resolve its parent for interpretation context.</li>
+                <li><strong>RAG (Retrieval-Augmented Generation):</strong> Pipeline in which retrieved evidence is supplied to an LLM.</li>
+                <li><strong>Recall@K:</strong> Whether required evidence appears in the top K retrieved results.</li>
+                <li><strong>Recursive chunking:</strong> Trying larger natural separators first and falling back to smaller ones when a unit exceeds the cap.</li>
+                <li><strong>Retrieval unit:</strong> The small, focused unit the search engine scores.</li>
+                <li><strong>RRF (Reciprocal Rank Fusion):</strong> Rank-based method for merging result lists.</li>
+                <li><strong>Semantic chunking:</strong> Cutting where embedding similarity between adjacent units drops.</li>
+                <li><strong>Sentence window:</strong> A focus sentence plus a symmetric window of radius w (at most 2w + 1 sentences).</li>
+                <li><strong>Sentence-based chunking:</strong> Grouping grammatical sentences under a token budget.</li>
+                <li><strong>Silent truncation:</strong> A provider cutting off input beyond its limit without error.</li>
+                <li><strong>Small-to-big:</strong> Locate evidence with a small unit, deliberately supply a larger unit for interpretation.</li>
+                <li><strong>Source span:</strong> A stable, locatable region of the original source that survives re-chunking.</li>
+                <li><strong>Source unit:</strong> The original structural unit (section, table, function) preserving authoritative lineage.</li>
+                <li><strong>Stale data:</strong> Indexed content no longer matching the current source due to unpropagated updates.</li>
+                <li><strong>Stride (S):</strong> Distance between window starts: S = C − O.</li>
+                <li><strong>Structure-aware chunking:</strong> Aligning boundaries with headings, records, tables, code blocks and FAQ pairs.</li>
+                <li><strong>Subword tokenization (BPE, WordPiece, Unigram):</strong> Splitting text into variable-length pieces.</li>
+                <li><strong>Token-aware chunking:</strong> Measuring length with the consuming model's tokenizer and enforcing a token budget.</li>
+                <li><strong>Unlearning:</strong> Purging every derived chunk, parent, window, summary, vector and cache when a source changes.</li>
+                <li><strong>Version ID / current flag:</strong> Revision stamp and lifecycle flag used to exclude obsolete content.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- APPENDIX C -->
+    <section class="major-section" id="appc">
+      <div class="major-head">
+        <div><span class="eyebrow">APPENDIX C · SOURCE PAGE 99</span>
+          <h2>Appendix C · source review notes</h2>
+        </div><button class="revise-btn" onclick="markRevised('appc',this)">Mark revised</button>
+      </div>
+      <div class="lesson-stack">
+        <article class="lesson-card">
+          <div class="lesson-head"><h3>Inconsistencies flagged while reading all 2,701 lines</h3></div>
+          <div class="lesson-body">
+            <div class="table-scroll">
+              <table class="lesson-table">
+                <thead><tr><th>#</th><th>Where</th><th>Observation</th><th>Suggested reading</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Part 9 intro</td><td>Says the Unified Model "identified six specific gaps" but §9.1–9.5 list five.</td><td>The sixth is the worked query trace in §6.5.</td></tr>
+                  <tr><td>2</td><td>Appendix A2–A4</td><td>Legacy headings reuse numbers that already exist in Parts 8–10.</td><td>Refer to appendix material as A2, A3, A4, A5.</td></tr>
+                  <tr><td>3</td><td>§1 and §8.5</td><td>Clarified doubts are "Doubt 1–8" but "D1–D8" in §8.5, clashing with query steps D1–D6.</td><td>Read §8.5 "D1–D8" as Doubts 1–8.</td></tr>
+                  <tr><td>4</td><td>Parts 1–7 vs 11</td><td>Syllabus questions are SQ1–SQ23 in checkpoints but Syl-Q/Syl-MCQ in Part 11.</td><td>Same 23 questions; MCQs numbered 11–17 in both.</td></tr>
+                  <tr><td>5</td><td>§11.5</td><td>Titled "Part 9 Rapid-Fire Interview Challenge" although it is in Part 11.</td><td>Treat A3 as the question-only drill version.</td></tr>
+                  <tr><td>6</td><td>Part 11 Group 2</td><td>Q39 is listed under Budget Planning, but the editing log says it moved to Boundary Selection.</td><td>The cause is separators and the length function.</td></tr>
+                  <tr><td>7</td><td>Editing log</td><td>Says gap fills are in "Part 10" and marked "[Added]"; they are in Part 9.</td><td>Part 9 is the gap-fill chapter.</td></tr>
+                  <tr><td>8</td><td>§5.5 vs A2 and §6.5</td><td>§5.5 describes C31 as "Inspection interval paragraph" and C32 as "Indicator check paragraph"; A2 and §6.5 treat C31 = scope, C32 = inspect indicator X every 30 days.</td><td>Use the A2/§6.5 labelling when tracing M-104.</td></tr>
+                  <tr><td>9</td><td>§4.4</td><td>Token-bloat example gives 1.24, described as matching the asymptotic factor C/(C−O) = 1.25.</td><td>Consistent: 1.25 is the long-document limit, 1.24 reflects the short final window.</td></tr>
+                  <tr><td>10</td><td>§1.4</td><td>Verify &amp; Maintain is listed under "Query Time", but Unlearning &amp; Purge is an offline lifecycle operation.</td><td>Think of Source-Span Dedup as query-time and Fair Eval / Unlearning as verification/maintenance.</td></tr>
+                  <tr><td>11</td><td>A5</td><td>Historical feedback refers to "these 20 questions" and to Q4, Q9, Q13–Q19 using first notes' numbering.</td><td>Treat as a historical snapshot.</td></tr>
+                  <tr><td>12</td><td>Referenced assets</td><td>The guide mentions an audio deep-dive, an infographic, flowchart PDFs and a repository assets/ folder.</td><td>Not reproducible here; see the Coverage Checklist.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE TOOLS -->
+    <section class="interactive-hub" id="study-tools">
+      <div class="major-head">
+        <div><span class="eyebrow">Practice lab</span><h2>Interactive revision tools</h2></div>
+      </div>
+      <div class="tool-grid">
+        <article class="tool-card">
+          <h3>Overlap &amp; stride calculator</h3>
+          <p>Stride is chunk size minus overlap. The source guide uses fixed windows and warns that overlap duplicates evidence rather than creating new evidence.</p>
+          <div class="calc-grid">
+            <label>Document length N <input id="ovN" min="1" type="number" value="10000" /></label>
+            <label>Chunk size C <input id="ovC" min="1" type="number" value="500" /></label>
+            <label>Overlap O <input id="ovO" min="0" type="number" value="100" /></label>
+            <button class="action-btn" onclick="calculateOverlap()">Calculate</button>
+          </div>
+          <div class="calc-result" id="ovResult">Enter values and calculate.</div>
+        </article>
+        <article class="tool-card">
+          <h3>Embedding budget checker</h3>
+          <p>Check whether heading, body and formatting fit an embedding ceiling. Example values mirror the worked 512-token calculation.</p>
+          <div class="calc-grid">
+            <label>Model limit <input id="bLimit" type="number" value="512" /></label>
+            <label>Heading tokens <input id="bHeading" type="number" value="30" /></label>
+            <label>Body tokens <input id="bBody" type="number" value="470" /></label>
+            <label>Formatting tokens <input id="bFormat" type="number" value="20" /></label>
+            <button class="action-btn" onclick="checkBudget()">Check budget</button>
+          </div>
+          <div class="calc-result" id="budgetResult">Total = 520 tokens · exceeds the 512-token ceiling by 8.</div>
+        </article>
+      </div>
+      <article class="tool-card wide">
+        <h3>Stage diagnosis practice</h3>
+        <p>Choose the observed failure to reveal the first stage to inspect and the source-aligned correction.</p>
+        <div class="tab-row" id="diag-tabs">
+          <button class="tab active" data-d="context">Missing context</button>
+          <button class="tab" data-d="table">Broken table</button>
+          <button class="tab" data-d="duplicate">Duplicate evidence</button>
+          <button class="tab" data-d="stale">Old policy</button>
+          <button class="tab" data-d="wrong">Wrong unit</button>
+        </div>
+        <div class="calc-result" id="diag-result"></div>
+      </article>
+      <article class="tool-card wide">
+        <h3>Self-test · key engineering concepts</h3>
+        <div id="quick-quiz">
+          <div class="quiz-question" data-q="0"><b>1. A chunk says "Inspect every 30 days" but omits the preceding definition. What is the likely failure?</b>
+            <div class="quiz-options">
+              <button class="quiz-option" onclick="answerQuiz(0,0,this)">Stale data</button>
+              <button class="quiz-option" onclick="answerQuiz(0,1,this)">Missing contextual dependence at the boundary</button>
+              <button class="quiz-option" onclick="answerQuiz(0,2,this)">Incorrect vector dimensionality</button>
+              <button class="quiz-option" onclick="answerQuiz(0,3,this)">Duplicate evidence</button>
+            </div>
+            <div class="quiz-explain" hidden="">The antecedent is missing: this is context loss. Stale data means the source has changed but derived data was not updated.</div>
+          </div>
+          <div class="quiz-question" data-q="1"><b>2. Which stage must apply tenant, ACL and version filters before search?</b>
+            <div class="quiz-options">
+              <button class="quiz-option" onclick="answerQuiz(1,0,this)">Budget Planning</button>
+              <button class="quiz-option" onclick="answerQuiz(1,1,this)">Boundary Selection</button>
+              <button class="quiz-option" onclick="answerQuiz(1,2,this)">Enrichment / Hard Pre-Filter</button>
+              <button class="quiz-option" onclick="answerQuiz(1,3,this)">Fair Evaluation</button>
+            </div>
+            <div class="quiz-explain" hidden="">Enrichment stores control metadata; the Hard Pre-Filter enforces it before Search Small Units.</div>
+          </div>
+          <div class="quiz-question" data-q="2"><b>3. What is the stride for chunk size 400 and overlap 80?</b>
+            <div class="quiz-options">
+              <button class="quiz-option" onclick="answerQuiz(2,0,this)">80</button>
+              <button class="quiz-option" onclick="answerQuiz(2,1,this)">320</button>
+              <button class="quiz-option" onclick="answerQuiz(2,2,this)">400</button>
+              <button class="quiz-option" onclick="answerQuiz(2,3,this)">480</button>
+            </div>
+            <div class="quiz-explain" hidden="">Stride = C − O = 400 − 80 = 320.</div>
+          </div>
+          <div class="quiz-question" data-q="3"><b>4. How should repeated overlap evidence be counted?</b>
+            <div class="quiz-options">
+              <button class="quiz-option" onclick="answerQuiz(3,0,this)">As independent evidence per chunk</button>
+              <button class="quiz-option" onclick="answerQuiz(3,1,this)">Once by canonical source span</button>
+              <button class="quiz-option" onclick="answerQuiz(3,2,this)">By chunk_id only</button>
+              <button class="quiz-option" onclick="answerQuiz(3,3,this)">Only the first retrieved result</button>
+            </div>
+            <div class="quiz-explain" hidden="">The same source statement appearing in overlapping chunks is still one piece of evidence. Deduplicate by source_span.</div>
+          </div>
+          <div class="quiz-question" data-q="4"><b>5. What should happen when a procedure refers to another document or section outside the known parent hierarchy?</b>
+            <div class="quiz-options">
+              <button class="quiz-option" onclick="answerQuiz(4,0,this)">Keep expanding the same parent</button>
+              <button class="quiz-option" onclick="answerQuiz(4,1,this)">Run a secondary authorized search</button>
+              <button class="quiz-option" onclick="answerQuiz(4,2,this)">Increase overlap</button>
+              <button class="quiz-option" onclick="answerQuiz(4,3,this)">Use a larger embedding</button>
+            </div>
+            <div class="quiz-explain" hidden="">Parent expansion resolves local structure; cross-document references require a new authorized search.</div>
+          </div>
+        </div>
+        <div class="quiz-score" id="quiz-score"></div>
+      </article>
+    </section>
+
+    <footer>
+      Study guide extracted and reorganized from the supplied M06.1.2 Chunking Complete Master Study &amp; Interview Guide (99 pages) and companion Interactive Mental Model HTML. Source wording and technical terminology are retained in the lesson content; visual study aids and interactions are additional presentation layers.
+    </footer>
+  </main>
+</div>
+
+<script>
+  const sectionLabels = [
+    { id: "front", label: "Start here · introduction & study roadmap" },
+    { id: "budget", label: "Budget Planning (was Stage A)" },
+    { id: "boundary", label: "Boundary Selection & Slicing (was Stage B)" },
+    { id: "enrich", label: "Enrichment & Security (was Stage C)" },
+    { id: "query", label: "Query-Time Retrieval (was Stage D)" },
+    { id: "verify", label: "Verify & Maintain (was Stage E)" },
+    { id: "part8", label: "Part 8 · handoffs, decision flows & diagnostics" },
+    { id: "part9", label: "Part 9 · advanced extensions & previously missing gaps" },
+    { id: "part10", label: "Part 10 · glossary, revision sheet & repository structure" },
+    { id: "part11", label: "Part 11 · complete practice & interview question bank" },
+    { id: "appa", label: "Appendix A · preserved additional material" },
+    { id: "appb", label: "Appendix B · alphabetical glossary" },
+    { id: "appc", label: "Appendix C · source review notes" },
+  ];
+  const revisedKey = "chunkingGuideRevised";
+  function getRevised() {
+    try { return JSON.parse(localStorage.getItem(revisedKey) || "{}"); }
+    catch (e) { return {}; }
+  }
+  function markRevised(id, btn) {
+    const state = getRevised();
+    state[id] = !state[id];
+    localStorage.setItem(revisedKey, JSON.stringify(state));
+    btn.classList.toggle("done", state[id]);
+    btn.textContent = state[id] ? "✓ Revised" : "Mark revised";
+  }
+  function initRevised() {
+    const state = getRevised();
+    document.querySelectorAll(".major-section").forEach((s) => {
+      const b = s.querySelector(".revise-btn");
+      if (state[s.id]) {
+        b.classList.add("done");
+        b.textContent = "✓ Revised";
+      }
+    });
+  }
+  function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("chunkingTheme", document.body.classList.contains("dark") ? "dark" : "light");
+  }
+  if (localStorage.getItem("chunkingTheme") === "dark")
+    document.body.classList.add("dark");
+  function expandAll() {
+    document.querySelectorAll(".reveal-card").forEach((x) => (x.open = true));
+  }
+  function filterLessons(q) {
+    q = q.trim().toLowerCase();
+    let n = 0;
+    document.querySelectorAll(".major-section").forEach((sec) => {
+      let visible = 0;
+      sec.querySelectorAll(".lesson-card").forEach((c) => {
+        const hit = !q || c.innerText.toLowerCase().includes(q);
+        c.style.display = hit ? "" : "none";
+        if (hit) { visible++; n++; }
+      });
+      sec.querySelectorAll(".reveal-card").forEach((r) => {
+        const hit = !q || r.innerText.toLowerCase().includes(q);
+        r.style.display = hit ? "" : "none";
+        if (hit && !q) { visible++; n++; }
+      });
+      sec.style.display = visible || !q ? "" : "none";
+    });
+    document.getElementById("search-count")?.remove();
+    const count = document.createElement("div");
+    count.id = "search-count";
+    count.className = "muted";
+    count.style.fontSize = "11px";
+    count.textContent = q ? `${n} matching items` : "";
+    document.querySelector(".searchbar").after(count);
+  }
+  function clearSearch() {
+    document.getElementById("search").value = "";
+    filterLessons("");
+  }
+  const ovCalc = () => {
+    const N = +document.getElementById("ovN").value,
+      C = +document.getElementById("ovC").value,
+      O = +document.getElementById("ovO").value;
+    const out = document.getElementById("ovResult");
+    if (!Number.isFinite(N + C + O) || N <= 0 || C <= 0 || O < 0 || O >= C) {
+      out.textContent = "Use N > 0, C > 0 and 0 ≤ O < C.";
+      return;
+    }
+    const S = C - O,
+      windows = N <= C ? 1 : 1 + Math.ceil((N - C) / S),
+      dup = (C / S).toFixed(2);
+    out.innerHTML = `Stride S = C − O = <b>${S}</b> tokens<br>Window count n = <b>${windows}</b><br>Approximate duplication factor C / S = <b>${dup}×</b>. Repeated text is not independent evidence.`;
+  };
+  function calculateOverlap() { ovCalc(); }
+  function checkBudget() {
+    const limit = +document.getElementById("bLimit").value,
+      h = +document.getElementById("bHeading").value,
+      b = +document.getElementById("bBody").value,
+      f = +document.getElementById("bFormat").value,
+      total = h + b + f,
+      delta = total - limit;
+    document.getElementById("budgetResult").innerHTML =
+      `Total = <b>${total}</b> / ${limit} tokens. ` +
+      (delta > 0
+        ? `<span style="color:#a05242">FAIL · exceeds the ceiling by ${delta} tokens. Split or trim; do not silently truncate.</span>`
+        : `<span style="color:#287a61">PASS · ${-delta} tokens of headroom remain.</span>`);
+  }
+  const diagnosticData = {
+    context: [
+      "Likely Boundary Selection / Structural Expansion",
+      "The child has lost its heading, subject, scope or exception. Preserve the semantic boundary and use controlled parent or sentence-window expansion; authorize every expanded span.",
+    ],
+    table: [
+      "Likely Boundary Selection / Structural Expansion",
+      "Keep the row attached to its table title, column headers, row labels, units and footnotes. Serialize the headers with each row chunk and retain source row coordinates.",
+    ],
+    duplicate: [
+      "Likely Boundary Selection overlap / Source-Span Deduplication",
+      "The same source statement is repeated across overlapping chunks. Deduplicate by source_span, not chunk_id, and evaluate duplicate rate.",
+    ],
+    stale: [
+      "Likely Enrichment / Hard Pre-Filter / Unlearning & Purge",
+      "A stale version or derived object may remain. Filter by authoritative version/current state and purge children, parents, windows, summaries, vectors and caches.",
+    ],
+    wrong: [
+      "Likely Boundary Selection / Enrichment / Hard Pre-Filter",
+      "The topic may be right but its equipment or tenant scope is wrong. Preserve section identity and apply company/tenant, ACL and version filters before retrieval.",
+    ],
+  };
+  document.querySelectorAll("[data-d]").forEach((btn) =>
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-d]").forEach((x) => x.classList.toggle("active", x === btn));
+      const d = diagnosticData[btn.dataset.d];
+      document.getElementById("diag-result").innerHTML = `<b>${d[0]}</b><br>${d[1]}`;
+    })
+  );
+  document.getElementById("diag-result").innerHTML =
+    `<b>${diagnosticData.context[0]}</b><br>${diagnosticData.context[1]}`;
+  const quizItems = [
+    ["A chunk says "Inspect every 30 days" but omits the preceding definition. What is the likely failure?",
+      ["Stale data", "Missing contextual dependence at the boundary", "Incorrect vector dimensionality", "Duplicate evidence"],
+      1, "The antecedent is missing: this is context loss. Stale data means the source has changed but derived data was not updated."],
+    ["Which stage must apply tenant, ACL and version filters before search?",
+      ["Budget Planning", "Boundary Selection", "Enrichment / Hard Pre-Filter", "Fair Evaluation"],
+      2, "Enrichment stores control metadata; the Hard Pre-Filter enforces it before Search Small Units."],
+    ["What is the stride for chunk size 400 and overlap 80?",
+      ["80", "320", "400", "480"],
+      1, "Stride = C − O = 400 − 80 = 320."],
+    ["How should repeated overlap evidence be counted?",
+      ["As independent evidence per chunk", "Once by canonical source span", "By chunk_id only", "Only the first retrieved result"],
+      1, "The same source statement appearing in overlapping chunks is still one piece of evidence. Deduplicate by source_span."],
+    ["What should happen when a procedure refers to another document or section outside the known parent hierarchy?",
+      ["Keep expanding the same parent", "Run a secondary authorized search", "Increase overlap", "Use a larger embedding"],
+      1, "Parent expansion resolves local structure; cross-document references require a new authorized search."],
+  ];
+  let score = 0, answered = 0;
+  function answerQuiz(qi, oi, btn) {
+    const row = document.querySelector(`.quiz-question[data-q="${qi}"]`);
+    if (row.dataset.done) return;
+    row.dataset.done = "1";
+    const item = quizItems[qi];
+    row.querySelectorAll(".quiz-option").forEach((b, i) => {
+      b.disabled = true;
+      if (i === item.correct) b.classList.add("correct");
+    });
+    if (oi === item.correct) score++;
+    else btn.classList.add("wrong");
+    const explain = row.querySelector(".quiz-explain");
+    explain.hidden = false;
+    answered++;
+    document.getElementById("quiz-score").textContent =
+      `Answered ${answered}/${quizItems.length} · Score ${score}/${answered}`;
+    if (answered === quizItems.length)
+      document.getElementById("quiz-score").textContent +=
+        ` · Final score ${score}/${quizItems.length}`;
+  }
+  function updateProgress() {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    document.getElementById("progress").style.width =
+      (max > 0 ? (scrollY / max) * 100 : 0) + "%";
+    let active = "";
+    document.querySelectorAll(".major-section").forEach((s) => {
+      if (scrollY >= s.offsetTop - 130) active = s.id;
+    });
+    document.querySelectorAll(".nav-link").forEach((a) =>
+      a.classList.toggle("active", a.getAttribute("href") === "#" + active)
+    );
+  }
+  window.addEventListener("scroll", updateProgress);
+  initRevised();
+  updateProgress();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.3/dist/mermaid.min.js"></script>
+<script>
+  window.addEventListener("load", function () {
+    if (window.mermaid) {
+      window.mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: "loose",
+        theme: "base",
+        themeVariables: {
+          primaryColor: "#eeebf8",
+          primaryTextColor: "#342d4d",
+          primaryBorderColor: "#8c78c8",
+          lineColor: "#6b8e86",
+          secondaryColor: "#e8f2ef",
+          tertiaryColor: "#fbf3e8",
+          fontFamily: "Inter, sans-serif",
+        },
+      });
+      window.mermaid.run({ querySelector: ".mermaid" });
+    }
+  });
+</script>
+</body>
+</html>
