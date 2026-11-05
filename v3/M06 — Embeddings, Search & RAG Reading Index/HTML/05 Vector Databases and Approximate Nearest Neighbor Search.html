@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="#e8ede6" name="theme-color"/><title>M06.2.2 · Vector Databases and ANN Search</title><style>
+:root{--bg:#e8ede6;--panel:#f8f7f1;--panel2:#f2f3ec;--ink:#24372f;--muted:#66786f;--sage:#6d8877;--sage2:#dbe6d9;--sage3:#c6d6c7;--sand:#e9dfca;--sand2:#f3ecdc;--line:#d1d8cf;--plum:#e7e1ef;--amber:#e8d8b8;--shadow:0 12px 35px rgba(44,63,52,.08);--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:26px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.62 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:#456c59;text-decoration-thickness:1px;text-underline-offset:3px}a:hover{color:#294b3a}button,input{font:inherit}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(232,237,230,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(120,145,126,.2)}.topbar-inner{max-width:1500px;margin:auto;padding:11px 24px;display:flex;align-items:center;gap:14px}.brand-mark{width:34px;height:34px;border-radius:12px;background:#496b56;color:#f8f7f1;display:grid;place-items:center;font-weight:800}.brand-title{font-size:13px;font-weight:800;letter-spacing:.08em;color:#455b4c}.top-spacer{flex:1}.search-wrap{position:relative;max-width:350px;flex:1}.search-wrap input{width:100%;border:1px solid var(--line);background:#f7f7f1;border-radius:999px;padding:10px 16px 10px 38px;outline:none;color:var(--ink)}.search-wrap input:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(109,136,119,.14)}.search-icon{position:absolute;left:14px;top:7px;color:var(--muted)}.top-btn{border:1px solid var(--line);background:#f7f7f1;color:var(--ink);border-radius:999px;padding:8px 13px;cursor:pointer;font-size:13px}.top-btn:hover{background:var(--sage2)}
+.hero{background:linear-gradient(120deg,#3f5f4b,#6d8975 72%,#879b88);color:#f6f5ed;padding:54px 24px 42px}.hero-inner{max-width:1200px;margin:auto}.hero-eyebrow{font-size:12px;letter-spacing:.19em;text-transform:uppercase;opacity:.82;font-weight:700}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.08;max-width:850px;margin:12px 0 14px;letter-spacing:-.035em}.hero p{font-size:18px;max-width:830px;color:#edf1e9;margin:0 0 25px}.hero-meta{display:flex;flex-wrap:wrap;gap:9px}.hero-meta span{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.1);padding:7px 12px;border-radius:999px;font-size:12px}
+.shell{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:270px minmax(0,1fr);gap:28px;padding:28px 24px 80px}.sidebar{align-self:start;position:sticky;top:74px;max-height:calc(100vh - 92px);overflow:auto;background:rgba(248,247,241,.8);border:1px solid var(--line);border-radius:22px;padding:18px 14px;box-shadow:var(--shadow)}.side-label{font-size:10px;letter-spacing:.16em;color:#829087;font-weight:800;padding:8px 11px 12px}.nav-link{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:12px;color:#42564a;text-decoration:none;font-size:13px;font-weight:650;margin:2px 0}.nav-link span{font-size:10px;color:#718277;letter-spacing:.08em}.nav-link:hover,.nav-link.active{background:var(--sage2);color:#2e4c39}.side-note{margin:18px 6px 4px;padding:13px;border-radius:14px;background:var(--sand2);font-size:12px;color:#71664f;line-height:1.5}.main{min-width:0}.module-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);margin-bottom:25px}.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.module-grid div{padding:12px 14px;background:#f0f2eb;border-radius:14px}.module-grid strong{display:block;font-size:11px;letter-spacing:.1em;color:#7c8c7d;text-transform:uppercase;margin-bottom:5px}.module-grid span{font-size:14px;color:#3e5145}
+.lesson-section{margin-bottom:44px;scroll-margin-top:85px}.section-kicker{font-size:11px;color:#76897d;font-weight:850;letter-spacing:.16em;margin:0 0 6px}.lesson-section h2{font-size:clamp(28px,3vw,39px);letter-spacing:-.025em;line-height:1.15;margin:0 0 8px;color:#2c4436}.section-intro{font-size:17px;color:#63746a;max-width:900px;margin:0 0 22px}.content-card,.stage-card,.diagram-card,.question-bank{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin:18px 0;box-shadow:0 8px 24px rgba(44,63,52,.045)}.content-card h2,.content-card h3,.content-card h4{color:#385343;line-height:1.25;margin-top:1.2em}.content-card h2:first-child,.content-card h3:first-child{margin-top:0}.content-card p{margin:.65em 0}.content-card li{margin:.35em 0}.content-card ul,.content-card ol{padding-left:1.35rem}.content-card blockquote{margin:16px 0;padding:10px 17px;border-left:4px solid var(--sage);background:#eef2ea;color:#506457;border-radius:0 12px 12px 0}.content-card pre{background:#263b32;color:#e6ede5;border-radius:14px;padding:17px;overflow:auto;font-size:13px;line-height:1.55}.content-card code{background:#e9eee6;color:#385343;border-radius:5px;padding:2px 5px;font-size:.9em}.content-card pre code{background:transparent;color:inherit;padding:0}.content-card table{border-collapse:separate;border-spacing:0;width:100%;font-size:14px;overflow:hidden;border:1px solid var(--line);border-radius:13px;margin:14px 0}.content-card th{background:#e6ece3;color:#405747;text-align:left;font-size:12px;letter-spacing:.04em}.content-card td,.content-card th{padding:10px 12px;border-bottom:1px solid #e0e4dc;vertical-align:top}.content-card tr:last-child td{border-bottom:0}.content-card tr:nth-child(even) td{background:#f5f5ef}.table-wrap{overflow:auto}
+.stage-card{background:linear-gradient(120deg,#edf2eb,#f8f7f1 70%);border-color:#c9d6c9;padding:20px 22px}.stage-top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}.stage-chip{font-size:11px;font-weight:850;letter-spacing:.11em;background:#dce8da;color:#3e6149;padding:7px 11px;border-radius:999px}.stage-caption{font-size:12px;color:#7c8c80}.stage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stage-grid>div{background:rgba(255,255,255,.6);padding:13px 15px;border:1px solid rgba(190,207,190,.6);border-radius:14px}.stage-grid b{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#768878}.stage-grid p{font-size:14px;line-height:1.5;margin:5px 0 0;color:#43584a}.arrow-small{color:#849a88;font-weight:900}
+.handoff-band{background:var(--sand2);border:1px solid #dfd2b7;border-radius:17px;padding:14px 18px;margin:16px 0}.handoff-label{font-size:10px;letter-spacing:.14em;font-weight:850;color:#8b7955;margin-bottom:9px}.handoff-flow{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:12px}.handoff-flow>div{font-size:14px;color:#554d3d}.handoff-flow span{display:block;font-size:10px;color:#9b8b6a;font-weight:800;letter-spacing:.1em}.handoff-flow i{font-style:normal;text-align:center;font-size:22px;color:#98855f}
+.diagram-card{padding:0;overflow:hidden}.diagram-header{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;padding:21px 24px 12px}.diagram-header h3{font-size:21px;margin:3px 0 4px;color:#385343}.diagram-header p{margin:0;color:#738177;font-size:13px;max-width:760px}.eyebrow{font-size:10px;letter-spacing:.16em;font-weight:850;color:#829184}.diagram-tag{white-space:nowrap;border-radius:999px;background:#e8eee5;color:#55705c;padding:7px 11px;font-size:11px;font-weight:750}.svg-wrap{padding:4px 12px 10px;overflow-x:auto}.flow-svg{display:block;width:100%;min-width:760px;height:auto}.flow-svg .svg-band-title{font:800 19px Inter,system-ui,sans-serif;letter-spacing:2px;fill:#597061}.flow-svg .svg-node-title{font:750 16px Inter,system-ui,sans-serif;text-anchor:middle;fill:#30483a}.flow-svg .svg-node-sub{font:500 12px Inter,system-ui,sans-serif;text-anchor:middle;fill:#63776a}.flow-svg .svg-icon{font:700 24px Inter,system-ui,sans-serif;text-anchor:middle;fill:#58765f}.flow-svg .svg-tiny{font:650 10px Inter,system-ui,sans-serif;letter-spacing:.08em;text-anchor:middle;fill:#8a7d62}.flow-svg .n-source{fill:#e4ede0;stroke:#bfd0bf;stroke-width:2}.flow-svg .n-node{fill:#f6f6ef;stroke:#cbd8cb;stroke-width:2}.flow-svg .n-lex{fill:#e8eee4;stroke:#b9cbb8;stroke-width:2}.flow-svg .n-dense{fill:#eeeaf4;stroke:#cfc5df;stroke-width:2}.flow-svg .n-guard{fill:#f1eadb;stroke:#dccca8;stroke-width:2}.flow-svg .n-note{fill:#f7f4ea;stroke:#d8d1bf;stroke-width:2}.flow-svg .connector{fill:none;stroke:#718778;stroke-width:3;marker-end:url(#arr)}.flow-svg .feedback{fill:none;stroke:#b18b4e;stroke-width:2.5;stroke-dasharray:8 7;marker-end:url(#arrAmber)}.diagram-legend{display:flex;flex-wrap:wrap;gap:17px;padding:10px 24px 18px;border-top:1px solid #e5e8e0;color:#78877d;font-size:11px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.dot.sage{background:#9eb69e}.dot.sand{background:#d3bf91}.dot.plum{background:#b7a9cc}.dot.amber{background:#c39c5e}
+.question-bank{padding:20px 20px 12px;background:#f5f5ef}.question-heading{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:12px}.question-heading h3{font-size:21px;margin:2px 0 4px;color:#36513f}.question-heading p{font-size:13px;color:#77847b;margin:0}.question-count{background:#e1e9dd;border:1px solid #cbd8c9;color:#58735e;font-size:11px;font-weight:800;border-radius:999px;padding:7px 11px;white-space:nowrap}.qa-card{border:1px solid #dce2d8;border-radius:14px;background:#fbfaf5;margin:9px 0;overflow:hidden}.qa-card summary{display:grid;grid-template-columns:78px 1fr auto 22px;gap:12px;align-items:center;list-style:none;padding:13px 15px;cursor:pointer}.qa-card summary::-webkit-details-marker{display:none}.qa-card summary:hover{background:#f0f3eb}.qa-id{font-size:10px;letter-spacing:.06em;font-weight:850;color:#77907c;background:#eaf0e7;padding:5px 7px;border-radius:8px;text-align:center}.qa-prompt{font-size:14px;font-weight:650;color:#344a3b;line-height:1.45}.qa-prompt p{margin:0}.qa-kind{font-size:10px;color:#8b8b7d;background:#f0eee5;border-radius:999px;padding:5px 8px;white-space:nowrap}.qa-toggle{font-weight:800;color:#708676;font-size:20px;text-align:center}.qa-card[open] .qa-toggle{transform:rotate(45deg)}.qa-answer{border-top:1px solid #e3e6de;padding:16px 18px 19px;background:#f7f7f1;color:#506256;font-size:14px}.qa-answer .answer-label{font-size:10px;color:#8a988d;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:7px}.qa-answer p:first-child{margin-top:0}.qa-answer p:last-child{margin-bottom:0}.qa-answer ul,.qa-answer ol{padding-left:1.25rem}.qa-answer pre{background:#2b4137;color:#e9eee7;padding:12px;border-radius:10px;overflow:auto}.qa-answer code{background:#e4ebe2;padding:2px 4px;border-radius:4px}
+.question-tools{display:flex;gap:8px;margin:10px 0 0;justify-content:flex-end}.small-control{border:1px solid #d3dbd1;border-radius:999px;padding:6px 10px;background:#f7f7f1;font-size:11px;color:#66776c;cursor:pointer}.small-control:hover{background:#e8eee5}.crosswalk td:first-child{width:90px}
+.footer{padding:30px 24px 48px;background:#dfe7dd;border-top:1px solid #cad5ca;color:#67786d}.footer-inner{max-width:1180px;margin:auto;font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.empty-state{display:none;padding:14px;border:1px dashed #bdcbbb;border-radius:13px;color:#78877c;font-size:13px;background:#f5f6f0}.mobile-menu{display:none}
+@media(max-width:1050px){.shell{grid-template-columns:230px minmax(0,1fr);gap:18px;padding-inline:16px}.sidebar{padding:12px 9px}.stage-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.topbar-inner{padding:9px 13px;gap:8px}.brand-title{font-size:11px}.top-btn.print-btn{display:none}.search-wrap{max-width:none}.mobile-menu{display:inline-block}.hero{padding:38px 18px 32px}.hero p{font-size:16px}.shell{display:block;padding:16px 12px 56px}.sidebar{position:relative;top:auto;max-height:0;overflow:hidden;padding:0;border:0;margin:0;box-shadow:none;transition:max-height .2s ease}.sidebar.open{max-height:680px;overflow:auto;padding:14px;border:1px solid var(--line);margin:0 0 16px}.module-card{padding:17px}.module-grid{grid-template-columns:1fr}.content-card,.stage-card,.question-bank{padding:17px;border-radius:17px}.stage-grid{grid-template-columns:1fr}.diagram-header{padding:17px 17px 10px;display:block}.diagram-tag{display:inline-block;margin-top:10px}.flow-svg{min-width:800px}.qa-card summary{grid-template-columns:62px 1fr 20px;gap:8px;padding:12px}.qa-kind{grid-column:2;grid-row:2;justify-self:start}.qa-toggle{grid-column:3;grid-row:1 / span 2}.qa-prompt{font-size:13px}.handoff-flow{grid-template-columns:1fr 20px 1fr;gap:6px}.handoff-flow>div{font-size:12px}.trouble-svg{min-width:820px}.question-heading{display:block}.question-count{display:inline-block;margin-top:8px}}
+@media print{body{background:#fff;color:#111}.topbar,.sidebar,.search-wrap,.top-btn,.question-tools{display:none!important}.hero{background:#e8ede6!important;color:#203328!important;padding:22px;print-color-adjust:exact}.hero p{color:#31483a}.shell{display:block;padding:10px;max-width:none}.content-card,.stage-card,.diagram-card,.question-bank{box-shadow:none;break-inside:avoid;border-color:#c8cec5}.lesson-section{break-before:page}.qa-card{break-inside:avoid}.qa-card:not([open]) .qa-answer{display:block}.sidebar{display:none}.flow-svg{min-width:0}a{color:#24372f;text-decoration:none}}
+
+.scope-note{margin:0 0 25px;padding:17px 20px;background:#f3ecdc;border:1px solid #dfd2b7;border-radius:17px;color:#625943;box-shadow:0 6px 18px rgba(44,63,52,.035)}.scope-note strong{display:block;color:#756342;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}.scope-note p{margin:0;font-size:14px;line-height:1.6}.scope-inline{margin:10px 0 15px;padding:11px 14px;background:#f3ecdc;border-left:3px solid #c8b68e;border-radius:0 10px 10px 0;color:#665d49;font-size:13px}.scope-inline:before{content:"HYBRID RETRIEVAL SCOPE · ";font-weight:800;letter-spacing:.08em;font-size:10px;color:#8b7955}
+@media(max-width:760px){.topbar-inner{min-width:0}.brand-title{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.search-wrap{min-width:60px}.topbar #expandAll,.topbar #collapseAll{display:none!important}}
+
+.qa-group-title{margin:20px 2px 8px;color:#7d8b7d;font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
+.branch-intro{font-size:15px;color:#6e7c72}
+.equation{margin:16px 0;padding:14px 18px;border:1px solid #d6ddcf;background:#eef2e9;border-radius:13px;overflow:auto}.equation-label{font-size:9px;letter-spacing:.15em;font-weight:850;color:#879487;margin-bottom:6px}.equation code{font:600 15px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:#354c3d;white-space:normal;background:none;padding:0}
+.content-card pre{position:relative;padding-top:42px}.content-card pre .copy-code{position:absolute;right:10px;top:9px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#edf1e9;border-radius:999px;padding:4px 9px;font-size:10px;cursor:pointer}.content-card pre .copy-code:hover{background:rgba(255,255,255,.2)}
+.content-card h3{scroll-margin-top:90px}.content-card h4{color:#597361;margin-bottom:8px}.lesson-section.final-section{margin-top:8px}
+@media(max-width:760px){.content-card pre{font-size:12px}.qa-group-title{margin-top:16px}.module-grid{grid-template-columns:1fr}}
+</style></head><body>
+<div class="topbar"><div class="topbar-inner"><button aria-label="Toggle section navigation" class="top-btn mobile-menu" id="menuToggle">☰</button><div class="brand-mark">VA</div><div class="brand-title">M06.2.2 · VECTOR DATABASES &amp; ANN</div><div class="top-spacer"></div><div class="search-wrap"><span class="search-icon">⌕</span><input aria-label="Search lessons and questions" id="searchInput" placeholder="Search lessons and questions…" type="search"/></div><button class="top-btn" id="expandAll">Expand answers</button><button class="top-btn" id="collapseAll">Collapse</button><button class="top-btn print-btn" onclick="window.print()">Print / PDF</button></div></div>
+<header class="hero"><div class="hero-inner"><div class="hero-eyebrow">M06 · VECTOR SEARCH · CORE MODULE</div><h1>Vector Databases and Approximate Nearest Neighbor Search</h1><p>Understand exact and approximate vector search, HNSW and IVF indexes, quantization, tuning, secure filtering, production lifecycle, and how to prove system correctness.</p><div class="hero-meta"><span>Path · Core</span><span>Depth · L2 foundation / L3 project practice</span><span>Prerequisite · Embeddings M06.1.3</span><span>5 branches · 83 Q&amp;A · 9 diagrams</span></div></div></header>
+<div class="shell"><aside class="sidebar" id="sidebar"><div class="side-label">LEARNING SEQUENCE · FIVE CONNECTED BRANCHES</div><a class="nav-link" href="#overview"><span>01</span>Quick reference</a><a class="nav-link" href="#branch-1"><span>02</span>Foundation &amp; mechanics</a><a class="nav-link" href="#branch-2"><span>03</span>Indexing algorithms</a><a class="nav-link" href="#branch-3"><span>04</span>Optimization &amp; implementation</a><a class="nav-link" href="#branch-4"><span>05</span>Production architecture</a><a class="nav-link" href="#branch-5"><span>06</span>Application</a><a class="nav-link" href="#glossary"><span>07</span>Glossary</a><a class="nav-link" href="#final-revision-checklist"><span>08</span>Final revision checklist</a><a class="nav-link" href="#multiple-choice-question-bank"><span>09</span>MCQ practice</a><a class="nav-link" href="#references"><span>10</span>References</a><div class="side-note"><strong>Memory aid</strong><br/>Measure approximation against exact search. Measure relevance against human evidence. Enforce eligibility independently of similarity.</div></aside>
+<main class="main"><div class="module-card"><div class="module-grid"><div><strong>Purpose</strong><span>Understand how vector search retrieves candidates, how indexes trade speed against recall, and how storage choices affect correctness, permissions, updates and deletion.</span></div><div><strong>Completion evidence</strong><span>Compare ANN with a filtered exact reference, measure relevance and latency, preserve permissions and versions, and demonstrate update/deletion behavior.</span></div><div><strong>How to study</strong><span>Follow the five branches in order. Read concepts, inspect code and diagrams, then attempt the theory, situational, practical and real-life questions.</span></div></div></div><section class="lesson-section" data-label="Quick reference" id="overview"><div class="section-kicker">MODULE OVERVIEW · START HERE</div><h2>How this module fits together</h2><p class="section-intro">Start with the difference between an index and a database, then understand exact and approximate search. From there, compare index families, optimize memory and query cost, and move into production architecture and application evidence.</p><div class="content-card"><h2 id="how-to-use-these-notes">How to Use These Notes</h2>
+<ol>
+<li>Read each branch top to bottom: concept → analogy → code → pitfalls.</li>
+<li>Cover the answers in the Q&amp;A and attempt them aloud (interview practice).</li>
+<li>Questions are tagged: <strong>[Theory]</strong>, <strong>[Situational]</strong>, <strong>[Practical]</strong>, <strong>[Real-life]</strong>, and levelled <strong>Junior / Mid / Senior</strong>.</li>
+<li>Reproduce the code examples yourself. The project exercise in Branch 5 is the L3 evidence.</li>
+</ol>
+<h2 id="master-quick-reference-table">Master Quick-Reference Table</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>One-line essence</th>
+<th>Key trap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vector index vs database</td>
+<td>Index = fast lookup structure; DB = index + metadata + security + lifecycle</td>
+<td>Assuming a library (FAISS) gives auth/backups/deletes</td>
+</tr>
+<tr>
+<td>3 correctness tiers</td>
+<td>Numerical → Retrieval → Application</td>
+<td>Perfect math can still leak/stale data</td>
+</tr>
+<tr>
+<td>Exact search</td>
+<td>Work ∝ N·d, perfect under metric</td>
+<td>Too slow at scale (but fine on small eligible sets)</td>
+</tr>
+<tr>
+<td>ANN</td>
+<td>Skip parts of space; may miss neighbors</td>
+<td>ANN recall ≠ relevance recall</td>
+</tr>
+<tr>
+<td>HNSW</td>
+<td>Multi-layer graph; <code>M</code>, <code>ef_construction</code>, <code>ef_search</code></td>
+<td>Static benchmark ≠ months of updates/deletes</td>
+</tr>
+<tr>
+<td>IVF / IVFFlat</td>
+<td>Centroids → probe nearest lists</td>
+<td>Centroids go stale on data drift</td>
+</tr>
+<tr>
+<td>SQ</td>
+<td>Lower precision per coordinate (~4x with int8)</td>
+<td>Rounding swaps close candidates</td>
+</tr>
+<tr>
+<td>PQ</td>
+<td>Subvectors → codebook IDs (3072 B → 96 B)</td>
+<td>Needs rescoring; can't recover missed candidates</td>
+</tr>
+<tr>
+<td>Tuning</td>
+<td>Index contract + one variable at a time + p95/p99</td>
+<td>Changing many things then crediting one</td>
+</tr>
+<tr>
+<td>Pre- vs post-filter</td>
+<td>Pre = restrict before search; post = after</td>
+<td>Post-filter starves results; removing filter = security defect</td>
+</tr>
+<tr>
+<td>Sharding</td>
+<td>Split data</td>
+<td>Hot shards; global top-K merge</td>
+</tr>
+<tr>
+<td>Replication</td>
+<td>Copy data</td>
+<td>Stale replicas can resurrect deleted data</td>
+</tr>
+<tr>
+<td>Tombstone / compaction</td>
+<td>Logical hide now / physical cleanup later</td>
+<td>Compaction is not a compliance mechanism; derived artifacts leak</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="master-mindmap">Master Mindmap</h2>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="master-mindmap-five-connected-branches">Master mindmap · five connected branches</h3><p>The module progresses from search mechanics to index choices, operational guarantees and a demonstrable project.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Vector database and ANN study map" class="flow-svg" role="img" viewbox="0 0 1280 500" xmlns="http://www.w3.org/2000/svg"><title>Vector database and ANN study map</title><desc>Five branches cover foundation, algorithms, optimization, production architecture, and application.</desc><defs><marker id="arr-0" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-0" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="72" rx="18" width="500" x="390" y="18"></rect><text class="svg-node-title" x="640" y="49">M06.2.2 · Vector Databases &amp; ANN</text><text class="svg-node-sub" x="640" y="72">From vector representation to production operation</text><path class="connector" d="M640 90 V125 H130 V160" style="marker-end:url(#arr-0)"></path><rect class="n-node" height="190" rx="16" width="220" x="20" y="160"></rect><text class="svg-node-title" style="font-size:15px" x="130.0" y="221.5">Branch 1 · Foundation</text><text class="svg-node-sub" x="130.0" y="248.5">Index vs database</text><text class="svg-node-sub" x="130.0" y="266.5">Correctness tiers</text><text class="svg-node-sub" x="130.0" y="284.5">Exact vs ANN</text><path class="connector" d="M640 90 V125 H380 V160" style="marker-end:url(#arr-0)"></path><rect class="n-lex" height="190" rx="16" width="220" x="270" y="160"></rect><text class="svg-node-title" style="font-size:15px" x="380.0" y="221.5">Branch 2 · Algorithms</text><text class="svg-node-sub" x="380.0" y="248.5">HNSW graph</text><text class="svg-node-sub" x="380.0" y="266.5">IVF / IVFFlat</text><text class="svg-node-sub" x="380.0" y="284.5">Index comparison</text><path class="connector" d="M640 90 V125 H630 V160" style="marker-end:url(#arr-0)"></path><rect class="n-dense" height="190" rx="16" width="220" x="520" y="160"></rect><text class="svg-node-title" style="font-size:15px" x="630.0" y="221.5">Branch 3 · Optimization</text><text class="svg-node-sub" x="630.0" y="248.5">Scalar &amp; product quantization</text><text class="svg-node-sub" x="630.0" y="266.5">Index contract</text><text class="svg-node-sub" x="630.0" y="284.5">Tuning &amp; quality gates</text><path class="connector" d="M640 90 V125 H880 V160" style="marker-end:url(#arr-0)"></path><rect class="n-guard" height="190" rx="16" width="220" x="770" y="160"></rect><text class="svg-node-title" style="font-size:15px" x="880.0" y="221.5">Branch 4 · Production</text><text class="svg-node-sub" x="880.0" y="248.5">Filtering &amp; permissions</text><text class="svg-node-sub" x="880.0" y="266.5">Sharding &amp; replicas</text><text class="svg-node-sub" x="880.0" y="284.5">Updates, deletes &amp; compaction</text><path class="connector" d="M640 90 V125 H1130 V160" style="marker-end:url(#arr-0)"></path><rect class="n-note" height="190" rx="16" width="220" x="1020" y="160"></rect><text class="svg-node-title" style="font-size:15px" x="1130.0" y="221.5">Branch 5 · Application</text><text class="svg-node-sub" x="1130.0" y="248.5">Worked case study</text><text class="svg-node-sub" x="1130.0" y="266.5">Project evidence</text><text class="svg-node-sub" x="1130.0" y="284.5">Holistic architecture</text><text class="svg-tiny" x="640" y="430">FOUNDATIONS → INDEX DESIGN → OPTIMIZATION → PRODUCTION → EVIDENCE</text></svg></div></div>
+<hr/>
+</div></section><section class="lesson-section" data-label="Foundation &amp; Mechanics" id="branch-1"><div class="section-kicker">BRANCH 1 · VECTOR DATABASES &amp; ANN</div><h2>Foundation &amp; Mechanics</h2><p class="section-intro">*The base concepts of vector search: what a vector store actually is, what "correct" means, and the exact-vs-approximate tradeoff.*</p><div class="content-card">
+</div><div class="content-card"><h3 id="11-vector-storage-fundamentals">1.1 Vector Storage Fundamentals</h3>
+<p><strong>Lifecycle connection:</strong> The architectural foundation. Before inserting any data, decide whether you need a raw mathematical index or a secure, production-ready database.</p>
+<h3 id="definitions">Definitions</h3>
+<ul>
+<li><strong>Vector database:</strong> stores vector representations plus associated records and supports similarity search. Depending on the system it may also offer filters, access control, durability, replication, text search, and operations tooling.</li>
+<li><strong>Vector index:</strong> the data structure that accelerates vector lookup. It is <em>one component</em> of a retrieval system. A library containing an ANN index (e.g., FAISS) is <strong>not</strong> automatically a database with authentication, backups, transactional metadata, or a deletion policy.</li>
+</ul>
+<blockquote>
+<p><strong>Analogy:</strong> The index is the card catalog. The database is the whole library, with a librarian checking permissions.</p>
+</blockquote>
+<h3 id="what-is-actually-stored">What is actually stored?</h3>
+<pre><code class="language-json">{
+  "chunk_id": "tenant-A:M-104:v4:section-7:chunk-2",
+  "document_id": "M-104",
+  "document_version": "v4",
+  "tenant_id": "tenant-A",
+  "resource_id": "ship-A",
+  "source_locator": "section 7, paragraph 2",
+  "acl_version": 18,
+  "content_hash": "example-hash",
+  "embedding_model": "example-model-revision",
+  "index_generation": "g12",
+  "status": "active"
+}
+</code></pre>
+<p>The embedding is an additional numeric field (or separate object). Original text may be co-stored or fetched by <code>chunk_id</code>.</p>
+<ul>
+<li><strong>Vector</strong> answers: <em>"Which items are close in this representation?"</em></li>
+<li><strong>Metadata</strong> answers: <em>"Who owns this? Which version is valid? Where did it come from?"</em></li>
+<li>Neither replaces the other.</li>
+</ul>
+<h3 id="three-tiers-of-correctness">Three tiers of correctness</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Question</th>
+<th>Example failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Numerical search correctness</td>
+<td>Did search find the nearest <strong>eligible</strong> vectors?</td>
+<td>ANN skipped a close vector</td>
+</tr>
+<tr>
+<td>2. Retrieval relevance</td>
+<td>Do the passages actually answer the question?</td>
+<td>Closest passage is about a different machine</td>
+</tr>
+<tr>
+<td>3. Application correctness</td>
+<td>May this evidence be used <strong>now</strong>?</td>
+<td>Passage is deleted, superseded, or unauthorized</td>
+</tr>
+</tbody>
+</table></div>
+<p>A perfect exact search can still fail tiers 2 and 3. <strong>Similarity is not permission.</strong></p>
+<h3 id="why-candidate-generation-matters">Why candidate generation matters</h3>
+<p>Vector search produces a <strong>candidate pool</strong>. A reranker refines it; evidence assembly picks what fits the context budget.</p>
+<p>Example: dense retrieval returns 40, hybrid union has 70 unique, reranker keeps 8. These are three different counts. Name them explicitly:</p>
+<ul>
+<li><code>dense_candidate_k</code> = 40</li>
+<li><code>fused_candidate_count</code> = 70</li>
+<li><code>final_context_k</code> = 8</li>
+</ul>
+<p>Log the stage where a relevant passage disappeared; this makes debugging tractable.</p>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="vector-index-vs-vector-database-correctness-layers">Vector index vs vector database · correctness layers</h3><p>Keep the mathematical index separate from the application responsibilities that make its results safe and usable.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Vector index and database architecture" class="flow-svg" role="img" viewbox="0 0 1200 490" xmlns="http://www.w3.org/2000/svg"><title>Vector index and database architecture</title><desc>A vector index accelerates lookup; a production database adds metadata, permissions, and lifecycle capabilities. Correctness has three tiers.</desc><defs><marker id="arr-1" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-1" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="66" rx="16" width="360" x="420" y="18"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="35.5">Vector search system</text><text class="svg-node-sub" x="600.0" y="62.5">representation + similarity query</text><path class="connector" d="M600 84 V120 H285 V150" style="marker-end:url(#arr-1)"></path><path class="connector" d="M600 120 H915 V150" style="marker-end:url(#arr-1)"></path><rect class="n-lex" height="105" rx="16" width="410" x="80" y="150"></rect><text class="svg-node-title" style="font-size:17px" x="285.0" y="178.0">Vector index</text><text class="svg-node-sub" x="285.0" y="205.0">Fast similarity lookup</text><text class="svg-node-sub" x="285.0" y="223.0">Mathematical search structure</text><rect class="n-dense" height="105" rx="16" width="410" x="710" y="150"></rect><text class="svg-node-title" style="font-size:17px" x="915.0" y="178.0">Vector database</text><text class="svg-node-sub" x="915.0" y="205.0">Vectors + records + metadata</text><text class="svg-node-sub" x="915.0" y="223.0">Security / durability / operations</text><rect class="n-node" height="125" rx="16" width="340" x="65" y="300"></rect><text class="svg-node-title" style="font-size:15px" x="235.0" y="347.0">Tier 1 · Numerical correctness</text><text class="svg-node-sub" x="235.0" y="374.0">Nearest eligible vectors under metric</text><rect class="n-guard" height="125" rx="16" width="340" x="430" y="300"></rect><text class="svg-node-title" style="font-size:15px" x="600.0" y="347.0">Tier 2 · Retrieval relevance</text><text class="svg-node-sub" x="600.0" y="374.0">Does the passage answer the question?</text><rect class="n-note" height="125" rx="16" width="340" x="795" y="300"></rect><text class="svg-node-title" style="font-size:15px" x="965.0" y="347.0">Tier 3 · Application correctness</text><text class="svg-node-sub" x="965.0" y="374.0">Current, authorized, usable evidence</text><path class="connector" d="M285 255 V275 H235 V300" style="marker-end:url(#arr-1)"></path><path class="connector" d="M600 255 V278 H600 V300" style="marker-end:url(#arr-1)"></path><path class="connector" d="M915 255 V275 H965 V300" style="marker-end:url(#arr-1)"></path><text class="svg-tiny" x="600" y="466">SIMILARITY IS NOT RELEVANCE · RELEVANCE IS NOT PERMISSION</text></svg></div></div>
+<p><strong>Key takeaway:</strong> An index accelerates similarity lookup. The complete application remains responsible for relevance, provenance, permissions, and lifecycle.</p>
+</div><div class="content-card"><h3 id="12-exact-search-ann-and-candidate-generation">1.2 Exact Search, ANN, and Candidate Generation</h3>
+<p><strong>Lifecycle connection:</strong> Dictates the retrieval execution strategy: how candidates are gathered before they reach a reranker or LLM.</p>
+<h3 id="exact-search">Exact search</h3>
+<p>Evaluates similarity/distance against <strong>every eligible vector</strong>, returns the best under the metric (subject to numerical precision and a defined tie policy).</p>
+<ul>
+<li>Work ∝ <strong>N × d</strong> (N vectors, d dimensions). A conceptual model, not a wall-clock prediction; hardware, batching, memory layout, and filters matter.</li>
+<li>Use when: the corpus is small, <strong>filters leave few rows</strong>, or you need a <strong>reference/gold baseline</strong> to test an ANN index.</li>
+</ul>
+<h3 id="ann-approximate-nearest-neighbor">ANN (Approximate Nearest Neighbor)</h3>
+<p>Reduces work by exploring only selected parts of the vector space or using compressed representations. <strong>May miss true neighbors.</strong> "Approximate" is not "arbitrary": a good index recovers most useful neighbors efficiently.</p>
+<p>pgvector's default is exact search; approximate indexes can change returned results, and behaviour is product-specific.</p>
+<h3 id="ann-recall-relevance-recall">ANN recall ≠ relevance recall</h3>
+<p>Let E_K(q) = exact top-K IDs and A_K(q) = approximate top-K IDs.</p>
+<pre><code>ANN Recall@K(q) = |A_K(q) ∩ E_K(q)| / K
+</code></pre>
+<p>(Assumes ≥K eligible records; otherwise use exact result count as denominator and document the convention.)</p>
+<p><strong>Example:</strong> exact = {A,B,C,D,E}, approx = {A,B,D,F,G} → overlap {A,B,D} → recall@5 = 3/5 = <strong>0.60</strong>.</p>
+<p>If a human says only B and H truly answer the question, ANN recall says nothing about whether H is represented well. <strong>Relevance recall</strong> requires human-labeled, authorized, current gold evidence.</p>
+<h3 id="recall-vs-latency-illustrative-invented">Recall vs. latency (illustrative, invented)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th style="text-align:right">ANN recall@10</th>
+<th style="text-align:right">Relevance recall@10</th>
+<th style="text-align:right">p95 latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small exploration</td>
+<td style="text-align:right">0.83</td>
+<td style="text-align:right">0.66</td>
+<td style="text-align:right">19 ms</td>
+</tr>
+<tr>
+<td>Medium exploration</td>
+<td style="text-align:right">0.94</td>
+<td style="text-align:right">0.73</td>
+<td style="text-align:right">31 ms</td>
+</tr>
+<tr>
+<td>Large exploration</td>
+<td style="text-align:right">0.98</td>
+<td style="text-align:right">0.74</td>
+<td style="text-align:right">62 ms</td>
+</tr>
+<tr>
+<td>Exact reference</td>
+<td style="text-align:right">1.00</td>
+<td style="text-align:right">0.75</td>
+<td style="text-align:right">105 ms</td>
+</tr>
+</tbody>
+</table></div>
+<p>Medium looks attractive; doubling exploration again buys ~1 point of relevance for 2x latency. Better embeddings or lexical retrieval may help more. But a rare missed passage can matter a lot to the business even if the average gap is small.</p>
+<h3 id="code-exact-search-reference-stdlib-only">Code: exact-search reference (stdlib only)</h3>
+<p>Eligibility is applied <strong>before</strong> scoring. In production, <code>allowed_ids</code> comes from trusted authorization logic, never a client claim.</p>
+<pre><code class="language-python">from math import sqrt
+
+def cosine(a, b):
+    if len(a) != len(b):
+        raise ValueError("Embedding dimensions differ")
+    na = sqrt(sum(x * x for x in a))
+    nb = sqrt(sum(x * x for x in b))
+    if na == 0 or nb == 0:
+        raise ValueError("Cosine is undefined for a zero vector")
+    return sum(x * y for x, y in zip(a, b)) / (na * nb)
+
+def exact_search(rows, query, allowed_ids, k):
+    eligible = [r for r in rows if r["id"] in allowed_ids]
+    ranked = sorted(eligible, key=lambda r: (-cosine(query, r["vector"]), r["id"]))  # tie policy: id
+    return [r["id"] for r in ranked[:k]]
+
+rows = [
+    {"id": "A", "vector": [1.0, 0.0]},
+    {"id": "B", "vector": [0.8, 0.6]},
+    {"id": "C", "vector": [0.0, 1.0]},
+]
+assert exact_search(rows, [1.0, 0.0], {"B", "C"}, 2) == ["B", "C"]
+</code></pre>
+<h3 id="code-measuring-ann-recall-k">Code: measuring ANN recall@K</h3>
+<pre><code class="language-python">def ann_recall_at_k(exact_ids, approx_ids, k):
+    e, a = set(exact_ids[:k]), set(approx_ids[:k])
+    denom = min(k, len(e)) or 1          # documented convention for small eligible sets
+    return len(e &amp; a) / denom
+
+print(ann_recall_at_k(list("ABCDE"), list("ABDFG"), 5))  # 0.6
+
+def mean_recall(queries, exact_fn, ann_fn, k):
+    return sum(ann_recall_at_k(exact_fn(q), ann_fn(q), k) for q in queries) / len(queries)
+</code></pre>
+<p>Use the <strong>same</strong> eligibility predicate, embedding version, metric, and tie policy for exact and ANN evaluation.</p>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="exact-search-and-ann-two-baselines-two-recall-concepts">Exact search and ANN · two baselines, two recall concepts</h3><p>Use exact search to measure approximation loss, and human relevance labels to measure whether retrieved passages answer the need.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Exact search compared with approximate nearest neighbor search" class="flow-svg" role="img" viewbox="0 0 1200 430" xmlns="http://www.w3.org/2000/svg"><title>Exact search compared with approximate nearest neighbor search</title><desc>Exact search scores every eligible vector. ANN explores a subset or compressed representation and may miss true neighbors.</desc><defs><marker id="arr-2" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-2" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="65" rx="16" width="370" x="415" y="18"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="35.0">Eligible vector set</text><text class="svg-node-sub" x="600.0" y="62.0">same corpus · model · metric · filters</text><path class="connector" d="M600 83 V120 H300 V155" style="marker-end:url(#arr-2)"></path><path class="connector" d="M600 120 H900 V155" style="marker-end:url(#arr-2)"></path><rect class="n-lex" height="110" rx="16" width="440" x="80" y="155"></rect><text class="svg-node-title" style="font-size:17px" x="300.0" y="185.5">Exact search</text><text class="svg-node-sub" x="300.0" y="212.5">Evaluate every eligible vector</text><text class="svg-node-sub" x="300.0" y="230.5">Reference / gold baseline</text><rect class="n-dense" height="110" rx="16" width="440" x="680" y="155"></rect><text class="svg-node-title" style="font-size:17px" x="900.0" y="185.5">ANN search</text><text class="svg-node-sub" x="900.0" y="212.5">Explore selected regions / codes</text><text class="svg-node-sub" x="900.0" y="230.5">Lower work · possible missed neighbors</text><path class="connector" d="M300 265 V300 H600 V325" style="marker-end:url(#arr-2)"></path><path class="connector" d="M900 265 V300 H600 V325" style="marker-end:url(#arr-2)"></path><rect class="n-guard" height="75" rx="16" width="460" x="370" y="325"></rect><text class="svg-node-title" style="font-size:16px" x="600.0" y="347.0">Compare two different questions</text><text class="svg-node-sub" x="600.0" y="374.0">ANN recall vs exact  ·  human relevance recall</text><text class="svg-tiny" x="600" y="415">EXACT SEARCH IS THE REFERENCE; RELEVANCE STILL NEEDS HUMAN-LABELED EVIDENCE</text></svg></div></div>
+</div><div class="question-bank"><div class="question-heading"><div><div class="eyebrow">BRANCH 1 · INTERVIEW &amp; RECALL</div><h3>Branch 1 Q&amp;A</h3><p>Attempt each question first, then expand the model answer. Difficulty and question type are retained from the source.</p></div><span class="question-count">16 questions</span></div><div class="qa-group-title">A. Theoretical</div><details class="qa-card" data-search="what is the main difference between a vector index and a vector database? model answer an index accelerates finding similar vectors. a database stores vectors alongside metadata, handles crud, and can enforce access permissions, durability, and replication. verify which capabilities a given product actually provides."><summary><span class="qa-id">B1 · Q1</span><span class="qa-prompt">What is the main difference between a vector index and a vector database?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>An index accelerates finding similar vectors. A database stores vectors alongside metadata, handles CRUD, and can enforce access permissions, durability, and replication. Verify which capabilities a given product actually provides.</p>
+</div></details><details class="qa-card" data-search="why not always use exact search if it guarantees the closest vectors? model answer at scale, work ∝ n×d per query. with millions of vectors, it crushes cpu/latency budgets for real-time use. (exception: small eligible sets.)"><summary><span class="qa-id">B1 · Q2</span><span class="qa-prompt">Why not always use exact search if it guarantees the closest vectors?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>At scale, work ∝ N×d per query. With millions of vectors, it crushes CPU/latency budgets for real-time use. (Exception: small eligible sets.)</p>
+</div></details><details class="qa-card" data-search="retrieval returns a semantically relevant passage. can you guarantee application correctness? model answer no. relevance (tier 2) ≠ application correctness (tier 3). the passage may be outdated, deleted, or unauthorized."><summary><span class="qa-id">B1 · Q3</span><span class="qa-prompt">Retrieval returns a semantically relevant passage. Can you guarantee application correctness?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. Relevance (tier 2) ≠ application correctness (tier 3). The passage may be outdated, deleted, or unauthorized.</p>
+</div></details><details class="qa-card" data-search="does exact vector search guarantee the right answer? model answer no. it finds the nearest eligible vectors under a metric. the embedding may rank irrelevant text highly, and generation can still misuse evidence."><summary><span class="qa-id">B1 · Q4</span><span class="qa-prompt">Does exact vector search guarantee the right answer?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. It finds the nearest eligible vectors under a metric. The embedding may rank irrelevant text highly, and generation can still misuse evidence.</p>
+</div></details><details class="qa-card" data-search="how do you compute ann recall@k? model answer take exact top-k ids, take ann top-k ids, divide overlap count by k (document the convention if fewer than k eligible)."><summary><span class="qa-id">B1 · Q5</span><span class="qa-prompt">How do you compute ANN Recall@K?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Take exact top-K IDs, take ANN top-K IDs, divide overlap count by K (document the convention if fewer than K eligible).</p>
+</div></details><details class="qa-card" data-search="why is ann recall different from relevance recall? model answer ann recall compares against the exact result in the same representation . relevance recall compares against human-labeled gold evidence. if the embedding is poor, ann recall can be ~1.0 while relevance is low."><summary><span class="qa-id">B1 · Q6</span><span class="qa-prompt">Why is ANN recall different from relevance recall?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>ANN recall compares against the exact result <em>in the same representation</em>. Relevance recall compares against human-labeled gold evidence. If the embedding is poor, ANN recall can be ~1.0 while relevance is low.</p>
+</div></details><details class="qa-card" data-search="why do we retain an exact reference system? model answer to isolate approximation loss from embedding/chunking/corpus problems, and to have a stable comparator while tuning."><summary><span class="qa-id">B1 · Q7</span><span class="qa-prompt">Why do we retain an exact reference system?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>To isolate approximation loss from embedding/chunking/corpus problems, and to have a stable comparator while tuning.</p>
+</div></details><details class="qa-card" data-search="why label counts like `dense_candidate_k` and `final_context_k` separately? model answer because several different &quot;top-k&quot; numbers exist in a pipeline. without labels you can't tell where a relevant passage was lost."><summary><span class="qa-id">B1 · Q8</span><span class="qa-prompt">Why label counts like `dense_candidate_k` and `final_context_k` separately?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Because several different "top-k" numbers exist in a pipeline. Without labels you can't tell where a relevant passage was lost.</p>
+</div></details><div class="qa-group-title">B. Situational</div><details class="qa-card" data-search="your multi-tenant rag (fastapi) returns highly relevant chunks, but qa reports occasional cross-tenant leaks. where is the flaw? model answer the system treats similarity as authorization. tenant boundaries must be enforced by database-level metadata filters or isolated namespaces/partitions, driven by server-derived identity (from the auth token), not by vector proximity or a client-supplied tenant_id ."><summary><span class="qa-id">B1 · Q9</span><span class="qa-prompt">Your multi-tenant RAG (FastAPI) returns highly relevant chunks, but QA reports occasional cross-tenant leaks. Where is the flaw?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>The system treats similarity as authorization. Tenant boundaries must be enforced by database-level metadata filters or isolated namespaces/partitions, driven by <strong>server-derived identity</strong> (from the auth token), not by vector proximity or a client-supplied <code>tenant_id</code>.</p>
+</div></details><details class="qa-card" data-search="exact search gets 60% relevance, ann gets 59%. the pm wants two weeks of ann tuning. agree? model answer no. a 1-point gap is negligible. the real issue is that even the exact pipeline is at 60%. investigate embeddings, chunking, query handling, and document coverage."><summary><span class="qa-id">B1 · Q10</span><span class="qa-prompt">Exact search gets 60% relevance, ANN gets 59%. The PM wants two weeks of ANN tuning. Agree?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. A 1-point gap is negligible. The real issue is that even the exact pipeline is at 60%. Investigate embeddings, chunking, query handling, and document coverage.</p>
+</div></details><details class="qa-card" data-search="exact search finds the relevant chunk for 92% of authorized questions; ann for 80%. what now? model answer that 12-point gap points to approximation. tune query exploration, then build parameters; compare against a filtered exact reference."><summary><span class="qa-id">B1 · Q11</span><span class="qa-prompt">Exact search finds the relevant chunk for 92% of authorized questions; ANN for 80%. What now?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>That 12-point gap points to approximation. Tune query exploration, then build parameters; compare against a <strong>filtered</strong> exact reference.</p>
+</div></details><details class="qa-card" data-search="why must the exact reference be *filtered*? model answer an unfiltered reference may include prohibited or superseded passages that the application correctly excludes, which would make ann look worse (or better) for the wrong reasons."><summary><span class="qa-id">B1 · Q12</span><span class="qa-prompt">Why must the exact reference be *filtered*?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>An unfiltered reference may include prohibited or superseded passages that the application correctly excludes, which would make ANN look worse (or better) for the wrong reasons.</p>
+</div></details><div class="qa-group-title">C. Practical (code / hands-on)</div><details class="qa-card" data-search="write a function to compute recall@k, then explain what the number means when k=10 and result is 0.8. model answer see ann_recall_at_k . 0.8 means 8 of the 10 exact nearest neighbors were returned by ann. it says nothing yet about whether those 8 answer the user's question."><summary><span class="qa-id">B1 · Q13</span><span class="qa-prompt">Write a function to compute recall@K, then explain what the number means when K=10 and result is 0.8.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>See <code>ann_recall_at_k</code>. 0.8 means 8 of the 10 exact nearest neighbors were returned by ANN. It says nothing yet about whether those 8 answer the user's question.</p>
+</div></details><details class="qa-card" data-search="design a benchmark harness for exact vs ann. model answer freeze corpus snapshot, embeddings, metric, and eligibility predicate. run n representative queries through both; record ann recall@k, relevance recall@k (gold labels), p50/p95/p99 latency, and memory. slice by query type (identifiers, conceptual, rare topics, multilingual)."><summary><span class="qa-id">B1 · Q14</span><span class="qa-prompt">Design a benchmark harness for exact vs ANN.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Freeze corpus snapshot, embeddings, metric, and eligibility predicate. Run N representative queries through both; record ANN recall@K, relevance recall@K (gold labels), p50/p95/p99 latency, and memory. Slice by query type (identifiers, conceptual, rare topics, multilingual).</p>
+</div></details><div class="qa-group-title">D. Real-life</div><details class="qa-card" data-search='a legal-tech product says "our vector db is 99% recall." what follow-up questions do you ask? model answer 99% of what ? ann recall vs relevance recall? on which corpus, filters, and k? which tenants/slices? at what p95 latency and memory? were deleted/unauthorized docs excluded from the reference?'><summary><span class="qa-id">B1 · Q15</span><span class="qa-prompt">A legal-tech product says "our vector DB is 99% recall." What follow-up questions do you ask?</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>99% of <em>what</em>? ANN recall vs relevance recall? On which corpus, filters, and K? Which tenants/slices? At what p95 latency and memory? Were deleted/unauthorized docs excluded from the reference?</p>
+</div></details><details class="qa-card" data-search="a startup uses faiss in a notebook and wants to ship it as &quot;the database.&quot; what's missing? model answer auth, tenant isolation, metadata storage/filters, durability/backups, replication, update/delete workflow, monitoring, versioned publication."><summary><span class="qa-id">B1 · Q16</span><span class="qa-prompt">A startup uses FAISS in a notebook and wants to ship it as "the database." What's missing?</span><span class="qa-kind">Mid · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Auth, tenant isolation, metadata storage/filters, durability/backups, replication, update/delete workflow, monitoring, versioned publication.</p>
+</div></details><div class="question-tools"><button class="small-control expand-branch">Expand this branch</button><button class="small-control collapse-branch">Collapse this branch</button></div></div></section><section class="lesson-section" data-label="Indexing Algorithms" id="branch-2"><div class="section-kicker">BRANCH 2 · VECTOR DATABASES &amp; ANN</div><h2>Indexing Algorithms</h2><p class="section-intro">*The distinct mathematical models used for ANN.*</p><div class="content-card">
+</div><div class="content-card"><h3 id="21-hnsw-hierarchical-navigable-small-world">2.1 HNSW (Hierarchical Navigable Small World)</h3>
+<p><strong>Lifecycle connection:</strong> Primary index-construction choice when low latency is required. Original paper: Malkov &amp; Yashunin (arXiv:1603.09320).</p>
+<h3 id="concept">Concept</h3>
+<p>Organizes vectors into a <strong>multi-level graph</strong>. Search starts in sparse upper layers to leap toward the right region, then descends to dense lower layers to examine nearby candidates closely.</p>
+<blockquote>
+<p><strong>Analogy:</strong> Navigating a map: district (upper layer) → street → exact building (dense bottom layer). Real levels are graph links between vectors, not literal districts.</p>
+</blockquote>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="hnsw-navigate-a-layered-graph">HNSW · navigate a layered graph</h3><p>The diagram illustrates the high-level search path; actual implementations use graph links between vector nodes, not literal geographic layers.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="HNSW layered graph navigation" class="flow-svg" role="img" viewbox="0 0 1200 430" xmlns="http://www.w3.org/2000/svg"><title>HNSW layered graph navigation</title><desc>Search descends from sparse upper graph layers to a denser bottom layer, exploring candidate neighbors along the way.</desc><defs><marker id="arr-3" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-3" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="58" rx="16" width="270" x="465" y="15"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="37.5">Query vector</text><path class="connector" d="M600 73 V105" style="marker-end:url(#arr-3)"></path><rect class="n-lex" height="70" rx="16" width="570" x="315" y="105"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="124.5">Upper graph layer</text><text class="svg-node-sub" x="600.0" y="151.5">Sparse long-range links · large directional hops</text><path class="connector" d="M600 175 V210" style="marker-end:url(#arr-3)"></path><rect class="n-node" height="70" rx="16" width="710" x="245" y="210"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="229.5">Middle graph layer</text><text class="svg-node-sub" x="600.0" y="256.5">Closer hops · progressively narrower neighborhood</text><path class="connector" d="M600 280 V315" style="marker-end:url(#arr-3)"></path><rect class="n-dense" height="78" rx="16" width="930" x="135" y="315"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="338.5">Bottom graph layer</text><text class="svg-node-sub" x="600.0" y="365.5">Denser local connections · candidate neighbors examined closely</text><text class="svg-tiny" x="600" y="418">M = GRAPH CONNECTIVITY · EF_CONSTRUCTION = BUILD EFFORT · EF_SEARCH = QUERY EFFORT</text></svg></div></div>
+<h3 id="the-three-controls">The three controls</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Influences</th>
+<th>Practical question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>M</code> (connectivity)</td>
+<td>Graph links per node → <strong>memory/index size</strong></td>
+<td>Is the graph connected enough?</td>
+</tr>
+<tr>
+<td><code>ef_construction</code></td>
+<td>Build-time exploration → <strong>build time/graph quality</strong></td>
+<td>Is a better graph worth longer builds?</td>
+</tr>
+<tr>
+<td><code>ef_search</code></td>
+<td>Query-time exploration → <strong>latency &amp; recall</strong></td>
+<td>How much latency can retrieval spend?</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="construction-vs-querying">Construction vs querying</h3>
+<ul>
+<li>A weakly built graph limits recall; raising <code>ef_search</code> can't always fix it economically.</li>
+<li>Rebuilding is unnecessary if a modest <code>ef_search</code> increase hits the target.</li>
+<li><strong>Sensible experiment:</strong> hold <code>M</code> and <code>ef_construction</code> fixed, vary <code>ef_search</code>. If no affordable <code>ef_search</code> meets the target, test a higher <code>ef_construction</code>/<code>M</code> in a <strong>new index generation</strong>.</li>
+</ul>
+<h3 id="lifecycle-risk">Lifecycle risk</h3>
+<p>A graph that excels on a static benchmark may degrade after months of updates/deletes (tombstones bloat traversal; navigability suffers). <strong>Include update/delete operations in the workload test</strong> and schedule rebuilds/compaction based on measured drift.</p>
+<h3 id="code-hnsw-with-faiss">Code: HNSW with FAISS</h3>
+<pre><code class="language-python">import numpy as np, faiss
+
+d, n = 128, 100_000
+xb = np.random.random((n, d)).astype("float32")
+xq = np.random.random((5, d)).astype("float32")
+
+index = faiss.IndexHNSWFlat(d, 32)        # M = 32
+index.hnsw.efConstruction = 200           # build-time effort
+index.add(xb)
+
+index.hnsw.efSearch = 64                  # query-time effort (tune this first)
+D, I = index.search(xq, 10)
+</code></pre>
+<h3 id="code-hnsw-in-pgvector-postgresql">Code: HNSW in pgvector (PostgreSQL)</h3>
+<pre><code class="language-sql">CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE chunks (
+  id bigserial PRIMARY KEY,
+  tenant_id text NOT NULL,
+  doc_version text NOT NULL,
+  status text NOT NULL DEFAULT 'active',
+  embedding vector(768)
+);
+
+CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)
+  WITH (m = 16, ef_construction = 64);
+
+-- query-time exploration
+SET hnsw.ef_search = 100;
+
+SELECT id FROM chunks
+WHERE tenant_id = 'tenant-A' AND status = 'active'
+ORDER BY embedding &lt;=&gt; '[0.1, 0.2, ...]'
+LIMIT 10;
+</code></pre>
+<blockquote>
+<p>With an approximate index, a <code>WHERE</code> filter may be applied <em>after</em> the index scan, which can return fewer than <code>LIMIT</code> rows. See <a href="#41-filtering-and-production-storage">Branch 4</a>.</p>
+</blockquote>
+<p><strong>Memory aid:</strong> HNSW = <em>navigate a graph, then explore nearby candidates.</em></p>
+</div><div class="content-card"><h3 id="22-ivf-and-ivfflat">2.2 IVF and IVFFlat</h3>
+<p><strong>Lifecycle connection:</strong> Alternative index construction, heavily dependent on the shape and clustering of your dataset.</p>
+<h3 id="concept-2">Concept</h3>
+<ul>
+<li><strong>IVF (inverted file):</strong> partition vector space into regions with representative <strong>centroids</strong>. At query time, compare the query to centroids, pick the nearest lists, and search only those.</li>
+<li><strong>IVFFlat:</strong> vectors inside the lists remain <strong>uncompressed ("Flat")</strong>. Approximation arises because only some lists are visited; "Flat" does <em>not</em> mean all lists are scanned.</li>
+<li>Read index names carefully: <strong>IVFFlat vs IVFPQ</strong> have different compression behaviour.</li>
+</ul>
+<h3 id="worked-example">Worked example</h3>
+<p>120,000 vectors in 120 lists; query probes 6 lists. If balanced: ~6,000 vectors inspected instead of 120,000 (≈5%). But real lists are unbalanced, and a true nearest neighbor sitting just across a boundary in an unprobed list is <strong>missed</strong>. More probes → more recall, more work (gain depends on clustering quality and query distribution).</p>
+<h3 id="training-and-representative-data">Training and representative data</h3>
+<p>Centroids must reflect the data you will search. Training on English policy docs and later ingesting multilingual technical manuals gives poorly fitted clusters.</p>
+<ul>
+<li>Train on a sample covering document types, languages, tenants (where policy permits), and time periods.</li>
+<li>Keep evaluation set <strong>separate</strong> from tuning data.</li>
+<li>Rebuild on <strong>evidence</strong> (list imbalance growth, widening quality gap), not just on a calendar.</li>
+</ul>
+<h3 id="code-ivfflat-with-faiss">Code: IVFFlat with FAISS</h3>
+<pre><code class="language-python">import numpy as np, faiss
+
+d, n, nlist = 128, 120_000, 120
+xb = np.random.random((n, d)).astype("float32")
+
+quantizer = faiss.IndexFlatL2(d)                 # holds the centroids
+index = faiss.IndexIVFFlat(quantizer, d, nlist)  # nlist = number of lists
+index.train(xb)                                  # learn centroids on representative data
+index.add(xb)
+
+index.nprobe = 6                                 # lists searched per query
+D, I = index.search(xb[:3], 10)
+</code></pre>
+<h3 id="code-ivfflat-in-pgvector">Code: IVFFlat in pgvector</h3>
+<pre><code class="language-sql">-- Build AFTER data is loaded so centroids are representative
+CREATE INDEX ON chunks USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+SET ivfflat.probes = 10;
+</code></pre>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="ivf-ivfflat-centroid-selection-and-list-probing">IVF / IVFFlat · centroid selection and list probing</h3><p>IVFFlat is approximate because only some lists are scanned—not because the vectors inside those lists are compressed.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="IVF query and list probing" class="flow-svg" role="img" viewbox="0 0 1200 440" xmlns="http://www.w3.org/2000/svg"><title>IVF query and list probing</title><desc>IVF groups vectors into centroid-associated inverted lists; a query probes selected lists rather than scanning all lists.</desc><defs><marker id="arr-4" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-4" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="60" rx="16" width="270" x="465" y="15"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="38.5">Query vector</text><path class="connector" d="M600 75 V105" style="marker-end:url(#arr-4)"></path><rect class="n-lex" height="70" rx="16" width="500" x="350" y="105"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="124.5">Compare query to centroids</text><text class="svg-node-sub" x="600.0" y="151.5">Select nearest partitions / lists</text><path class="connector" d="M600 175 V205" style="marker-end:url(#arr-4)"></path><rect class="n-node" height="70" rx="16" width="500" x="350" y="205"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="224.5">Probe nprobe lists</text><text class="svg-node-sub" x="600.0" y="251.5">Only selected inverted lists are searched</text><path class="connector" d="M600 275 V305" style="marker-end:url(#arr-4)"></path><rect class="n-dense" height="70" rx="16" width="500" x="350" y="305"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="324.5">Scan vectors in probed lists</text><text class="svg-node-sub" x="600.0" y="351.5">IVFFlat vectors remain uncompressed</text><rect class="n-guard" height="170" rx="16" width="260" x="900" y="205"></rect><text class="svg-node-title" style="font-size:15px" x="1030.0" y="274.5">Unprobed lists</text><text class="svg-node-sub" x="1030.0" y="301.5">May contain a true neighbor; boundary misses are possible</text><path class="connector" d="M850 240 H900" style="marker-end:url(#arr-4)"></path><text class="svg-tiny" x="600" y="420">MORE PROBES → MORE WORK AND USUALLY MORE NEIGHBOR RECOVERY</text></svg></div></div>
+</div><div class="content-card"><h3 id="23-hnsw-vs-ivf-comparison">2.3 HNSW vs IVF Comparison</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>HNSW-style question</th>
+<th>IVF-style question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Construction</td>
+<td>How costly are graph connections?</td>
+<td>Is the training sample representative?</td>
+</tr>
+<tr>
+<td>Query control</td>
+<td>How broad is graph exploration (<code>ef_search</code>)?</td>
+<td>How many lists probed (<code>nprobe</code>/<code>probes</code>)?</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Vectors + graph links</td>
+<td>Vectors/codes + list structures</td>
+</tr>
+<tr>
+<td>Distribution change</td>
+<td>Does graph quality hold after updates?</td>
+<td>Do centroids still represent the corpus?</td>
+</tr>
+<tr>
+<td>Filtering</td>
+<td>Can eligible neighbors be reached efficiently?</td>
+<td>How selective are filters within probed lists?</td>
+</tr>
+</tbody>
+</table></div>
+<p>This is a <strong>decision framework</strong>, not a claim that one family always wins. Benchmark on <strong>your</strong> workload.</p>
+</div><div class="question-bank"><div class="question-heading"><div><div class="eyebrow">BRANCH 2 · INTERVIEW &amp; RECALL</div><h3>Branch 2 Q&amp;A</h3><p>Attempt each question first, then expand the model answer. Difficulty and question type are retained from the source.</p></div><span class="question-count">16 questions</span></div><div class="qa-group-title">A. Theoretical</div><details class="qa-card" data-search="how does hnsw skip irrelevant data? model answer sparse upper layers allow big leaps toward the target region; only the dense bottom layer is explored closely around the final neighborhood."><summary><span class="qa-id">B2 · Q1</span><span class="qa-prompt">How does HNSW skip irrelevant data?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Sparse upper layers allow big leaps toward the target region; only the dense bottom layer is explored closely around the final neighborhood.</p>
+</div></details><details class="qa-card" data-search="what is a centroid in ivf? model answer the mathematical center of a cluster of vectors; a representative marker for that list/bucket."><summary><span class="qa-id">B2 · Q2</span><span class="qa-prompt">What is a centroid in IVF?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>The mathematical center of a cluster of vectors; a representative marker for that list/bucket.</p>
+</div></details><details class="qa-card" data-search="why is ivfflat &quot;approximate&quot; if vectors aren't compressed? model answer because only a subset of lists is searched; a true neighbor may be in an unsearched list near a boundary."><summary><span class="qa-id">B2 · Q3</span><span class="qa-prompt">Why is IVFFlat "approximate" if vectors aren't compressed?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Because only a subset of lists is searched; a true neighbor may be in an unsearched list near a boundary.</p>
+</div></details><details class="qa-card" data-search="name the three hnsw controls and what each affects. model answer m → memory/connectivity; ef_construction → build time/graph quality; ef_search → query latency/recall."><summary><span class="qa-id">B2 · Q4</span><span class="qa-prompt">Name the three HNSW controls and what each affects.</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p><code>M</code> → memory/connectivity; <code>ef_construction</code> → build time/graph quality; <code>ef_search</code> → query latency/recall.</p>
+</div></details><details class="qa-card" data-search="what are the ivf analogues of build vs query effort? model answer build: number of lists ( nlist / lists ) and training sample quality. query: number of probes ( nprobe / probes )."><summary><span class="qa-id">B2 · Q5</span><span class="qa-prompt">What are the IVF analogues of build vs query effort?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Build: number of lists (<code>nlist</code>/<code>lists</code>) and training sample quality. Query: number of probes (<code>nprobe</code>/<code>probes</code>).</p>
+</div></details><details class="qa-card" data-search="does increasing `ef_search` always improve recall for every query? model answer no. it usually helps on average at a latency cost, but it is not guaranteed per query and can plateau if another bottleneck exists."><summary><span class="qa-id">B2 · Q6</span><span class="qa-prompt">Does increasing `ef_search` always improve recall for every query?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. It usually helps on average at a latency cost, but it is not guaranteed per query and can plateau if another bottleneck exists.</p>
+</div></details><div class="qa-group-title">B. Situational</div><details class="qa-card" data-search="hnsw recall is too low. rebuild immediately? model answer no. raise ef_search first. only if no affordable value meets the target, rebuild with higher ef_construction or m as a new generation."><summary><span class="qa-id">B2 · Q7</span><span class="qa-prompt">HNSW recall is too low. Rebuild immediately?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. Raise <code>ef_search</code> first. Only if no affordable value meets the target, rebuild with higher <code>ef_construction</code> or <code>M</code> as a new generation.</p>
+</div></details><details class="qa-card" data-search="hnsw is perfect on a static benchmark; after 6 months of updates/deletes, latency spikes and recall drops. why? model answer continuous updates and tombstones degrade graph navigability (bloated traversal, poorly connected regions). schedule rebuilds/compaction and include churn in benchmarks."><summary><span class="qa-id">B2 · Q8</span><span class="qa-prompt">HNSW is perfect on a static benchmark; after 6 months of updates/deletes, latency spikes and recall drops. Why?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Continuous updates and tombstones degrade graph navigability (bloated traversal, poorly connected regions). Schedule rebuilds/compaction and include churn in benchmarks.</p>
+</div></details><details class="qa-card" data-search="ivf trained on english financial reports; a year later multilingual manuals arrive; latency fine, recall terrible. diagnose. model answer data drift: centroids no longer represent the distribution, so new data sits in poorly fitted clusters. retrain centroids on a representative sample of the new corpus and measure list imbalance."><summary><span class="qa-id">B2 · Q9</span><span class="qa-prompt">IVF trained on English financial reports; a year later multilingual manuals arrive; latency fine, recall terrible. Diagnose.</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Data drift: centroids no longer represent the distribution, so new data sits in poorly fitted clusters. Retrain centroids on a representative sample of the new corpus and measure list imbalance.</p>
+</div></details><details class="qa-card" data-search="which index would you choose for an interactive chatbot with frequent small updates and a generous ram budget? model answer likely hnsw-style (low latency, incremental inserts), but only after benchmarking update behaviour, memory (vectors + graph), and filtered recall against alternatives."><summary><span class="qa-id">B2 · Q10</span><span class="qa-prompt">Which index would you choose for an interactive chatbot with frequent small updates and a generous RAM budget?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Likely HNSW-style (low latency, incremental inserts), but only after benchmarking update behaviour, memory (vectors + graph), and filtered recall against alternatives.</p>
+</div></details><details class="qa-card" data-search="which for a mostly-static corpus with tight memory? model answer ivf-family with quantization (ivfpq/ivfsq) is a candidate; add rescoring. measure."><summary><span class="qa-id">B2 · Q11</span><span class="qa-prompt">Which for a mostly-static corpus with tight memory?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>IVF-family with quantization (IVFPQ/IVFSQ) is a candidate; add rescoring. Measure.</p>
+</div></details><div class="qa-group-title">C. Practical</div><details class="qa-card" data-search="write the experiment to tune hnsw `ef_search`. model answer fix corpus, embeddings, m , ef_construction . for ef_search in [16, 32, 64, 128, 256]: compute ann recall@10 vs filtered exact, relevance recall@10, p95 latency under target concurrency. choose the cheapest value meeting gates. for ef in [16, 32, 64, 128, 256]: index.hnsw.efsearch = ef # run queries -&gt; record recall@10, p95 latency"><summary><span class="qa-id">B2 · Q12</span><span class="qa-prompt">Write the experiment to tune HNSW `ef_search`.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Fix corpus, embeddings, <code>M</code>, <code>ef_construction</code>. For <code>ef_search</code> in [16, 32, 64, 128, 256]: compute ANN recall@10 vs filtered exact, relevance recall@10, p95 latency under target concurrency. Choose the cheapest value meeting gates.</p>
+<pre><code class="language-python">for ef in [16, 32, 64, 128, 256]:
+    index.hnsw.efSearch = ef
+    # run queries -&gt; record recall@10, p95 latency
+</code></pre>
+</div></details><details class="qa-card" data-search="your pgvector ivfflat index gives poor recall right after a big import. likely cause and fix? model answer the index was built when the table was nearly empty (poor centroids). rebuild after loading representative data; tune lists and raise probes ."><summary><span class="qa-id">B2 · Q13</span><span class="qa-prompt">Your pgvector IVFFlat index gives poor recall right after a big import. Likely cause and fix?</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>The index was built when the table was nearly empty (poor centroids). Rebuild after loading representative data; tune <code>lists</code> and raise <code>probes</code>.</p>
+</div></details><details class="qa-card" data-search="how do you compute ivf work saved? model answer approx fraction scanned ≈ nprobe / nlist if balanced (6/120 = 5%). verify actual list size distribution since imbalance changes this."><summary><span class="qa-id">B2 · Q14</span><span class="qa-prompt">How do you compute IVF work saved?</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Approx fraction scanned ≈ <code>nprobe / nlist</code> if balanced (6/120 = 5%). Verify actual list size distribution since imbalance changes this.</p>
+</div></details><div class="qa-group-title">D. Real-life</div><details class="qa-card" data-search="a product launches in new languages and search quality drops only for those languages. hnsw or ivf? model answer could be either; first check the embedding model's multilingual quality with exact search. if exact is fine but ann isn't, inspect ivf centroids (drift) or hnsw exploration. slice metrics by language."><summary><span class="qa-id">B2 · Q15</span><span class="qa-prompt">A product launches in new languages and search quality drops only for those languages. HNSW or IVF?</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Could be either; first check the embedding model's multilingual quality with exact search. If exact is fine but ANN isn't, inspect IVF centroids (drift) or HNSW exploration. Slice metrics by language.</p>
+</div></details><details class="qa-card" data-search="team copies &quot;m=64, ef=500&quot; from a blog. evaluate. model answer parameters are workload-dependent. cost: memory (m) and build time (ef_construction). validate against own exact reference, latency budget, and memory; don't import benchmark values as standards."><summary><span class="qa-id">B2 · Q16</span><span class="qa-prompt">Team copies "M=64, ef=500" from a blog. Evaluate.</span><span class="qa-kind">Mid · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Parameters are workload-dependent. Cost: memory (M) and build time (ef_construction). Validate against own exact reference, latency budget, and memory; don't import benchmark values as standards.</p>
+</div></details><div class="question-tools"><button class="small-control expand-branch">Expand this branch</button><button class="small-control collapse-branch">Collapse this branch</button></div></div></section><section class="lesson-section" data-label="Optimization &amp; Implementation" id="branch-3"><div class="section-kicker">BRANCH 3 · VECTOR DATABASES &amp; ANN</div><h2>Optimization &amp; Implementation</h2><p class="section-intro">*Making the algorithms run efficiently and verifiably in the real world.*</p><div class="content-card">
+</div><div class="content-card"><h3 id="31-product-and-scalar-quantization">3.1 Product and Scalar Quantization</h3>
+<p><strong>Lifecycle connection:</strong> The optimization phase, applied when infrastructure cost or memory limits threaten production scaling.</p>
+<h3 id="the-memory-problem">The memory problem</h3>
+<pre><code>raw vector bytes = N × d × b
+</code></pre>
+<p>For N = 1,000,000; d = 768; b = 4 (float32):</p>
+<pre><code>1,000,000 × 768 × 4 = 3,072,000,000 bytes ≈ 3.07 GB (decimal) ≈ 2.86 GiB
+</code></pre>
+<p>This <strong>excludes</strong> metadata, graph links, text, replicas, allocator overhead, and build-time temp space. Vector search runs in <strong>RAM</strong> for speed, which is expensive.</p>
+<h3 id="scalar-quantization-sq">Scalar Quantization (SQ)</h3>
+<p>Reduces precision of <strong>each coordinate</strong> (e.g., map [-1, 1] into 256 integer bins). Distinct values can collapse into the same bin. int8 ≈ 1/4 of float32 coordinate storage (plus scaling parameters/alignment overhead in real layouts).</p>
+<h3 id="product-quantization-pq">Product Quantization (PQ)</h3>
+<p>Split the vector into <strong>subvectors</strong>; replace each with the ID of the nearest <strong>learned codebook</strong> entry.</p>
+<ul>
+<li>768 dims → 96 subvectors × 8 dims; each subvector stored as 1 byte (256 centroids).</li>
+<li>Code size = <strong>96 bytes</strong> vs 3,072 bytes float32 (~32x), before overhead.</li>
+<li>Toy arithmetic, <strong>not</strong> a guarantee of accuracy or a full memory estimate.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Scalar Quantization</th>
+<th>Product Quantization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unit approximated</td>
+<td>Each coordinate</td>
+<td>Group of coordinates (subvector)</td>
+</tr>
+<tr>
+<td>Mechanism</td>
+<td>Fewer value levels</td>
+<td>Learned codebook IDs</td>
+</tr>
+<tr>
+<td>Typical compression</td>
+<td>~4x (int8)</td>
+<td>Often much larger (e.g., 32x)</td>
+</tr>
+<tr>
+<td>Analogy</td>
+<td>Rounding each number</td>
+<td>Replacing a whole phrase with a dictionary ID</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="what-compression-changes">What compression changes</h3>
+<p>Rounding error can swap the order of closely scored candidates. <strong>Rescoring pattern:</strong></p>
+<ol>
+<li>Retrieve a larger pool (e.g., top-100) with compressed index.</li>
+<li>Fetch raw/uncompressed vectors (or text) for only those 100.</li>
+<li>Rescore exactly (or rerank with a text reranker).</li>
+<li>Pass top results to the LLM.</li>
+</ol>
+<p>Rescoring fixes <strong>ordering</strong>; it <strong>cannot recover</strong> a relevant item that never entered the pool.</p>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="quantization-save-memory-then-recover-ranking-precision">Quantization · save memory, then recover ranking precision</h3><p>SQ approximates individual coordinates; PQ approximates subvectors. Rescoring can correct ordering inside the retrieved pool, not recover a candidate that never entered it.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Scalar and product quantization with rescoring" class="flow-svg" role="img" viewbox="0 0 1200 450" xmlns="http://www.w3.org/2000/svg"><title>Scalar and product quantization with rescoring</title><desc>Compression reduces memory but can alter ranking; rescoring refines only candidates returned by compressed retrieval.</desc><defs><marker id="arr-5" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-5" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="62" rx="16" width="380" x="410" y="15"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="30.5">Memory pressure</text><text class="svg-node-sub" x="600.0" y="57.5">raw vectors: N × dimensions × bytes per value</text><path class="connector" d="M600 77 V110 H300 V140" style="marker-end:url(#arr-5)"></path><path class="connector" d="M600 110 H900 V140" style="marker-end:url(#arr-5)"></path><rect class="n-lex" height="105" rx="16" width="460" x="70" y="140"></rect><text class="svg-node-title" style="font-size:17px" x="300.0" y="168.0">Scalar quantization (SQ)</text><text class="svg-node-sub" x="300.0" y="195.0">Reduce precision per coordinate</text><text class="svg-node-sub" x="300.0" y="213.0">Example: float32 → int8</text><rect class="n-dense" height="105" rx="16" width="460" x="670" y="140"></rect><text class="svg-node-title" style="font-size:17px" x="900.0" y="168.0">Product quantization (PQ)</text><text class="svg-node-sub" x="900.0" y="195.0">Split into subvectors</text><text class="svg-node-sub" x="900.0" y="213.0">Store learned codebook IDs</text><path class="connector" d="M300 245 V280 H600 V305" style="marker-end:url(#arr-5)"></path><path class="connector" d="M900 245 V280 H600 V305" style="marker-end:url(#arr-5)"></path><rect class="n-guard" height="70" rx="16" width="460" x="370" y="305"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="324.5">Compressed candidate retrieval</text><text class="svg-node-sub" x="600.0" y="351.5">Possible rounding / code approximation rank changes</text><path class="connector" d="M600 375 V395" style="marker-end:url(#arr-5)"></path><text class="svg-node-title" style="font-size:16px" x="600" y="425">Retrieve larger pool → fetch raw vectors → rescore / rerank → final candidates</text></svg></div></div>
+<h3 id="code-memory-estimator-and-pq-in-faiss">Code: memory estimator and PQ in FAISS</h3>
+<pre><code class="language-python">def raw_bytes(n, d, bytes_per=4):
+    return n * d * bytes_per
+
+n, d = 1_000_000, 768
+b = raw_bytes(n, d)
+print(f"{b/1e9:.2f} GB decimal | {b/2**30:.2f} GiB")       # 3.07 GB | 2.86 GiB
+
+# PQ code size: m subvectors * (nbits/8) bytes
+m, nbits = 96, 8
+print("PQ bytes per vector:", m * nbits // 8)               # 96
+print("Compression:", (d * 4) / (m * nbits // 8), "x")      # 32.0x
+</code></pre>
+<pre><code class="language-python">import faiss, numpy as np
+d, nlist, m, nbits = 768, 1024, 96, 8
+quantizer = faiss.IndexFlatL2(d)
+index = faiss.IndexIVFPQ(quantizer, d, nlist, m, nbits)
+index.train(train_vectors)      # learns centroids + PQ codebooks (float32 array)
+index.add(all_vectors)
+index.nprobe = 16
+D, I = index.search(queries, 100)   # large candidate pool -&gt; then rescore with raw vectors
+</code></pre>
+<h3 id="measure-four-stages-separately">Measure four stages separately</h3>
+<ol>
+<li>Exact search, original vectors.</li>
+<li>ANN index, original vectors.</li>
+<li>ANN index, compressed vectors.</li>
+<li>Compressed retrieval + rescoring/reranking.</li>
+</ol>
+<p>This separates <strong>index approximation</strong> from <strong>compression loss</strong> from <strong>downstream recovery</strong>. Always report memory saved <em>with</em> quality lost/regained.</p>
+</div><div class="content-card"><h3 id="32-index-construction-and-tuning">3.2 Index Construction and Tuning</h3>
+<p><strong>Lifecycle connection:</strong> The deployment-gating phase: prove the index works before production.</p>
+<h3 id="the-index-contract">The Index Contract</h3>
+<p>Record before indexing:</p>
+<ul>
+<li>Embedding model <strong>and revision</strong></li>
+<li>Query/document encoding conventions</li>
+<li>Dimension and numeric type</li>
+<li>Similarity metric and normalization policy</li>
+<li>Chunking and extraction versions</li>
+<li>Metadata schema and authorization fields</li>
+<li>Index family and build parameters</li>
+<li>Corpus snapshot / generation</li>
+</ul>
+<p>Two vectors of equal dimension from different models are <strong>incompatible</strong>. A successful insert doesn't prove meaningful comparison.</p>
+<h3 id="one-experiment-answers-one-question">One experiment answers one question</h3>
+<ul>
+<li>❌ Weak: change embedding model + chunk size + HNSW settings + reranker + prompt → "score went up."</li>
+<li>✅ Strong: hold corpus and representation fixed; vary only query exploration; measure neighbor recovery, relevance retrieval, p95 latency, memory.</li>
+</ul>
+<h3 id="workload-realism">Workload realism</h3>
+<p>Test short identifiers, conceptual questions, rare topics, multilingual queries, high-selectivity and low-selectivity filters, warm and cold caches, and realistic concurrency. <strong>Never use average latency alone</strong>; use p95/p99 and timeout rate. Break latency into: query embedding, DB retrieval, reranking, source fetch, generation.</p>
+<h3 id="quality-gates-fictional-example-thresholds-not-standards">Quality gates (fictional example thresholds, not standards)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Example requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eligibility</td>
+<td><strong>Zero</strong> unauthorized passages returned in the security suite</td>
+</tr>
+<tr>
+<td>Approximation</td>
+<td>ANN recall@20 ≥ 0.95 on the chosen benchmark</td>
+</tr>
+<tr>
+<td>Relevance</td>
+<td>No material regression on exact identifiers / rare document classes</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Retrieval p95 within budget at target concurrency</td>
+</tr>
+<tr>
+<td>Deletion</td>
+<td>Deleted IDs cannot be served after the declared enforcement point</td>
+</tr>
+<tr>
+<td>Recovery</td>
+<td>A failed build leaves the previous valid generation usable</td>
+</tr>
+</tbody>
+</table></div>
+</div><div class="question-bank"><div class="question-heading"><div><div class="eyebrow">BRANCH 3 · INTERVIEW &amp; RECALL</div><h3>Branch 3 Q&amp;A</h3><p>Attempt each question first, then expand the model answer. Difficulty and question type are retained from the source.</p></div><span class="question-count">15 questions</span></div><div class="qa-group-title">A. Theoretical</div><details class="qa-card" data-search="why compress vectors instead of buying more disk? model answer vector search is done in ram for speed. ram is expensive and raw vectors exhaust it quickly; disk doesn't fix the latency problem."><summary><span class="qa-id">B3 · Q1</span><span class="qa-prompt">Why compress vectors instead of buying more disk?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Vector search is done in RAM for speed. RAM is expensive and raw vectors exhaust it quickly; disk doesn't fix the latency problem.</p>
+</div></details><details class="qa-card" data-search="sq vs pq? model answer sq reduces precision of each coordinate independently. pq splits the vector into chunks and replaces each chunk with a codebook id learned from data."><summary><span class="qa-id">B3 · Q2</span><span class="qa-prompt">SQ vs PQ?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>SQ reduces precision of each coordinate independently. PQ splits the vector into chunks and replaces each chunk with a codebook ID learned from data.</p>
+</div></details><details class="qa-card" data-search="what is an index contract? model answer a documented record of exact build configuration (embedding model/revision, dimension, metric, chunking, schema, index params, corpus generation)."><summary><span class="qa-id">B3 · Q3</span><span class="qa-prompt">What is an index contract?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>A documented record of exact build configuration (embedding model/revision, dimension, metric, chunking, schema, index params, corpus generation).</p>
+</div></details><details class="qa-card" data-search="why measure p95/p99 rather than average latency? model answer averages hide slow outliers. users experience the tail; slas are set on percentiles."><summary><span class="qa-id">B3 · Q4</span><span class="qa-prompt">Why measure p95/p99 rather than average latency?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Averages hide slow outliers. Users experience the tail; SLAs are set on percentiles.</p>
+</div></details><details class="qa-card" data-search="can rescoring recover a missed relevant document? model answer no. it reorders documents already in the candidate pool. recovery requires a larger pool or less lossy retrieval."><summary><span class="qa-id">B3 · Q5</span><span class="qa-prompt">Can rescoring recover a missed relevant document?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. It reorders documents already in the candidate pool. Recovery requires a larger pool or less lossy retrieval.</p>
+</div></details><details class="qa-card" data-search="how do you estimate vector memory properly? model answer n × d × bytes for raw vectors, then add measured index structures (graph/lists), metadata, replicas, temp build space, process overhead; state gb vs gib; validate with a real build."><summary><span class="qa-id">B3 · Q6</span><span class="qa-prompt">How do you estimate vector memory properly?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p><code>N × d × bytes</code> for raw vectors, then add measured index structures (graph/lists), metadata, replicas, temp build space, process overhead; state GB vs GiB; validate with a real build.</p>
+</div></details><div class="qa-group-title">B. Situational</div><details class="qa-card" data-search="pq cut memory 75%, but the best document dropped from rank 1 to rank 15 and the llm lacks context. fix while keeping savings? model answer use rescoring: retrieve top-100 from the compressed index, fetch raw vectors for only those, rescore exactly (or rerank with a cross-encoder), return the top few. memory stays low (raw vectors on disk/cheaper tier)."><summary><span class="qa-id">B3 · Q7</span><span class="qa-prompt">PQ cut memory 75%, but the best document dropped from rank 1 to rank 15 and the LLM lacks context. Fix while keeping savings?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Use rescoring: retrieve top-100 from the compressed index, fetch raw vectors for only those, rescore exactly (or rerank with a cross-encoder), return the top few. Memory stays low (raw vectors on disk/cheaper tier).</p>
+</div></details><details class="qa-card" data-search="a dev changed embedding model, chunk size, and switched to hnsw all at once for +10% relevance. merge? model answer no. confounded variables. require independent tests against a fixed baseline."><summary><span class="qa-id">B3 · Q8</span><span class="qa-prompt">A dev changed embedding model, chunk size, and switched to HNSW all at once for +10% relevance. Merge?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. Confounded variables. Require independent tests against a fixed baseline.</p>
+</div></details><details class="qa-card" data-search="compressed index fits in memory but loses a rare document class. deploy? model answer not on average score alone. measure that slice; try larger pool or original-vector rescoring; evaluate memory/latency cost. if the class is required and still below gate, keep uncompressed or redesign."><summary><span class="qa-id">B3 · Q9</span><span class="qa-prompt">Compressed index fits in memory but loses a rare document class. Deploy?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Not on average score alone. Measure that slice; try larger pool or original-vector rescoring; evaluate memory/latency cost. If the class is required and still below gate, keep uncompressed or redesign.</p>
+</div></details><details class="qa-card" data-search="after an embedding model upgrade, can you insert new vectors into the old index? model answer no. different representation spaces are not comparable. build a new index generation, re-embed the corpus, validate, then switch via versioned publication."><summary><span class="qa-id">B3 · Q10</span><span class="qa-prompt">After an embedding model upgrade, can you insert new vectors into the old index?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. Different representation spaces are not comparable. Build a new index generation, re-embed the corpus, validate, then switch via versioned publication.</p>
+</div></details><div class="qa-group-title">C. Practical</div><details class="qa-card" data-search="compute memory for 50m vectors, 1024 dims, float32, and for pq with 128 bytes/vector. model answer raw: 50,000,000 × 1024 × 4 = 204.8 gb (≈190.7 gib). pq codes: 50,000,000 × 128 = 6.4 gb (+ codebooks, lists, metadata, replicas)."><summary><span class="qa-id">B3 · Q11</span><span class="qa-prompt">Compute memory for 50M vectors, 1024 dims, float32, and for PQ with 128 bytes/vector.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Raw: 50,000,000 × 1024 × 4 = 204.8 GB (≈190.7 GiB). PQ codes: 50,000,000 × 128 = 6.4 GB (+ codebooks, lists, metadata, replicas).</p>
+</div></details><details class="qa-card" data-search="design the four-stage compression experiment. model answer run exact / ann-raw / ann-compressed / ann-compressed+rescore on the same queries and filters; tabulate ann recall, relevance recall, p95, memory for each. differences attribute loss to the right layer."><summary><span class="qa-id">B3 · Q12</span><span class="qa-prompt">Design the four-stage compression experiment.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Run exact / ANN-raw / ANN-compressed / ANN-compressed+rescore on the same queries and filters; tabulate ANN recall, relevance recall, p95, memory for each. Differences attribute loss to the right layer.</p>
+</div></details><details class="qa-card" data-search="write a quality-gate checklist as ci steps. model answer (1) security suite: 0 leaks. (2) ann recall@k ≥ threshold on frozen set. (3) relevance on slices (ids, rare classes). (4) p95 at target qps. (5) deletion test. (6) failed-build rollback test."><summary><span class="qa-id">B3 · Q13</span><span class="qa-prompt">Write a quality-gate checklist as CI steps.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>(1) Security suite: 0 leaks. (2) ANN recall@K ≥ threshold on frozen set. (3) Relevance on slices (IDs, rare classes). (4) p95 at target QPS. (5) Deletion test. (6) Failed-build rollback test.</p>
+</div></details><div class="qa-group-title">D. Real-life</div><details class="qa-card" data-search="cloud bill is exploding because the vector db holds everything in ram. options? model answer quantization (sq/pq) + rescoring, tiering (raw vectors on ssd), dimension reduction (if the embedding model supports it), partitioning cold tenants, lowering replicas where availability permits. measure quality at each step."><summary><span class="qa-id">B3 · Q14</span><span class="qa-prompt">Cloud bill is exploding because the vector DB holds everything in RAM. Options?</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Quantization (SQ/PQ) + rescoring, tiering (raw vectors on SSD), dimension reduction (if the embedding model supports it), partitioning cold tenants, lowering replicas where availability permits. Measure quality at each step.</p>
+</div></details><details class="qa-card" data-search='marketing demo "felt fast." is that enough to ship? model answer no. need percentiles at concurrency, filter-selectivity tests, recall vs exact, memory, update/deletion behaviour.'><summary><span class="qa-id">B3 · Q15</span><span class="qa-prompt">Marketing demo "felt fast." Is that enough to ship?</span><span class="qa-kind">Mid · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. Need percentiles at concurrency, filter-selectivity tests, recall vs exact, memory, update/deletion behaviour.</p>
+</div></details><div class="question-tools"><button class="small-control expand-branch">Expand this branch</button><button class="small-control collapse-branch">Collapse this branch</button></div></div></section><section class="lesson-section" data-label="Production Architecture &amp; Lifecycle" id="branch-4"><div class="section-kicker">BRANCH 4 · VECTOR DATABASES &amp; ANN</div><h2>Production Architecture &amp; Lifecycle</h2><p class="section-intro">*Scaling the math into a secure, enterprise-grade system.*</p><div class="content-card">
+</div><div class="content-card"><h3 id="41-filtering-and-production-storage">4.1 Filtering and Production Storage</h3>
+<p><strong>Lifecycle connection:</strong> Security and application logic. Ensure the right users see only the right data.</p>
+<h3 id="metadata-filtering">Metadata filtering</h3>
+<p>A filter restricts eligibility (tenant, current version, language, product, date). Some are optional relevance preferences; others are <strong>mandatory security constraints</strong>. Database predicates (e.g., Qdrant payload filters, SQL <code>WHERE</code>) can express them, but security-critical values must be derived from <strong>trusted identity and policy</strong>.</p>
+<blockquote>
+<p>A user-provided <code>tenant_id</code> must <strong>never</strong> decide the security boundary. If an authenticated tenant-A user submits <code>tenant-B</code>, the server must not adopt it.</p>
+</blockquote>
+<h3 id="pre-post-and-integrated-filtering">Pre-, post-, and integrated filtering</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What it does</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pre-filtering</strong></td>
+<td>Removes ineligible records <em>before</em> similarity selection</td>
+<td>May need filter-aware index or exact fallback for efficiency</td>
+</tr>
+<tr>
+<td><strong>Post-filtering</strong></td>
+<td>Removes ineligible records <em>after</em> initial top-K</td>
+<td><strong>Starvation:</strong> top-100 → 98 removed → 2 left</td>
+</tr>
+<tr>
+<td><strong>Integrated filtering</strong></td>
+<td>Eligibility checked during index traversal</td>
+<td>Implementation-specific; verify behaviour</td>
+</tr>
+</tbody>
+</table></div>
+<p>A DB may guarantee returned rows satisfy a predicate while still exploring a region full of ineligible rows. <strong>Security and retrieval recall are different properties.</strong></p>
+<h3 id="the-post-filter-trap-and-the-forbidden-fix">The post-filter trap and the forbidden fix</h3>
+<p>Top-100 contains only 2 tenant-A rows → only 2 results even though tenant A has many useful passages. The tempting fix, <em>"disable the filter if fewer than 5 results,"</em> is a <strong>security defect</strong>.</p>
+<p><strong>Valid fixes:</strong></p>
+<ul>
+<li>Increase bounded exploration (e.g., larger <code>ef_search</code>/candidate K, iterative scans where supported).</li>
+<li>Use a filter-aware index.</li>
+<li>Query an <strong>authorized partition/namespace</strong>.</li>
+<li>Run <strong>exact search over the small eligible subset</strong> (small tenant → small N → exact is cheap).</li>
+</ul>
+<p>All unauthorized content must stay inside the trusted retrieval boundary: <strong>never</strong> send it to a reranker, embedding provider, LLM, user-facing log, or citation preview. Re-check authorization/deletion state before final emission if state can change mid-request.</p>
+<h3 id="collections-and-namespaces">Collections and namespaces</h3>
+<p>Semantics vary (physical index, logical partition, routing label). Names help organization but become a <strong>security control only when trusted server-side routing and access enforcement prevent unauthorized access</strong>. A client-supplied namespace string is not isolation.</p>
+<p>PostgreSQL Row-Level Security illustrates DB-enforced policies, but table owners/superusers/<code>BYPASSRLS</code> roles can bypass them. <strong>Test the actual service role.</strong></p>
+<h3 id="code-server-derived-tenant-filtering-fastapi-sql">Code: server-derived tenant filtering (FastAPI + SQL)</h3>
+<pre><code class="language-python">from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class SearchRequest(BaseModel):
+    query: str
+    # NOTE: no tenant_id field here on purpose!
+
+def current_identity(token: str = Depends(oauth2_scheme)):
+    claims = verify_jwt(token)                  # your auth logic
+    if not claims:
+        raise HTTPException(401)
+    return {"tenant_id": claims["tenant_id"], "allowed_resources": claims["resources"]}
+
+@app.post("/search")
+async def search(req: SearchRequest, ident=Depends(current_identity)):
+    qvec = await embed(req.query)
+    rows = await db.fetch(
+        """
+        SELECT id, text
+        FROM chunks
+        WHERE tenant_id = $1
+          AND status = 'active'
+          AND resource_id = ANY($2)
+        ORDER BY embedding &lt;=&gt; $3
+        LIMIT 20
+        """,
+        ident["tenant_id"], ident["allowed_resources"], qvec,
+    )
+    # Recheck current authz/deletion state before returning (state may change mid-request)
+    return await recheck_and_emit(rows, ident)
+</code></pre>
+<h3 id="code-small-tenant-exact-fallback-secure-alternative-to-disabling-the-filter">Code: small-tenant exact fallback (secure alternative to disabling the filter)</h3>
+<pre><code class="language-python">SMALL_TENANT_THRESHOLD = 50_000
+
+async def tenant_search(ident, qvec, k=20):
+    n_eligible = await eligible_count(ident)             # trusted count
+    if n_eligible &lt;= SMALL_TENANT_THRESHOLD:
+        return await exact_scan(ident, qvec, k)          # exact over pre-filtered subset
+    return await ann_search_with_filter(ident, qvec, k, ef_search=200)  # bounded; filter stays ON
+</code></pre>
+</div><div class="content-card"><h3 id="42-sharding-replication-and-scaling">4.2 Sharding, Replication, and Scaling</h3>
+<p><strong>Lifecycle connection:</strong> Infrastructure scaling for enterprise growth and high availability.</p>
+<h3 id="sharding">Sharding</h3>
+<p>Splits data across nodes/partitions to balance storage and compute. Example: shard 1 owns tenants A–F, shard 2 owns G–L; a tenant-A query routes to shard 1.</p>
+<blockquote>
+<p><strong>Analogy:</strong> Splitting a book into chapters across desks.</p>
+</blockquote>
+<p>Challenges: balancing <em>load</em> (not just record count), correct routing. One huge tenant → <strong>hot shard</strong> while others idle. Hash sharding may balance counts but not traffic.</p>
+<h3 id="merging-results-across-shards">Merging results across shards</h3>
+<p>A global top-10 <strong>cannot</strong> be built from "top-2 per shard." Collect enough candidates from every shard (e.g., 5 shards × top-10 = 50), sort at a <strong>fusion layer</strong> by <em>compatible</em> scores, return the true top-10. Dense scores need compatible embeddings/metrics; lexical scores (e.g., BM25) depend on collection statistics. Prefer deliberate fusion/reranking (e.g., RRF) over mixing incomparable numbers.</p>
+<pre><code class="language-python">import heapq
+
+def global_top_k(shard_results, k):
+    # shard_results: list of lists of (score, id), higher is better, scores comparable across shards
+    merged = (item for res in shard_results for item in res)
+    return heapq.nlargest(k, merged, key=lambda x: x[0])
+</code></pre>
+<h3 id="replication">Replication</h3>
+<p>Stores extra copies for availability and read capacity.</p>
+<blockquote>
+<p><strong>Analogy:</strong> A full copy of the book on every desk.</p>
+</blockquote>
+<p>Consistency risk: if a delete reaches the primary before a replica, a replica query must not resurrect the source. Need a current authorization/deletion registry, read-routing policy, or stronger consistency.</p>
+<h3 id="scaling-tradeoffs">Scaling tradeoffs</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Benefit</th>
+<th>Cost / risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Add shards</td>
+<td>More storage + parallelism</td>
+<td>Fan-out cost, routing complexity</td>
+</tr>
+<tr>
+<td>Add replicas</td>
+<td>Read capacity + availability</td>
+<td>Storage + update propagation, staleness</td>
+</tr>
+<tr>
+<td>Compress vectors</td>
+<td>Lower memory</td>
+<td>Approximation loss, rescoring</td>
+</tr>
+<tr>
+<td>Lower candidate count</td>
+<td>Less retrieval/rerank work</td>
+<td>Missed evidence</td>
+</tr>
+<tr>
+<td>Isolate large tenants</td>
+<td>Workload control</td>
+<td>More operational units</td>
+</tr>
+<tr>
+<td>Cache retrieval</td>
+<td>Lower repeated latency</td>
+<td>Permission, freshness, invalidation</td>
+</tr>
+</tbody>
+</table></div>
+<p>Infrastructure complexity is a cost even when average latency improves.</p>
+</div><div class="content-card"><h3 id="43-updates-deletes-tombstones-and-compaction">4.3 Updates, Deletes, Tombstones, and Compaction</h3>
+<p><strong>Lifecycle connection:</strong> Cleanup and maintenance; critical for legal compliance (e.g., GDPR) and system health.</p>
+<h3 id="updates">Updates</h3>
+<p>A document change can alter text, metadata, permissions, or all three.</p>
+<ul>
+<li>Embedded content changed → <strong>re-embed</strong>.</li>
+<li>ACL-only change → update metadata/authorization; vector may stay.</li>
+<li>Record <strong>content version</strong> and <strong>policy (ACL) version separately</strong>, otherwise a "no content change" optimization can skip a permission revocation.</li>
+</ul>
+<h3 id="tombstones">Tombstones</h3>
+<p>A <strong>tombstone</strong> is a logical marker (gravestone) that a record is inactive; serving stops <em>immediately</em> while physical cleanup is deferred. Physical deletion from graph indexes is slow and heavy.</p>
+<h3 id="compaction">Compaction</h3>
+<p><strong>Compaction</strong> is an asynchronous background process that reorganizes storage and reclaims bytes from tombstoned vectors. It is <strong>operational, not a compliance guarantee</strong>; privacy and freshness must not depend on its schedule. Suppress tombstoned items at serving time <em>now</em>.</p>
+<h3 id="derived-artifacts-the-hidden-leak">Derived artifacts: the hidden leak</h3>
+<p>A deleted source may survive in: lexical indexes, extracted text, thumbnails, generated summaries, graph facts/summaries, <strong>query caches, answer caches, long-term conversation memory summaries</strong>, reranker stores, and backups (per retention policy). Track derived artifacts by <strong>source ID + version</strong> so deletion can propagate.</p>
+<h3 id="versioned-publication">Versioned publication</h3>
+<p>For manual M-104: build v4 in a <strong>staging generation</strong>; validate extraction, vectors, metadata, source locators; publish as active only when all required indexes are ready. If publication fails midway, never mix v4 text with a v3 citation locator. Use a <strong>manifest/publication record</strong> stating which generation is authoritative.</p>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="production-architecture-three-control-planes">Production architecture · three control planes</h3><p>A vector index is production-ready only when filtering, scaling, versioning and deletion behavior are tested—not just query speed.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Production readiness dimensions" class="flow-svg" role="img" viewbox="0 0 1200 470" xmlns="http://www.w3.org/2000/svg"><title>Production readiness dimensions</title><desc>Production design joins mandatory filtering, infrastructure scaling, and the complete update/deletion lifecycle.</desc><defs><marker id="arr-6" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-6" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="66" rx="16" width="400" x="400" y="18"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="35.5">Production readiness</text><text class="svg-node-sub" x="600.0" y="62.5">security · scale · lifecycle</text><path class="connector" d="M600 84 V120 H205 V150" style="marker-end:url(#arr-6)"></path><rect class="n-guard" height="150" rx="16" width="350" x="35" y="150"></rect><text class="svg-node-title" style="font-size:16px" x="210.0" y="191.5">Filtering &amp; storage</text><text class="svg-node-sub" x="210.0" y="218.5">Pre-filter / integrated</text><text class="svg-node-sub" x="210.0" y="236.5">Post-filter starvation</text><text class="svg-node-sub" x="210.0" y="254.5">Server-derived identity</text><path class="connector" d="M600 84 V120 H595 V150" style="marker-end:url(#arr-6)"></path><rect class="n-lex" height="150" rx="16" width="350" x="425" y="150"></rect><text class="svg-node-title" style="font-size:16px" x="600.0" y="191.5">Scaling</text><text class="svg-node-sub" x="600.0" y="218.5">Sharding: divide data</text><text class="svg-node-sub" x="600.0" y="236.5">Replication: copy data</text><text class="svg-node-sub" x="600.0" y="254.5">Global top-K merge</text><path class="connector" d="M600 84 V120 H985 V150" style="marker-end:url(#arr-6)"></path><rect class="n-dense" height="150" rx="16" width="350" x="815" y="150"></rect><text class="svg-node-title" style="font-size:16px" x="990.0" y="191.5">Lifecycle</text><text class="svg-node-sub" x="990.0" y="218.5">Logical deletion now</text><text class="svg-node-sub" x="990.0" y="236.5">Derived artifact cleanup</text><text class="svg-node-sub" x="990.0" y="254.5">Compaction later</text><text class="svg-tiny" x="600" y="370">KEEP ELIGIBILITY ENFORCED · CONTROL HOT SHARDS AND STALE REPLICAS · VERIFY DELETION ACROSS SERVING PATHS</text><rect class="n-note" height="58" rx="16" width="560" x="320" y="395"></rect><text class="svg-node-title" style="font-size:15px" x="600.0" y="417.5">Evidence: security tests · p95/p99 · update/delete checks · rollback</text></svg></div></div>
+<h3 id="code-deletion-workflow-skeleton">Code: deletion workflow skeleton</h3>
+<pre><code class="language-python">async def delete_source(source_id: str):
+    # 1. Logical delete first: stops serving immediately
+    await registry.mark_deleted(source_id)                   # authoritative deletion registry
+    await vector_store.tombstone(source_id)
+
+    # 2. Propagate to every derived artifact
+    await lexical_index.remove(source_id)
+    await query_cache.invalidate_by_source(source_id)
+    await answer_cache.invalidate_by_source(source_id)
+    await summary_store.remove_by_source(source_id)
+    await graph_store.remove_facts_by_source(source_id)
+    await memory_store.scrub_by_source(source_id)
+
+    # 3. Physical cleanup later (not a compliance mechanism)
+    schedule_compaction()
+
+    # 4. Evidence: verify across ALL serving paths, not just one empty search
+    assert not await direct_id_lookup(source_id)
+    assert not await any_cache_contains(source_id)
+</code></pre>
+<h3 id="code-tombstone-filter-at-serve-time-defense-in-depth">Code: tombstone filter at serve time (defense in depth)</h3>
+<pre><code class="language-python">def serve(results, registry):
+    # Even if the index still physically holds a tombstoned vector, never emit it
+    return [r for r in results if registry.is_active(r.source_id, r.version)]
+</code></pre>
+</div><div class="question-bank"><div class="question-heading"><div><div class="eyebrow">BRANCH 4 · INTERVIEW &amp; RECALL</div><h3>Branch 4 Q&amp;A</h3><p>Attempt each question first, then expand the model answer. Difficulty and question type are retained from the source.</p></div><span class="question-count">22 questions</span></div><div class="qa-group-title">A. Theoretical</div><details class="qa-card" data-search="pre-filtering vs post-filtering? model answer pre-filtering narrows the search space before vector math; post-filtering searches first and discards ineligible results afterward."><summary><span class="qa-id">B4 · Q1</span><span class="qa-prompt">Pre-filtering vs post-filtering?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Pre-filtering narrows the search space before vector math; post-filtering searches first and discards ineligible results afterward.</p>
+</div></details><details class="qa-card" data-search="why never trust a client-provided `tenant_id`? model answer a malicious user could change it to read another tenant. derive tenant from a verified auth token server-side."><summary><span class="qa-id">B4 · Q2</span><span class="qa-prompt">Why never trust a client-provided `tenant_id`?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>A malicious user could change it to read another tenant. Derive tenant from a verified auth token server-side.</p>
+</div></details><details class="qa-card" data-search="sharding vs replication? model answer sharding divides data (chapters across desks). replication copies data (full book on each desk). different problems: capacity vs availability."><summary><span class="qa-id">B4 · Q3</span><span class="qa-prompt">Sharding vs replication?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Sharding divides data (chapters across desks). Replication copies data (full book on each desk). Different problems: capacity vs availability.</p>
+</div></details><details class="qa-card" data-search="primary risk of sharding by `tenant_id`? model answer hot shard from imbalanced tenants (one with 80% of data/traffic)."><summary><span class="qa-id">B4 · Q4</span><span class="qa-prompt">Primary risk of sharding by `tenant_id`?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Hot shard from imbalanced tenants (one with 80% of data/traffic).</p>
+</div></details><details class="qa-card" data-search="why use tombstones instead of immediate physical delete? model answer physical delete from complex indexes is slow/heavy. tombstone hides data instantly while cleanup occurs in background."><summary><span class="qa-id">B4 · Q5</span><span class="qa-prompt">Why use tombstones instead of immediate physical delete?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Physical delete from complex indexes is slow/heavy. Tombstone hides data instantly while cleanup occurs in background.</p>
+</div></details><details class="qa-card" data-search="can compaction satisfy gdpr &quot;right to be forgotten&quot; instantly? model answer no. it's scheduled and operational. compliance needs immediate logical deletion across all serving paths (and defined retention handling for backups)."><summary><span class="qa-id">B4 · Q6</span><span class="qa-prompt">Can compaction satisfy GDPR "right to be forgotten" instantly?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No. It's scheduled and operational. Compliance needs immediate logical deletion across all serving paths (and defined retention handling for backups).</p>
+</div></details><details class="qa-card" data-search="why is a namespace string not isolation by itself? model answer it's only a label unless trusted server-side routing and access control enforce it."><summary><span class="qa-id">B4 · Q7</span><span class="qa-prompt">Why is a namespace string not isolation by itself?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>It's only a label unless trusted server-side routing and access control enforce it.</p>
+</div></details><details class="qa-card" data-search='why can a db "guarantee the filter" yet still give poor recall? model answer it can return only matching rows from an ann-explored region that held few eligible rows. correctness of the predicate ≠ recall of eligible neighbors.'><summary><span class="qa-id">B4 · Q8</span><span class="qa-prompt">Why can a DB "guarantee the filter" yet still give poor recall?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>It can return only matching rows from an ANN-explored region that held few eligible rows. Correctness of the predicate ≠ recall of eligible neighbors.</p>
+</div></details><div class="qa-group-title">B. Situational</div><details class="qa-card" data-search="post-filtered ann returns 1–2 docs for a strict tenant → llm hallucinates. junior suggests disabling the filter below 5 results. alternative? model answer never disable the filter. route small tenants to a dedicated partition/namespace or exact search over their pre-filtered subset; for larger ones increase bounded exploration or use filter-aware/iterative index scans."><summary><span class="qa-id">B4 · Q9</span><span class="qa-prompt">Post-filtered ANN returns 1–2 docs for a strict tenant → LLM hallucinates. Junior suggests disabling the filter below 5 results. Alternative?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Never disable the filter. Route small tenants to a dedicated partition/namespace or exact search over their pre-filtered subset; for larger ones increase bounded exploration or use filter-aware/iterative index scans.</p>
+</div></details><details class="qa-card" data-search="query fan-out to 5 shards, each returns top-10. build global top-10. model answer aggregate all 50, sort by comparable scores at a fusion layer, return the top 10. taking top-2 per shard is wrong."><summary><span class="qa-id">B4 · Q10</span><span class="qa-prompt">Query fan-out to 5 shards, each returns top-10. Build global top-10.</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Aggregate all 50, sort by comparable scores at a fusion layer, return the top 10. Taking top-2 per shard is wrong.</p>
+</div></details><details class="qa-card" data-search="a sensitive doc is tombstoned and compacted; index shows 0 results; next day the llm summarizes it. failure points? model answer deletion didn't propagate to derived artifacts: query/answer cache (e.g., redis), reranker/extracted-text store, graph/text summaries, or conversation memory summary."><summary><span class="qa-id">B4 · Q11</span><span class="qa-prompt">A sensitive doc is tombstoned and compacted; index shows 0 results; next day the LLM summarizes it. Failure points?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Deletion didn't propagate to derived artifacts: query/answer cache (e.g., Redis), reranker/extracted-text store, graph/text summaries, or conversation memory summary.</p>
+</div></details><details class="qa-card" data-search="users receive old manual instructions though search is fast. what do you inspect? model answer trace returned chunk → document version &amp; locator; publication state; metadata filters ( status , version ); replica lag; retrieval/answer caches; whether a failed update left a mixed generation."><summary><span class="qa-id">B4 · Q12</span><span class="qa-prompt">Users receive old manual instructions though search is fast. What do you inspect?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Trace returned chunk → document version &amp; locator; publication state; metadata filters (<code>status</code>, <code>version</code>); replica lag; retrieval/answer caches; whether a failed update left a mixed generation.</p>
+</div></details><details class="qa-card" data-search="a user revokes access mid-request while the pipeline is running. what guarantee do you implement? model answer re-check current authorization/deletion state immediately before emission (and keep unauthorized content out of reranker/llm inputs); define the enforcement point explicitly."><summary><span class="qa-id">B4 · Q13</span><span class="qa-prompt">A user revokes access mid-request while the pipeline is running. What guarantee do you implement?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Re-check current authorization/deletion state immediately before emission (and keep unauthorized content out of reranker/LLM inputs); define the enforcement point explicitly.</p>
+</div></details><details class="qa-card" data-search="a replica serves a deleted doc for a few seconds. acceptable? model answer depends on declared guarantee. if not acceptable: consult a deletion registry at serve time, route reads to consistent nodes, or use stronger consistency; document the enforcement point."><summary><span class="qa-id">B4 · Q14</span><span class="qa-prompt">A replica serves a deleted doc for a few seconds. Acceptable?</span><span class="qa-kind">Mid · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Depends on declared guarantee. If not acceptable: consult a deletion registry at serve time, route reads to consistent nodes, or use stronger consistency; document the enforcement point.</p>
+</div></details><div class="qa-group-title">C. Practical</div><details class="qa-card" data-search="write the sql for a tenant-safe, current-version vector query. model answer see the fastapi/sql example: where tenant_id = $1 and status='active' with tenant from the jwt; order by embedding &lt;=&gt; $3 limit k ."><summary><span class="qa-id">B4 · Q15</span><span class="qa-prompt">Write the SQL for a tenant-safe, current-version vector query.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>See the FastAPI/SQL example: <code>WHERE tenant_id = $1 AND status='active'</code> with tenant from the JWT; <code>ORDER BY embedding &lt;=&gt; $3 LIMIT k</code>.</p>
+</div></details><details class="qa-card" data-search="test atomicity of an index update workflow. model answer during a batch insert/update of a new document version, blast the index with reads. if any query returns new vector with old metadata (or v4 text with v3 locator), the update isn't atomic. fix with staging generation + manifest switch."><summary><span class="qa-id">B4 · Q16</span><span class="qa-prompt">Test atomicity of an index update workflow.</span><span class="qa-kind">Senior · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>During a batch insert/update of a new document version, blast the index with reads. If any query returns new vector with old metadata (or v4 text with v3 locator), the update isn't atomic. Fix with staging generation + manifest switch.</p>
+</div></details><details class="qa-card" data-search="design a deletion test that's convincing. model answer query the deleted content before and after deletion; do direct id lookup; inspect caches, lexical index, summaries, replicas; verify the declared serving guarantee. a single empty search is weak evidence."><summary><span class="qa-id">B4 · Q17</span><span class="qa-prompt">Design a deletion test that's convincing.</span><span class="qa-kind">Senior · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Query the deleted content before and after deletion; do direct ID lookup; inspect caches, lexical index, summaries, replicas; verify the declared serving guarantee. A single empty search is weak evidence.</p>
+</div></details><details class="qa-card" data-search="test postgres rls correctly. model answer connect with the actual application role (not owner/superuser), attempt cross-tenant reads, verify the role lacks bypassrls , and confirm policies apply to the vector query path."><summary><span class="qa-id">B4 · Q18</span><span class="qa-prompt">Test Postgres RLS correctly.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Connect with the <em>actual</em> application role (not owner/superuser), attempt cross-tenant reads, verify the role lacks <code>BYPASSRLS</code>, and confirm policies apply to the vector query path.</p>
+</div></details><div class="qa-group-title">D. Real-life</div><details class="qa-card" data-search="saas has 5,000 tenants; 3 are huge, the rest tiny. storage architecture? model answer isolate the 3 large tenants onto dedicated shards/collections; pack small tenants into shared partitions with enforced filters and exact search over pre-filtered subsets when small. monitor hot shards; keep server-side routing."><summary><span class="qa-id">B4 · Q19</span><span class="qa-prompt">SaaS has 5,000 tenants; 3 are huge, the rest tiny. Storage architecture?</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Isolate the 3 large tenants onto dedicated shards/collections; pack small tenants into shared partitions with enforced filters and <strong>exact search over pre-filtered subsets</strong> when small. Monitor hot shards; keep server-side routing.</p>
+</div></details><details class="qa-card" data-search='compliance asks: "prove deleted data is gone." model answer provide: deletion registry record + timestamp, test evidence across serving paths (vector, lexical, caches, summaries, memory), backup retention policy, compaction schedule, and audit logs. distinguish logical non-retrievability from physical deletion.'><summary><span class="qa-id">B4 · Q20</span><span class="qa-prompt">Compliance asks: "prove deleted data is gone."</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Provide: deletion registry record + timestamp, test evidence across serving paths (vector, lexical, caches, summaries, memory), backup retention policy, compaction schedule, and audit logs. Distinguish logical non-retrievability from physical deletion.</p>
+</div></details><details class="qa-card" data-search="caching boosts speed but a cached answer leaked a revoked doc. redesign? model answer key caches by (tenant, acl version, source versions); invalidate by source id on delete/update; re-validate authorization on cache hit; short ttl for sensitive classes."><summary><span class="qa-id">B4 · Q21</span><span class="qa-prompt">Caching boosts speed but a cached answer leaked a revoked doc. Redesign?</span><span class="qa-kind">Mid · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Key caches by (tenant, ACL version, source versions); invalidate by source ID on delete/update; re-validate authorization on cache hit; short TTL for sensitive classes.</p>
+</div></details><details class="qa-card" data-search='marketing wants "just show something if filtered results are few." response? model answer fill with non-sensitive fallback (e.g., broader authorized content, clarification question, or "not enough evidence") but never relax authorization filters.'><summary><span class="qa-id">B4 · Q22</span><span class="qa-prompt">Marketing wants "just show something if filtered results are few." Response?</span><span class="qa-kind">Mid · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Fill with non-sensitive fallback (e.g., broader <em>authorized</em> content, clarification question, or "not enough evidence") but never relax authorization filters.</p>
+</div></details><div class="question-tools"><button class="small-control expand-branch">Expand this branch</button><button class="small-control collapse-branch">Collapse this branch</button></div></div></section><section class="lesson-section" data-label="Application" id="branch-5"><div class="section-kicker">BRANCH 5 · VECTOR DATABASES &amp; ANN</div><h2>Application</h2><p class="section-intro">*Putting it all together: multi-tenant boundaries, reranking pipelines, derived-artifact cleanup, and project-level evidence.*</p><div class="content-card">
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="application-path-from-trusted-identity-to-grounded-answer">Application path · from trusted identity to grounded answer</h3><p>ANN should be measured against an exact reference under identical filters. Unauthorized candidates must never enter reranking or generation.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Vector search application integration" class="flow-svg" role="img" viewbox="0 0 1200 410" xmlns="http://www.w3.org/2000/svg"><title>Vector search application integration</title><desc>Trusted identity and lifecycle metadata define the eligible set; exact and ANN retrieval feed refinement and answer generation.</desc><defs><marker id="arr-7" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-7" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-guard" height="105" rx="16" width="175" x="35" y="145"></rect><text class="svg-node-title" style="font-size:17px" x="122.5" y="182.0">Identity</text><text class="svg-node-sub" x="122.5" y="209.0">server-derived</text><rect class="n-source" height="105" rx="16" width="190" x="250" y="145"></rect><text class="svg-node-title" style="font-size:17px" x="345.0" y="182.0">Eligible set</text><text class="svg-node-sub" x="345.0" y="209.0">tenant · ACL · version</text><rect class="n-lex" height="95" rx="16" width="190" x="485" y="75"></rect><text class="svg-node-title" style="font-size:17px" x="580.0" y="107.0">Exact reference</text><text class="svg-node-sub" x="580.0" y="134.0">all eligible vectors</text><rect class="n-dense" height="95" rx="16" width="190" x="485" y="220"></rect><text class="svg-node-title" style="font-size:17px" x="580.0" y="252.0">ANN index</text><text class="svg-node-sub" x="580.0" y="279.0">graph / partitions / codes</text><rect class="n-node" height="105" rx="16" width="175" x="720" y="145"></rect><text class="svg-node-title" style="font-size:17px" x="807.5" y="182.0">Compare &amp; refine</text><text class="svg-node-sub" x="807.5" y="209.0">recall · latency</text><rect class="n-note" height="105" rx="16" width="220" x="940" y="145"></rect><text class="svg-node-title" style="font-size:17px" x="1050.0" y="182.0">Rerank + assemble</text><text class="svg-node-sub" x="1050.0" y="209.0">recheck · cite · answer</text><path class="connector" d="M210 198 H250" style="marker-end:url(#arr-7)"></path><path class="connector" d="M440 175 H465 V122 H485" style="marker-end:url(#arr-7)"></path><path class="connector" d="M440 220 H465 V267 H485" style="marker-end:url(#arr-7)"></path><path class="connector" d="M675 122 H700 V178 H720" style="marker-end:url(#arr-7)"></path><path class="connector" d="M675 267 H700 V218 H720" style="marker-end:url(#arr-7)"></path><path class="connector" d="M895 198 H940" style="marker-end:url(#arr-7)"></path><text class="svg-tiny" x="600" y="365">LEXICAL RETRIEVAL MAY ALSO JOIN THE CANDIDATE/FUSION PIPELINE WHERE REQUIRED</text></svg></div></div>
+</div><div class="content-card"><h3 id="51-worked-case-study">5.1 Worked Case Study</h3>
+<h3 id="scenario">Scenario</h3>
+<p>An employee of <strong>tenant A</strong> asks: <em>"What changed in section 7 of manual M-104?"</em> The system holds v3 and v4 of M-104, plus a similarly titled manual owned by <strong>tenant B</strong>.</p>
+<p>Requirements: use only <strong>authorized</strong> versions of M-104 (current v4 vs archived v3 as the question needs); never retrieve tenant B's text merely because it scores higher.</p>
+<h3 id="pipeline-view">Pipeline view</h3>
+<div class="diagram-card"><div class="diagram-header"><div><div class="eyebrow">VISUAL EXPLANATION</div><h3 id="worked-case-study-m-104-across-tenants-and-revisions">Worked case study · M-104 across tenants and revisions</h3><p>The exact reference, ANN branch and final source validation use the same trusted eligibility policy.</p></div><span class="diagram-tag">Rendered flowchart</span></div><div class="svg-wrap"><svg aria-label="Worked case study pipeline" class="flow-svg" role="img" viewbox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg"><title>Worked case study pipeline</title><desc>An employee from tenant A asks about manual M-104; the system compares eligible versions and prevents tenant B content from entering the result path.</desc><defs><marker id="arr-8" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#718778"></path></marker><marker id="arrAmber-8" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L8,3 L0,6 Z" fill="#b18b4e"></path></marker></defs><rect class="n-source" height="66" rx="16" width="460" x="370" y="15"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="32.5">Question: What changed in section 7 of M-104?</text><text class="svg-node-sub" x="600.0" y="59.5">authenticated employee · tenant A</text><path class="connector" d="M600 81 V115" style="marker-end:url(#arr-8)"></path><rect class="n-guard" height="75" rx="16" width="500" x="350" y="115"></rect><text class="svg-node-title" style="font-size:17px" x="600.0" y="137.0">Resolve eligibility</text><text class="svg-node-sub" x="600.0" y="164.0">tenant A · allowed resource · relevant version</text><path class="connector" d="M600 190 V225 H285 V255" style="marker-end:url(#arr-8)"></path><path class="connector" d="M600 225 H915 V255" style="marker-end:url(#arr-8)"></path><rect class="n-lex" height="95" rx="16" width="440" x="65" y="255"></rect><text class="svg-node-title" style="font-size:17px" x="285.0" y="287.0">Exact reference search</text><text class="svg-node-sub" x="285.0" y="314.0">eligible vectors only</text><rect class="n-dense" height="95" rx="16" width="440" x="695" y="255"></rect><text class="svg-node-title" style="font-size:17px" x="915.0" y="287.0">ANN candidate search</text><text class="svg-node-sub" x="915.0" y="314.0">HNSW / IVF / compression options</text><path class="connector" d="M285 350 V385 H600 V405" style="marker-end:url(#arr-8)"></path><path class="connector" d="M915 350 V385 H600" style="marker-end:url(#arr-8)"></path><text class="svg-node-title" style="font-size:16px" x="600" y="425">Compare recall + latency → rerank → verify version / ACL → cite evidence</text><text class="svg-tiny" x="600" y="452">TENANT B CONTENT MUST NOT ENTER THE CANDIDATE OR RERANKER INPUT</text></svg></div></div>
+<h3 id="diagnosis-playbook">Diagnosis playbook</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Likely area to inspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exact finds v4, ANN misses</td>
+<td>ANN exploration (<code>ef_search</code>/<code>nprobe</code>), filter behaviour</td>
+</tr>
+<tr>
+<td>Neither finds v4</td>
+<td>Ingestion, chunking, embedding compatibility; maybe route via document/version metadata first</td>
+</tr>
+<tr>
+<td>Retrieval finds v4 but answer cites v3</td>
+<td>Source lookup / context assembly, not the vector index</td>
+</tr>
+<tr>
+<td>Tenant-B passage appears in reranker input</td>
+<td><strong>Run fails</strong>, even if final answer doesn't quote it</td>
+</tr>
+<tr>
+<td>Fast but stale answers</td>
+<td>Publication state, replicas, caches</td>
+</tr>
+<tr>
+<td>Good average, bad rare class</td>
+<td>Compression loss, slice-level evaluation</td>
+</tr>
+</tbody>
+</table></div>
+</div><div class="content-card"><h3 id="52-project-exercise-and-required-evidence">5.2 Project Exercise and Required Evidence</h3>
+<p><strong>Build a small synthetic corpus with:</strong></p>
+<ul>
+<li>Two tenants with separate permissions</li>
+<li>Current and archived manual revisions</li>
+<li>Exact document identifiers</li>
+<li>Semantically similar distractors</li>
+<li>A deleted passage</li>
+<li>An ambiguous query requiring clarification</li>
+</ul>
+<p><strong>Build</strong> an exact reference and at least one ANN index (identical embedding config). Add lexical retrieval and a fixed reranker so vector changes are evaluated in the real pipeline.</p>
+<p><strong>Deliverables (L3 evidence):</strong></p>
+<ol>
+<li>Configuration record (index contract)</li>
+<li>Exact-vs-ANN comparison (ANN recall + relevance recall)</li>
+<li>Latency distribution (p50/p95/p99)</li>
+<li>Memory estimate</li>
+<li>Filter-selectivity results</li>
+<li>Update test (version change, ACL-only change)</li>
+<li>Deletion test (vector, lexical, caches, summaries, replicas)</li>
+<li>Permission-negative test (cross-tenant attempts, tampered IDs, reranker-input inspection)</li>
+</ol>
+<p><strong>Completion evidence:</strong> Explain exact vs ANN; compare an index against an exact reference; measure relevance and latency under real filters; demonstrate correct source-version, permission, and deletion behaviour. "The database is popular" or "the demo felt fast" is <em>not</em> evidence.</p>
+<h3 id="starter-harness-skeleton">Starter harness (skeleton)</h3>
+<pre><code class="language-python">def run_eval(queries, gold, exact_fn, ann_fn, k=10):
+    report = []
+    for q in queries:
+        e, a = exact_fn(q), ann_fn(q)
+        report.append({
+            "q": q.text,
+            "ann_recall": ann_recall_at_k(e, a, k),
+            "relevance_recall": len(set(a[:k]) &amp; gold[q.id]) / max(1, len(gold[q.id])),
+            "leaks": [r for r in a if not q.identity.can_read(r)],   # must be empty
+        })
+    assert all(not r["leaks"] for r in report), "SECURITY FAILURE"
+    return report
+</code></pre>
+</div><div class="content-card"><h3 id="53-holistic-architecture-notes">5.3 Holistic Architecture Notes</h3>
+<p><strong>Do vector DBs replace relational DBs?</strong> No. Vector DBs do similarity search over unstructured data; relational DBs give ACID transactions and structured lookups. Extensions like <strong>pgvector</strong> let PostgreSQL do both, which also simplifies joins with ACL tables.</p>
+<p><strong>Heterogeneous data (code, Slack, PDFs) for an agentic system:</strong> don't dump everything into one unpartitioned index. Options: (1) route queries to domain-specific collections with specialized embeddings (e.g., a code model for code, a text model for chat); or (2) use a strong multimodal/general embedding with strict <strong>metadata pre-filtering</strong> by <code>data_source</code> so code questions don't pull chatter.</p>
+<p><strong>Atomicity test:</strong> during active batch insert of a new doc version, hammer reads; any hybrid of old metadata + new vector indicates a non-atomic update.</p>
+<p><strong>End-to-end mental model:</strong></p>
+<pre><code>Identity (server-derived) -&gt; Eligible set (tenant, ACL, version, status)
+  -&gt; Candidate generation (exact / ANN [+ lexical])
+  -&gt; Fusion -&gt; Rerank -&gt; Evidence assembly -&gt; Authz/deletion recheck -&gt; LLM
+  Lifecycle registry (versions, ACLs, deletions) governs every stage.
+</code></pre>
+</div><div class="question-bank"><div class="question-heading"><div><div class="eyebrow">BRANCH 5 · INTERVIEW &amp; RECALL</div><h3>Branch 5 Q&amp;A</h3><p>Attempt each question first, then expand the model answer. Difficulty and question type are retained from the source.</p></div><span class="question-count">14 questions</span></div><div class="qa-group-title">A. Theoretical</div><details class="qa-card" data-search="do vector databases replace relational databases? model answer no; different purposes. vector dbs: similarity on unstructured data. relational: acid transactions/structured queries. pgvector blends both."><summary><span class="qa-id">B5 · Q1</span><span class="qa-prompt">Do vector databases replace relational databases?</span><span class="qa-kind">Junior · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>No; different purposes. Vector DBs: similarity on unstructured data. Relational: ACID transactions/structured queries. pgvector blends both.</p>
+</div></details><details class="qa-card" data-search="why does a tenant-b passage in reranker input fail the run even if never quoted? model answer disclosure already crossed the trust boundary (to a reranker/model/logs). security is about where data flows, not only what's displayed."><summary><span class="qa-id">B5 · Q2</span><span class="qa-prompt">Why does a tenant-B passage in reranker input fail the run even if never quoted?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Disclosure already crossed the trust boundary (to a reranker/model/logs). Security is about where data flows, not only what's displayed.</p>
+</div></details><details class="qa-card" data-search="how does a good test distinguish retrieval error from generation error? model answer inspect each stage: does retrieval contain v4? does context assembly include it? does the answer cite it? errors can occur at any stage; log stage-wise candidate ids."><summary><span class="qa-id">B5 · Q3</span><span class="qa-prompt">How does a good test distinguish retrieval error from generation error?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Inspect each stage: does retrieval contain v4? Does context assembly include it? Does the answer cite it? Errors can occur at any stage; log stage-wise candidate IDs.</p>
+</div></details><details class="qa-card" data-search='why keep content version and acl version separate? model answer so acl-only changes (permission revocations) are never skipped by "content unchanged" optimizations.'><summary><span class="qa-id">B5 · Q4</span><span class="qa-prompt">Why keep content version and ACL version separate?</span><span class="qa-kind">Mid · Theory</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>So ACL-only changes (permission revocations) are never skipped by "content unchanged" optimizations.</p>
+</div></details><div class="qa-group-title">B. Situational</div><details class="qa-card" data-search="agentic assistant searches code repos, slack, and pdfs. how do you design vector representation? model answer separate collections per domain with suited embeddings, or one strong embedding with mandatory data_source pre-filters; route queries by intent; evaluate per-source recall."><summary><span class="qa-id">B5 · Q5</span><span class="qa-prompt">Agentic assistant searches code repos, Slack, and PDFs. How do you design vector representation?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Separate collections per domain with suited embeddings, or one strong embedding with mandatory <code>data_source</code> pre-filters; route queries by intent; evaluate per-source recall.</p>
+</div></details><details class="qa-card" data-search="how do you test the atomicity of index updates? model answer concurrent read blast during batch update; flag any mixed old/new metadata/vector result; remediate with staged generation + manifest."><summary><span class="qa-id">B5 · Q6</span><span class="qa-prompt">How do you test the atomicity of index updates?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Concurrent read blast during batch update; flag any mixed old/new metadata/vector result; remediate with staged generation + manifest.</p>
+</div></details><details class="qa-card" data-search="retrieval finds v4 but the answer cites v3. where's the bug? model answer likely source lookup or context assembly (e.g., resolving locator against the wrong version, cache keyed without version), not the ann index."><summary><span class="qa-id">B5 · Q7</span><span class="qa-prompt">Retrieval finds v4 but the answer cites v3. Where's the bug?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Likely source lookup or context assembly (e.g., resolving locator against the wrong version, cache keyed without version), not the ANN index.</p>
+</div></details><details class="qa-card" data-search='user asks an ambiguous question ("what changed in section 7?") with multiple manuals. what does the system do? model answer detect ambiguity (multiple authorized candidates), ask a clarifying question or route via document/version metadata first; avoid guessing across tenants/versions.'><summary><span class="qa-id">B5 · Q8</span><span class="qa-prompt">User asks an ambiguous question ("what changed in section 7?") with multiple manuals. What does the system do?</span><span class="qa-kind">Senior · Situational</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Detect ambiguity (multiple authorized candidates), ask a clarifying question or route via document/version metadata first; avoid guessing across tenants/versions.</p>
+</div></details><div class="qa-group-title">C. Practical</div><details class="qa-card" data-search="prove tenant isolation for vector retrieval. model answer derive identity server-side; enforce tenant/resource policy before evidence leaves the retrieval boundary; adversarial tests (forged tenant ids, document ids, direct lookups, cache probes); inspect reranker and llm inputs and logs; test revocation mid-request; confirm db role lacks bypass."><summary><span class="qa-id">B5 · Q9</span><span class="qa-prompt">Prove tenant isolation for vector retrieval.</span><span class="qa-kind">Senior · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Derive identity server-side; enforce tenant/resource policy before evidence leaves the retrieval boundary; adversarial tests (forged tenant IDs, document IDs, direct lookups, cache probes); inspect reranker and LLM inputs and logs; test revocation mid-request; confirm DB role lacks bypass.</p>
+</div></details><details class="qa-card" data-search="which five artifacts would you deliver to show an index is production-ready? model answer index contract, exact-vs-ann report, latency percentiles at target concurrency, filter-selectivity matrix, and update/deletion/permission negative-test results."><summary><span class="qa-id">B5 · Q10</span><span class="qa-prompt">Which five artifacts would you deliver to show an index is production-ready?</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Index contract, exact-vs-ANN report, latency percentiles at target concurrency, filter-selectivity matrix, and update/deletion/permission negative-test results.</p>
+</div></details><details class="qa-card" data-search="design logging so you can debug stage-level loss without leaking data. model answer log ids, versions, scores, and stage names (not raw unauthorized text); store per-stage candidate lists under access control; scrub on deletion."><summary><span class="qa-id">B5 · Q11</span><span class="qa-prompt">Design logging so you can debug stage-level loss without leaking data.</span><span class="qa-kind">Mid · Practical</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Log IDs, versions, scores, and stage names (not raw unauthorized text); store per-stage candidate lists under access control; scrub on deletion.</p>
+</div></details><div class="qa-group-title">D. Real-life</div><details class="qa-card" data-search="customers complain the bot quotes a deleted contract clause. incident response? model answer contain: disable caches for that source, mark deletion in registry, purge derived artifacts. investigate propagation gap (caches/summaries/memory). add deletion test to ci; post-mortem; confirm enforcement point and notify per policy."><summary><span class="qa-id">B5 · Q12</span><span class="qa-prompt">Customers complain the bot quotes a deleted contract clause. Incident response?</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Contain: disable caches for that source, mark deletion in registry, purge derived artifacts. Investigate propagation gap (caches/summaries/memory). Add deletion test to CI; post-mortem; confirm enforcement point and notify per policy.</p>
+</div></details><details class="qa-card" data-search="you must choose between one big shared index with filters vs per-tenant indexes. decide. model answer depends on tenant count/size, isolation policy, lifecycle (per-tenant delete/export), and cost. shared+filters is cheaper but needs rigorous filter enforcement and handling of selectivity; per-tenant gives stronger isolation and simple deletion but more operational units. hybrid: isolate large/high-sensitivity tenants."><summary><span class="qa-id">B5 · Q13</span><span class="qa-prompt">You must choose between one big shared index with filters vs per-tenant indexes. Decide.</span><span class="qa-kind">Senior · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Depends on tenant count/size, isolation policy, lifecycle (per-tenant delete/export), and cost. Shared+filters is cheaper but needs rigorous filter enforcement and handling of selectivity; per-tenant gives stronger isolation and simple deletion but more operational units. Hybrid: isolate large/high-sensitivity tenants.</p>
+</div></details><details class="qa-card" data-search="leadership asks which vector db to pick. how do you answer? model answer define requirements (scale, filters, updates, latency p95, compliance, ops skills); shortlist; run the project harness on your own data; compare exact-referenced recall, latency, memory, operational complexity, cost. don't rely on popularity."><summary><span class="qa-id">B5 · Q14</span><span class="qa-prompt">Leadership asks which vector DB to pick. How do you answer?</span><span class="qa-kind">Mid · Real-life</span><span class="qa-toggle">＋</span></summary><div class="qa-answer"><div class="answer-label">Model answer</div><p>Define requirements (scale, filters, updates, latency p95, compliance, ops skills); shortlist; run the project harness on your own data; compare exact-referenced recall, latency, memory, operational complexity, cost. Don't rely on popularity.</p>
+</div></details><div class="question-tools"><button class="small-control expand-branch">Expand this branch</button><button class="small-control collapse-branch">Collapse this branch</button></div></div></section><section class="lesson-section final-section" data-label="Glossary" id="glossary"><div class="section-kicker">REFERENCE · REVISION</div><h2>Glossary</h2><div class="content-card">
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vector database</td>
+<td>Storage + query system supporting vector representations (plus metadata/ops features)</td>
+</tr>
+<tr>
+<td>Vector index</td>
+<td>Structure used to accelerate vector lookup</td>
+</tr>
+<tr>
+<td>Exact search</td>
+<td>Best results under selected metric over the eligible set</td>
+</tr>
+<tr>
+<td>ANN</td>
+<td>Search that may sacrifice neighbor recovery to reduce work</td>
+</tr>
+<tr>
+<td>ANN recall@K</td>
+<td>Overlap of approximate top-K with exact top-K, divided by K</td>
+</tr>
+<tr>
+<td>Relevance recall</td>
+<td>Fraction of human-labeled gold evidence retrieved</td>
+</tr>
+<tr>
+<td>HNSW</td>
+<td>Hierarchical graph-based ANN approach</td>
+</tr>
+<tr>
+<td><code>M</code> / <code>ef_construction</code> / <code>ef_search</code></td>
+<td>HNSW connectivity / build effort / query effort</td>
+</tr>
+<tr>
+<td>IVF / IVFFlat</td>
+<td>Partitioned search using inverted lists / with uncompressed vectors in lists</td>
+</tr>
+<tr>
+<td>Centroid</td>
+<td>Representative center of a cluster/list</td>
+</tr>
+<tr>
+<td><code>nlist</code> / <code>nprobe</code></td>
+<td>Number of lists / lists searched per query</td>
+</tr>
+<tr>
+<td>Scalar quantization</td>
+<td>Lower-precision approximation of individual coordinates</td>
+</tr>
+<tr>
+<td>Product quantization</td>
+<td>Codebook approximation of vector subvectors</td>
+</tr>
+<tr>
+<td>Rescoring</td>
+<td>Re-computing exact scores on a shortlist from a compressed search</td>
+</tr>
+<tr>
+<td>Candidate pool</td>
+<td>Items retrieved and available for later refinement</td>
+</tr>
+<tr>
+<td>Pre-/post-filtering</td>
+<td>Eligibility applied before / after similarity selection</td>
+</tr>
+<tr>
+<td>Filter selectivity</td>
+<td>Fraction of records satisfying a predicate</td>
+</tr>
+<tr>
+<td>Shard / Replica</td>
+<td>Partition of the data / additional copy of data</td>
+</tr>
+<tr>
+<td>Hot shard</td>
+<td>Shard overloaded by skewed data or traffic</td>
+</tr>
+<tr>
+<td>Tombstone</td>
+<td>Logical deletion marker</td>
+</tr>
+<tr>
+<td>Compaction</td>
+<td>Background storage reorganization and space reclamation</td>
+</tr>
+<tr>
+<td>Derived artifact</td>
+<td>Cache, summary, graph fact, or memory derived from a source</td>
+</tr>
+<tr>
+<td>Index generation</td>
+<td>Identified version of a built index</td>
+</tr>
+<tr>
+<td>Index contract</td>
+<td>Recorded configuration of embedding, chunking, metric, schema, index params</td>
+</tr>
+</tbody>
+</table></div>
+</div></section><section class="lesson-section final-section" data-label="Final Revision Checklist" id="final-revision-checklist"><div class="section-kicker">REFERENCE · REVISION</div><h2>Final Revision Checklist</h2><div class="content-card">
+<ul>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox">Separate nearest-neighbor recovery (ANN recall) from evidence relevance (relevance recall).</input></li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Benchmark with identical vectors, metric, permissions, and corpus version; use a <strong>filtered</strong> exact reference.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Treat HNSW <code>M</code>, <code>ef_construction</code>, <code>ef_search</code> as different controls; tune <code>ef_search</code> first.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Treat IVF list count and probes as different controls; train on representative data.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Measure compression loss separately from ANN traversal loss; use rescoring for ordering.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Include metadata, graph, replicas, and temp build space in memory estimates.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Keep security predicates <strong>mandatory</strong>, even when they reduce candidates; never "relax" them to fill results.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Derive tenant/identity server-side; test the actual DB role.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Merge shard results at a fusion layer using comparable scores.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Test updates, deletions, caches, and replicas, not just inserts.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Propagate deletes to all derived artifacts; don't rely on compaction for compliance.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Preserve source IDs and versions through every derived artifact; publish via manifest/generation.</li>
+<li class="task-list-item"><input class="task-list-item-checkbox" disabled="" type="checkbox"/>Choose an index based on <strong>measured workload</strong> behaviour, with p95/p99 and slice metrics.</li>
+</ul>
+</div></section><section class="lesson-section final-section" data-label="Multiple-Choice Question Bank" id="multiple-choice-question-bank"><div class="section-kicker">REFERENCE · REVISION</div><h2>Multiple-Choice Question Bank</h2><div class="content-card">
+<p><strong>Easy</strong></p>
+<p><strong>1. Suitable baseline for measuring ANN approximation loss?</strong>
+A. A different embedding model B. Exact search over the same eligible vectors C. Unfiltered web search D. Longer prompt
+<strong>Answer: B.</strong> Hold representation, metric, corpus, and eligibility constant.</p>
+<p><strong>2. Which statement about replicas is correct?</strong>
+A. They contain different shards B. They eliminate stale reads C. They are copies whose consistency behaviour must be understood D. They remove the need for deletion tests
+<strong>Answer: C.</strong></p>
+<p><strong>Medium</strong></p>
+<p><strong>3. ANN overlaps 8 of exact top-10. Recall@10?</strong>
+A. 0.08 B. 0.20 C. 0.80 D. 1.25
+<strong>Answer: C.</strong> 8/10.</p>
+<p><strong>4. Which change specifically tests compression loss?</strong>
+A. Replace embeddings and prompts B. Compare original vs compressed representations controlling the rest C. Increase answer length D. Remove metadata filters
+<strong>Answer: B.</strong></p>
+<p><strong>5. Why might exact search be reasonable on a large database?</strong>
+A. Large DBs are small in memory B. A mandatory filter may leave a small eligible subset C. Exact always has constant cost D. It needs no metric
+<strong>Answer: B.</strong> Database size ≠ per-query eligible set size.</p>
+<p><strong>Hard</strong></p>
+<p><strong>6. Tenant filtering leaves only 2 of 100 candidates. Best response?</strong>
+A. Remove the filter B. Ask the model to ignore unauthorized passages C. Bounded deeper search or authorized partition/exact search D. Include prohibited candidates without citations
+<strong>Answer: C.</strong> A model instruction can't repair a disclosure that already occurred.</p>
+<p><strong>7. After deletion, vector search is empty but a cached answer includes the source. What failed?</strong>
+A. Cosine similarity B. Deletion propagation across derived artifacts C. Exact search definition D. Need for a reranker
+<strong>Answer: B.</strong></p>
+<p><strong>8. Exact relevance recall is 0.60, ANN is 0.59. Best next step?</strong>
+A. Rebuild HNSW B. Inspect representation, query handling, chunking, source coverage C. Remove the eval set D. Claim 99% accuracy
+<strong>Answer: B.</strong></p>
+<p><strong>9. PQ saves memory but the top document fell to rank 15. Best mitigation?</strong>
+A. Drop the filter B. Retrieve a larger pool and rescore with raw vectors/reranker C. Lower <code>ef_search</code> D. Increase chunk size blindly
+<strong>Answer: B.</strong></p>
+<p><strong>10. A dev changed embedding model, chunking, and index type simultaneously and saw +10%. Verdict?</strong>
+A. Merge B. Reject; confounded, require independent tests C. Merge if latency is fine D. Only test the index
+<strong>Answer: B.</strong></p>
+</div></section><section class="lesson-section final-section" data-label="References" id="references"><div class="section-kicker">REFERENCE · REVISION</div><h2>References</h2><div class="content-card">
+<p>Combine these with the installed version's documentation; names and behaviour can change.</p>
+<ul>
+<li>Malkov &amp; Yashunin — <em>HNSW original paper</em>: <a href="https://arxiv.org/abs/1603.09320">https://arxiv.org/abs/1603.09320</a></li>
+<li>Faiss — <em>Index families and storage properties</em>: <a href="https://github.com/facebookresearch/faiss/wiki/Faiss-indexes">https://github.com/facebookresearch/faiss/wiki/Faiss-indexes</a></li>
+<li>pgvector — <em>Exact/approximate search, index configuration, filtering</em>: <a href="https://github.com/pgvector/pgvector">https://github.com/pgvector/pgvector</a></li>
+<li>Qdrant — <em>Structured filtering</em>: <a href="https://qdrant.tech/documentation/search/filtering/">https://qdrant.tech/documentation/search/filtering/</a></li>
+<li>PostgreSQL — <em>Row security policies and bypass behavior</em>: <a href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">https://www.postgresql.org/docs/current/ddl-rowsecurity.html</a></li>
+</ul>
+</div></section><div class="empty-state" id="emptyState">No matching lesson or question was found. Try a broader keyword.</div></main></div>
+<footer class="footer"><div class="footer-inner"><span><strong>M06.2.2 · Vector databases &amp; ANN search</strong><br/>Exact and approximate search · index design · production lifecycle</span><span>Standalone HTML · embedded styles, scripts and flowcharts<br/>Designed for desktop and mobile study</span></div></footer>
+<script>
+const searchInput=document.getElementById('searchInput');
+const sections=[...document.querySelectorAll('.lesson-section')];
+const empty=document.getElementById('emptyState');
+function runSearch(){
+ const q=searchInput.value.trim().toLowerCase(); let visible=0;
+ sections.forEach(sec=>{
+  if(!q){sec.style.display='';sec.querySelectorAll('.qa-card').forEach(c=>c.style.display='');visible++;return;}
+  const cards=[...sec.querySelectorAll('.qa-card')];let cardMatches=0;
+  cards.forEach(card=>{const match=(card.innerText+' '+(card.dataset.search||'')).toLowerCase().includes(q);card.style.display=match?'':'none';if(match)cardMatches++;});
+  const own=[...sec.children].filter(el=>!el.classList.contains('question-bank')).map(el=>el.innerText).join(' ').toLowerCase();
+  const match=own.includes(q)||cardMatches>0;sec.style.display=match?'':'none';if(match)visible++;
+ });
+ empty.style.display=visible?'none':'block';
+}
+searchInput.addEventListener('input',runSearch);
+document.getElementById('expandAll').addEventListener('click',()=>document.querySelectorAll('.qa-card').forEach(d=>{if(d.style.display!=='none')d.open=true;}));
+document.getElementById('collapseAll').addEventListener('click',()=>document.querySelectorAll('.qa-card').forEach(d=>d.open=false));
+document.getElementById('menuToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+const links=[...document.querySelectorAll('.nav-link')];
+if('IntersectionObserver' in window){const obs=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));});},{rootMargin:'-15% 0px -70% 0px'});sections.forEach(s=>obs.observe(s));}
+links.forEach(a=>a.addEventListener('click',()=>{if(window.innerWidth<760)document.getElementById('sidebar').classList.remove('open')}));
+document.querySelectorAll('.question-bank').forEach(bank=>{const ex=bank.querySelector('.expand-branch'),co=bank.querySelector('.collapse-branch');if(ex)ex.addEventListener('click',()=>bank.querySelectorAll('.qa-card').forEach(d=>{if(d.style.display!=='none')d.open=true;}));if(co)co.addEventListener('click',()=>bank.querySelectorAll('.qa-card').forEach(d=>d.open=false));});
+document.querySelectorAll('pre').forEach(pre=>{const btn=document.createElement('button');btn.className='copy-code';btn.type='button';btn.textContent='Copy code';btn.addEventListener('click',async()=>{const code=pre.querySelector('code')?.innerText||pre.innerText;try{await navigator.clipboard.writeText(code);btn.textContent='Copied';}catch(e){const ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();btn.textContent='Copied';}setTimeout(()=>btn.textContent='Copy code',1400);});pre.appendChild(btn);});
+</script></body></html>
